@@ -1,0 +1,141 @@
+<div class="page-shell">
+
+  <!-- HEADER -->
+  <div class="view-header">
+    <div class="title-section">
+      <span class="eyebrow">Sales</span>
+      <h1 class="view-title">Sales History</h1>
+      <p class="view-subtitle">Default: last 30 days (Pacific)</p>
+    </div>
+
+    <div class="actions">
+      <button
+        type="button"
+        class="btn-ghost"
+        (click)="search()"
+        [disabled]="loading || form.invalid"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+        Search
+      </button>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters" [formGroup]="form">
+
+    <mat-form-field appearance="outline" class="field">
+      <mat-label>From (Pacific)</mat-label>
+      <input matInput type="datetime-local" formControlName="fromDateTime" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field">
+      <mat-label>To (Pacific)</mat-label>
+      <input matInput type="datetime-local" formControlName="toDateTime" />
+    </mat-form-field>
+
+    <div class="meta">
+      <span>Store: {{ storeName || ('#' + storeId) }}</span>
+      <span>Rows: {{ dataSource.data.length }}</span>
+    </div>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+
+    <div *ngIf="loading" class="loading">
+      <mat-spinner diameter="28"></mat-spinner>
+      <span>Loading sales...</span>
+    </div>
+
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      [trackBy]="trackById"
+      *ngIf="!loading"
+    >
+
+      <!-- DATE -->
+      <ng-container matColumnDef="saleDate">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.saleDate | date:'MMM d, y, h:mm a' }}
+        </td>
+      </ng-container>
+
+      <!-- SUBTOTAL -->
+      <ng-container matColumnDef="subtotal">
+        <th mat-header-cell *matHeaderCellDef>Subtotal</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.subtotal | currency:'USD' }}
+        </td>
+      </ng-container>
+
+      <!-- TAX -->
+      <ng-container matColumnDef="tax">
+        <th mat-header-cell *matHeaderCellDef>Tax</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.tax | currency:'USD' }}
+        </td>
+      </ng-container>
+
+      <!-- TOTAL -->
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let row" class="cell-total">
+          {{ row.total | currency:'USD' }}
+        </td>
+      </ng-container>
+
+      <!-- PAYMENT -->
+      <ng-container matColumnDef="paymentMethod">
+        <th mat-header-cell *matHeaderCellDef>Payment</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.paymentMethod || '-' }}
+        </td>
+      </ng-container>
+
+      <!-- NOTES -->
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef>Notes</th>
+        <td mat-cell *matCellDef="let row" class="cell-ellipsis">
+          {{ row.notes || '-' }}
+        </td>
+      </ng-container>
+
+      <!-- ACTIONS -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions-col"></th>
+        <td mat-cell *matCellDef="let row" class="actions-col">
+
+          <button
+            mat-icon-button
+            color="warn"
+            type="button"
+            (click)="deleteSale(row)"
+            [disabled]="isDeleting(row)"
+          >
+            <mat-icon *ngIf="!isDeleting(row)">delete</mat-icon>
+            <mat-spinner *ngIf="isDeleting(row)" diameter="18"></mat-spinner>
+          </button>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+      ></tr>
+
+    </table>
+
+    <div class="empty" *ngIf="!loading && dataSource.data.length === 0">
+      No sales found for this period.
+    </div>
+
+  </div>
+
+</div>

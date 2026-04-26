@@ -1,0 +1,183 @@
+:host {
+  display: block;
+}
+
+/* =========================
+   DASHBOARD LAYOUT
+========================= */
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dashboard-main {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.map-panel,
+.side-panel {
+  min-width: 0;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.map-surface {
+  min-height: 420px;
+}
+
+/* =========================
+   CHART CARDS
+========================= */
+.chart-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.chart-card {
+  min-height: 320px;
+}
+
+.chart-host {
+  width: 100%;
+  min-height: 240px;
+}
+
+/* =========================
+   SALES BY HOUR
+========================= */
+.hourly-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  min-height: 240px;
+  padding: 24px 0 8px;
+  overflow-x: auto;
+}
+
+.hour-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 58px;
+  height: 220px;
+}
+
+.bar-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.bar-wrapper {
+  width: 34px;
+  height: 150px;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  width: 100%;
+  min-height: 8px;
+  background: #3b82f6;
+  border-radius: 10px 10px 0 0;
+  transition: height 0.25s ease;
+}
+
+.bar-label {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* =========================
+   ACTIVITY LIST
+========================= */
+.list-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.activity-item:last-child {
+  border-bottom: 0;
+}
+
+.activity-copy {
+  min-width: 0;
+}
+
+.activity-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.activity-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.activity-value {
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1100px) {
+  .dashboard-main {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hourly-chart {
+    gap: 12px;
+    min-height: 220px;
+  }
+
+  .hour-bar {
+    min-width: 48px;
+    height: 200px;
+  }
+
+  .bar-wrapper {
+    width: 28px;
+    height: 130px;
+  }
+
+  .bar-value,
+  .bar-label {
+    font-size: 0.78rem;
+  }
+}

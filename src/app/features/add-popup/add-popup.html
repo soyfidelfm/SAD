@@ -1,0 +1,183 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+  <div class="modal" (click)="onDialogClick($event)">
+    <div class="modal-header">
+      <h2>{{ title }}</h2>
+      <button class="icon-btn" type="button" (click)="close.emit()">✕</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="modal-body" [ngSwitch]="mode">
+
+        <!-- CREDIT -->
+        <ng-container *ngSwitchCase="'credit'">
+          <label class="field">
+            <span>Store</span>
+
+            <select formControlName="storeId" [disabled]="loadingStores || storesError">
+              <option [ngValue]="null" disabled>
+                {{
+                  loadingStores
+                    ? 'Loading stores...'
+                    : (storesError ? 'Could not load stores' : 'Select a store...')
+                }}
+              </option>
+
+              <option *ngFor="let s of stores" [ngValue]="s.storeId">
+                {{ s.storeNumber }} - {{ s.storeName }}
+              </option>
+            </select>
+
+            <small class="error" *ngIf="storesError">
+              Could not load stores.
+              <button type="button" class="link" (click)="loadStores()">Retry</button>
+            </small>
+
+            <small class="error"
+              *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
+              Store is required
+            </small>
+          </label>
+
+          <label class="field">
+            <span>Approved?</span>
+            <select formControlName="approved">
+              <option [ngValue]="null" disabled>Select...</option>
+              <option [ngValue]="true">Approved</option>
+              <option [ngValue]="false">Not approved</option>
+            </select>
+
+            <small class="error" *ngIf="form.controls.approved.touched && form.controls.approved.invalid">
+              Approval status is required
+            </small>
+          </label>
+        </ng-container>
+
+        <!-- MEMBERSHIP -->
+        <ng-container *ngSwitchCase="'membership'">
+
+          <label class="field">
+            <span>Store</span>
+
+            <select formControlName="storeId" [disabled]="loadingStores || storesError">
+              <option [ngValue]="null" disabled>
+                {{
+                  loadingStores
+                    ? 'Loading stores...'
+                    : (storesError ? 'Could not load stores' : 'Select a store...')
+                }}
+              </option>
+
+              <option *ngFor="let s of stores" [ngValue]="s.storeId">
+                {{ s.storeNumber }} - {{ s.storeName }}
+              </option>
+            </select>
+
+            <small class="error" *ngIf="storesError">
+              Could not load stores.
+              <button type="button" class="link" (click)="loadStores()">Retry</button>
+            </small>
+
+            <small class="error"
+              *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
+              Store is required
+            </small>
+          </label>
+
+          <label class="field">
+            <span>Membership</span>
+
+            <select
+              formControlName="membershipProductId"
+              [disabled]="loadingMemberships || membershipsError"
+            >
+              <option [ngValue]="null" disabled>
+                {{
+                  loadingMemberships
+                    ? 'Loading memberships...'
+                    : (membershipsError ? 'Could not load memberships' : 'Select membership...')
+                }}
+              </option>
+
+              <option *ngFor="let m of membershipProducts" [ngValue]="m.membershipProductId">
+                {{ m.productName }}
+              </option>
+            </select>
+
+            <small class="error" *ngIf="membershipsError">
+              Could not load memberships.
+              <button type="button" class="link" (click)="loadMembershipProducts()">Retry</button>
+            </small>
+
+            <small class="error"
+              *ngIf="form.controls.membershipProductId.touched && form.controls.membershipProductId.invalid && !membershipsError">
+              Membership is required
+            </small>
+          </label>
+
+          <label class="field">
+            <span>Term (months)</span>
+            <input type="number" formControlName="termMonths" placeholder="e.g. 12" />
+
+            <small class="error" *ngIf="form.controls.termMonths.touched && form.controls.termMonths.invalid">
+              Term must be 1+ months
+            </small>
+          </label>
+        </ng-container>
+
+        <!-- SALE -->
+        <!-- SALE -->
+<ng-container *ngSwitchCase="'sale'">
+
+  <label class="field">
+    <span>Store</span>
+
+    <select formControlName="storeId" [disabled]="loadingStores || storesError">
+      <option [ngValue]="null" disabled>
+        {{
+          loadingStores
+            ? 'Loading stores...'
+            : (storesError ? 'Could not load stores' : 'Select a store...')
+        }}
+      </option>
+
+      <option *ngFor="let s of stores" [ngValue]="s.storeId">
+        {{ s.storeNumber }} - {{ s.storeName }}
+      </option>
+    </select>
+
+    <small class="error" *ngIf="storesError">
+      Could not load stores.
+      <button type="button" class="link" (click)="loadStores()">Retry</button>
+    </small>
+
+    <small class="error"
+      *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
+      Store is required
+    </small>
+  </label>
+
+  <label class="field">
+    <span>Sale Amount</span>
+    <input type="number" step="0.01" formControlName="saleAmount" placeholder="e.g. 199.99" />
+    <small class="error" *ngIf="form.controls.saleAmount.touched && form.controls.saleAmount.invalid">
+      Amount is required
+    </small>
+  </label>
+
+  <label class="field">
+    <span>Notes (optional)</span>
+    <textarea rows="3" formControlName="notes" placeholder="Add details..."></textarea>
+  </label>
+
+</ng-container>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn ghost" (click)="close.emit()">Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
