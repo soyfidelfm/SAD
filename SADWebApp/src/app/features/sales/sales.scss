@@ -1,0 +1,36 @@
+
+
+/* FILTERS */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 14px;
+
+  .field {
+    width: 270px;
+    min-width: 230px;
+  }
+
+  .meta {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+    align-items: center;
+
+    span {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+  }
+}

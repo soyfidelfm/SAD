@@ -1,0 +1,274 @@
+<div class="dashboard-page page-shell">
+  <!-- HEADER -->
+  <div class="view-header">
+    <div class="title-section">
+      <span class="eyebrow">Overview</span>
+      <h1 class="view-title">Dashboard</h1>
+      <p class="view-subtitle">Sales Advisor Overview</p>
+    </div>
+
+    <div class="view-actions">
+
+      <button       
+          type="button"
+          class="btn-secondary"
+          (click)="refreshSummary()">
+          <i class="fa-solid fa-arrow-rotate-right"></i>
+        </button>      
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="toggleMenu()">
+        <i class="fa-solid fa-plus"></i> Add new
+      </button>
+
+      <div class="card add-menu" *ngIf="menuOpen">
+        <button
+          type="button"
+          class="btn-ghost"
+          (click)="openPopup('credit')">
+          New Credit Card
+        </button>
+
+        <button
+          type="button"
+          class="btn-ghost"
+          (click)="openPopup('membership')">
+          New Membership
+        </button>
+
+        <button
+          type="button"
+          class="btn-ghost"
+          (click)="openPopup('sale')">
+          New Sale
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP -->
+  <app-add-popup
+    *ngIf="popupOpen"
+    [mode]="popupMode"
+    (close)="closePopup()"
+    (submitForm)="onPopupSubmit($event)">
+  </app-add-popup>
+
+  <!-- SUMMARY -->
+  <ng-container *ngIf="summary$ | async as s; else loadingCards">
+    <div class="kpi-grid">
+      <!-- CREDIT APPS -->
+      <div class="kpi-card">
+        <div class="kpi-label">Credit Card Applications</div>
+
+        <div
+          class="kpi-value"
+          [ngClass]="getStatusClass(s.creditCards.total)">
+          {{ s.creditCards.total }}
+        </div>
+
+        <div class="kpi-hint">
+          Today's goal - {{ dailyCreditAppGoal }} apps
+        </div>
+      </div>
+
+      <!-- MEMBERSHIPS -->
+      <div class="kpi-card">
+        <div class="kpi-label">Membership Sales</div>
+
+        <div
+          class="kpi-value"
+          [ngClass]="getStatusClass(s.memberships.total)">
+          {{ s.memberships.total }}
+        </div>
+
+        <div class="kpi-hint">
+          Today's goal - {{ dailyMembershipGoal }} memberships
+        </div>
+      </div>
+
+      <!-- SALES -->
+      <div class="kpi-card">
+        <div class="kpi-label">
+          Total Sales for Today - {{ today | date:'MMM d, y' }}
+        </div>
+
+        <div
+          class="kpi-value"
+          [ngClass]="getSalesAmountClass(s.todaySales.todaySalesTotal)">
+          {{ s.todaySales.todaySalesTotal | currency:'USD':'symbol':'1.2-2' }}
+        </div>
+
+        <div class="kpi-hint">
+          Goal:
+          {{ dailySalesGoal | currency:'USD':'symbol':'1.0-0' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- STATUS PANEL -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Status</div>
+          <div class="card-subtitle">Today's progress against goals</div>
+        </div>
+      </div>
+
+      <!-- SALES BAR -->
+      <div class="progress-block">
+        <div class="progress-head">
+          <span>Sales progress (today)</span>
+          <span>{{ getSalesPercent(s.todaySales.todaySalesTotal) }}%</span>
+        </div>
+
+        <div
+          class="progress-track"
+          role="progressbar"
+          [attr.aria-valuenow]="getSalesPercent(s.todaySales.todaySalesTotal)"
+          aria-valuemin="0"
+          aria-valuemax="100">
+
+          <div
+            class="progress-fill"
+            [style.width.%]="getSalesPercent(s.todaySales.todaySalesTotal)"
+            [ngClass]="getSalesBarClass(s.todaySales.todaySalesTotal)">
+          </div>
+        </div>
+
+        <div class="progress-sub muted">
+          {{ s.todaySales.todaySalesTotal | currency:'USD':'symbol':'1.0-0' }}
+          of
+          {{ dailySalesGoal | currency:'USD':'symbol':'1.0-0' }}
+          ·
+          {{ getSalesProgressText(s.todaySales.todaySalesTotal) }}
+        </div>
+      </div>
+    </div>
+    <!-- SALES BY HOUR CHART -->
+<div class="card mt-lg">
+  <div class="card-header">
+    <div>
+      <div class="card-title">Sales by Hour</div>
+      <div class="card-subtitle">Total sales amount per hour today</div>
+    </div>
+  </div>
+
+  <div class="hourly-chart" *ngIf="salesByHour.length > 0; else noHourlySales">
+    <div
+      class="hour-bar"
+      *ngFor="let item of salesByHour">
+
+      <div class="bar-value">
+        {{ item.total | currency:'USD':'symbol':'1.0-0' }}
+      </div>
+
+      <div class="bar-wrapper">
+        <div
+          class="bar-fill"
+          [style.height.%]="getHourlyBarHeight(item.total)">
+        </div>
+      </div>
+
+      <div class="bar-label">
+        {{ item.hourLabel }}
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noHourlySales>
+    <div class="empty-state">
+      No sales registered today.
+    </div>
+  </ng-template>
+</div>
+  </ng-container>
+
+  <!-- LOADING -->
+  <ng-template #loadingCards>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Credit Card Applications</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-hint">Loading...</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Membership Sales</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-hint">Loading...</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Total Sales</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-hint">Loading...</div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- LATEST CREDIT APPS -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Latest Credit Card Applications</div>
+        <div class="card-subtitle">
+          Most recent submitted applications
+        </div>
+      </div>      
+    </div>
+
+    <div *ngIf="loadingLatest" class="muted">
+      Loading...
+    </div>
+
+    <div *ngIf="!loadingLatest && latestError" class="error-box">
+      {{ latestError }}
+    </div>
+
+    <div
+      *ngIf="!loadingLatest && !latestError && latestCreditApps.length === 0"
+      class="empty-state">
+      No records yet.
+    </div>
+
+    <div
+      *ngIf="!loadingLatest && latestCreditApps.length > 0"
+      class="table-wrapper">
+
+      <table class="app-table">
+        <thead>
+          <tr>
+            <th>Store</th>
+            <th>Approved</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let x of latestCreditApps; trackBy: trackById">
+
+            <td>
+              {{ x.storeNumber }} - {{ x.storeName }}
+            </td>
+
+            <td>
+              <span
+                class="badge"
+                [ngClass]="x.statusId == 1 ? 'badge-success' : 'badge-danger'">
+
+                {{ x.statusId == 1 ? 'Approved' : 'Not approved' }}
+              </span>
+            </td>
+
+            <td>
+              {{ x.submittedAtUtc | date:'short' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
