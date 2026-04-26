@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
 
     // 4) URL al backend (start)
     const url =
-      `${environment.apiUrl}/${provider}/start` +
+      `$${this.baseUrl}/${provider}/start` +
       `?aNumber=${encodeURIComponent(aNumber)}` +
       `&storeNumber=${encodeURIComponent(storeNumber)}`;
 
