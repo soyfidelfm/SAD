@@ -153,7 +153,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.get<MeResponse>(`${environment.apiUrl}/api/auth/me`, { headers }).pipe(
+    return this.http.get<MeResponse>(`${environment.apiUrl}/auth/me`, { headers }).pipe(
       tap((me) => this.persistMe(me))
     );
   }
