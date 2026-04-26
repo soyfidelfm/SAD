@@ -1,0 +1,180 @@
+<div class="settings-page">
+    <div class="header">
+      <div class="title-section">
+        <span class="eyebrow">Settings</span>
+        <h1 class="view-title">{{ isEditMode ? 'Edit User Daily Settings' : 'Create User Daily Settings' }}</h1>
+        <p class="view-subtitle">
+          Configure the daily sales target, required apps, memberships, and assigned store
+          for the selected day.
+        </p>
+      </div>
+    </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="settings-form">
+    <div class="card">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="settingDate">Date</label>
+        <input id="settingDate" type="date" formControlName="settingDate" />
+        <small class="error" *ngIf="f.settingDate.touched && f.settingDate.invalid">
+          Date is required.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="storeId">Store</label>
+        <select id="storeId" formControlName="storeId">
+          <option [ngValue]="null">Select store</option>
+          <option *ngFor="let store of stores" [ngValue]="store.storeId">
+            {{ store.storeName || store.storeNumber }}
+          </option>
+        </select>
+        <small class="error" *ngIf="f.storeId.touched && f.storeId.invalid">
+          Store is required.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="salesGoalAmount">Sales Goal Amount</label>
+        <input id="salesGoalAmount" type="number" step="0.01" min="0" formControlName="salesGoalAmount"
+          placeholder="Enter sales target" />
+        <small class="error" *ngIf="f.salesGoalAmount.touched && f.salesGoalAmount.invalid">
+          Enter a valid amount.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="appsGoal">Apps Goal</label>
+        <input id="appsGoal" type="number" min="0" formControlName="appsGoal" placeholder="Enter apps goal" />
+        <small class="error" *ngIf="f.appsGoal.touched && f.appsGoal.invalid">
+          Enter a valid number.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="membershipsGoal">Memberships Goal</label>
+        <input id="membershipsGoal" type="number" min="0" formControlName="membershipsGoal"
+          placeholder="Enter memberships goal" />
+        <small class="error" *ngIf="f.membershipsGoal.touched && f.membershipsGoal.invalid">
+          Enter a valid number.
+        </small>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="check-inline">
+          <input type="checkbox" formControlName="isActive" />
+          <span>Active</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="messages">
+      <div class="message error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="message success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-danger" (click)="resetForm()" [disabled]="saving">
+        Reset
+      </button>
+
+      <button type="submit" class="btn-secondary" [disabled]="saving || loading">
+        {{ saving ? 'Saving...' : (isEditMode ? 'Update Settings' : 'Save Settings') }}
+      </button>
+    </div>
+    </div>
+  </form>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+
+    <div *ngIf="loading" class="loading">
+      <mat-spinner diameter="28"></mat-spinner>
+      <span>Loading settings...</span>
+    </div>
+
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      [trackBy]="trackById"
+      *ngIf="!loading"
+    >
+
+      <!-- DATE -->
+      <ng-container matColumnDef="settingDate">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.settingDate | date:'MMM d, y, h:mm a' }}
+        </td>
+      </ng-container>
+
+      <!-- SUBTOTAL -->
+      <ng-container matColumnDef="salesGoalAmount">
+        <th mat-header-cell *matHeaderCellDef>Sales Goal Amount</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.salesGoalAmount | currency:'USD' }}
+        </td>
+      </ng-container>
+
+      <!-- TAX -->
+      <ng-container matColumnDef="appsGoal">
+        <th mat-header-cell *matHeaderCellDef>Apps Goal</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.appsGoal }}
+        </td>
+      </ng-container>
+
+      <!-- TOTAL -->
+      <ng-container matColumnDef="membershipsGoal">
+        <th mat-header-cell *matHeaderCellDef>Memberships Goal</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.membershipsGoal  }}
+        </td>
+      </ng-container>
+
+      <!-- PAYMENT -->
+      <ng-container matColumnDef="storeName">
+        <th mat-header-cell *matHeaderCellDef>Store</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.storeName || '-' }}
+        </td>
+      </ng-container>
+
+      <!-- ACTIONS -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions-col"></th>
+        <td mat-cell *matCellDef="let row" class="actions-col">
+
+          <button                        
+            type="button"
+            class="btn-danger"
+            (click)="deleteSetting(row)"
+            [disabled]="isDeleting(row)"
+          >
+            <i class="fa-regular fa-trash-can"></i>
+            <mat-spinner *ngIf="isDeleting(row)" diameter="18"></mat-spinner>
+          </button>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+      ></tr>
+
+    </table>
+
+    <div class="empty" *ngIf="!loading && dataSource.data.length === 0">
+      No settings found for this period.
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <img src="assets/favicon.png" alt="SAD" class="logo" />
+
+      <div class="title">
+        <div class="name">Sales Advisor Dashboard</div>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <span class="hi" *ngIf="firstName">Hi {{ firstName }}</span>
+
+      <button class="btn-ghost btn-menu" type="button" (click)="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <button class="btn-danger btn-logout" type="button" (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="body" [class.sidebar-closed]="sidebarClosed">
+    <aside class="sidebar">
+      <nav class="nav">
+        <a
+          *ngFor="let item of navItems"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+          class="nav-item"
+        >
+          <i [class]="item.icon"></i>
+          <span class="label">{{ item.label }}</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
