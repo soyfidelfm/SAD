@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../environments/environment'; // ✅ sin .ts
 import { AuthService } from '../../../core/services/auth.service';
+import { API_BASE_URL } from '../../../core/services/api.config';
 
 type ExternalProvider = 'microsoft' | 'google' | 'apple';
 
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit {
   storeNumber = new FormControl('', { nonNullable: true, validators: [Validators.required] });
 
   private isBrowser: boolean;
+  private baseUrl = `${API_BASE_URL}/api`;
 
   constructor(
     private route: ActivatedRoute,

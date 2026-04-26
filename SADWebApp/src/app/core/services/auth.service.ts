@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { API_BASE_URL } from './api.config';
 
 export type ExternalProvider = 'microsoft' | 'google' | 'apple';
 
@@ -31,6 +32,7 @@ export interface MeResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private isBrowser: boolean;
+  private baseUrl = `${API_BASE_URL}/api/auth`;
 
   // 🔑 Keys (cámbialos si ya usas otros)
   private readonly ACCESS_TOKEN_KEY = 'accessToken';
@@ -153,7 +155,7 @@ export class AuthService {
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.get<MeResponse>(`${environment.apiUrl}/auth/me`, { headers }).pipe(
+    return this.http.get<MeResponse>(`${this.baseUrl}/me`, { headers }).pipe(
       tap((me) => this.persistMe(me))
     );
   }
