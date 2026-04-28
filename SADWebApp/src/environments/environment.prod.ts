@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://sadapi.thekiddycloud.com'
+  apiUrl: 'https://sadapi.thekiddycloud.com-test2'
 };
