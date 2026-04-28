@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   storeNumber = new FormControl('', { nonNullable: true, validators: [Validators.required] });
 
   private isBrowser: boolean;
-  private baseUrl = `${API_BASE_URL}/api`;
+  private baseUrl = `${API_BASE_URL}/api/auth`;
 
   constructor(
     private route: ActivatedRoute,
@@ -86,9 +86,6 @@ export class LoginComponent implements OnInit {
       `${this.baseUrl}/${provider}/start` +
       `?aNumber=${encodeURIComponent(aNumber)}` +
       `&storeNumber=${encodeURIComponent(storeNumber)}`;
-      console.log('API_BASE_URL:', API_BASE_URL);
-console.log('baseUrl:', this.baseUrl);
-console.log('FINAL URL:', url);
 
     // 5) Redirección
     window.location.assign(url);
