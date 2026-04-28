@@ -83,9 +83,12 @@ export class LoginComponent implements OnInit {
 
     // 4) URL al backend (start)
     const url =
-      `$${this.baseUrl}/${provider}/start` +
+      `${this.baseUrl}/${provider}/start` +
       `?aNumber=${encodeURIComponent(aNumber)}` +
       `&storeNumber=${encodeURIComponent(storeNumber)}`;
+      console.log('API_BASE_URL:', API_BASE_URL);
+console.log('baseUrl:', this.baseUrl);
+console.log('FINAL URL:', url);
 
     // 5) Redirección
     window.location.assign(url);
