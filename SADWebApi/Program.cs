@@ -26,7 +26,7 @@ if (string.IsNullOrWhiteSpace(connectionString))
 }
 
 builder.Services.AddDbContext<SadDbContext>(opt =>
-  opt.UseSqlServer(connectionString));
+  opt.UseNpgsql(connectionString));
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();

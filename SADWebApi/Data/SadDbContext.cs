@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Sad.Api.Data.Entities;
 using Sad.Api.Data.Entities.Sales;
 using SADWebApi.Data.Entities;
@@ -86,10 +86,10 @@ public class SadDbContext : DbContext
 				.HasPrecision(12, 2);
 
 			e.Property(x => x.CreatedAt)
-				.HasColumnType("datetime2(0)");
+				.HasColumnType("timestamp without time zone");
 
 			e.Property(x => x.UpdatedAt)
-				.HasColumnType("datetime2(0)");
+				.HasColumnType("timestamp without time zone");
 
 			// FK -> Users (auth schema)
 			e.HasOne(x => x.User)
@@ -117,7 +117,7 @@ public class SadDbContext : DbContext
             e.Property(x => x.LastLoginAtUtc).HasPrecision(0);
             e.HasIndex(x => x.Email)
                 .HasDatabaseName("IX_Users_Email")
-                .HasFilter("[Email] IS NOT NULL");
+                .HasFilter("\"Email\" IS NOT NULL");
         });
 
         modelBuilder.Entity<AuthUserExternalLogin>(e =>
@@ -172,7 +172,7 @@ public class SadDbContext : DbContext
 			e.Property(x => x.SaleId).ValueGeneratedOnAdd();
 
 			e.Property(x => x.SaleDate)
-				.HasColumnType("datetime2(0)");
+				.HasColumnType("timestamp without time zone");
 
 			e.Property(x => x.Subtotal)
 				.HasPrecision(12, 2);
@@ -194,10 +194,10 @@ public class SadDbContext : DbContext
 				.IsUnicode(true);
 
 			e.Property(x => x.CreatedAt)
-				.HasColumnType("datetime2(0)");
+				.HasColumnType("timestamp without time zone");
 
 			e.Property(x => x.UpdatedAt)
-				.HasColumnType("datetime2(0)");
+				.HasColumnType("timestamp without time zone");
 
 			e.HasIndex(x => new { x.StoreId, x.SaleDate });
 			e.HasIndex(x => new { x.UserId, x.SaleDate });

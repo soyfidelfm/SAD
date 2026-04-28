@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Npgsql;
 using Microsoft.EntityFrameworkCore;
 using Sad.Api.Contracts.Auth;
 using Sad.Api.Data;
@@ -16,14 +16,14 @@ public class AuthService : IAuthService
 		ExternalLoginRequestDto dto,
 		CancellationToken ct)
 	{
-		var p1 = new SqlParameter("@IdentityProviderCode", dto.IdentityProviderCode);
-		var p2 = new SqlParameter("@ProviderSubject", dto.ProviderSubject);
-		var p3 = new SqlParameter("@Email", (object?)dto.Email ?? DBNull.Value);
-		var p4 = new SqlParameter("@DisplayName", (object?)dto.DisplayName ?? DBNull.Value);
-		var p5 = new SqlParameter("@Anumber", dto.Anumber);
-		var p6 = new SqlParameter("@StoreId", dto.StoreId);		
+		var p1 = new NpgsqlParameter("@IdentityProviderCode", dto.IdentityProviderCode);
+		var p2 = new NpgsqlParameter("@ProviderSubject", dto.ProviderSubject);
+		var p3 = new NpgsqlParameter("@Email", (object?)dto.Email ?? DBNull.Value);
+		var p4 = new NpgsqlParameter("@DisplayName", (object?)dto.DisplayName ?? DBNull.Value);
+		var p5 = new NpgsqlParameter("@Anumber", dto.Anumber);
+		var p6 = new NpgsqlParameter("@StoreId", dto.StoreId);		
 
-		var outUserId = new SqlParameter("@UserId", SqlDbType.UniqueIdentifier)
+		var outUserId = new NpgsqlParameter("@UserId", SqlDbType.UniqueIdentifier)
 		{
 			Direction = ParameterDirection.Output
 		};

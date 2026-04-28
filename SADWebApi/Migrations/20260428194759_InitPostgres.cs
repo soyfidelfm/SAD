@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace SADWebApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitPostgres : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,11 +26,11 @@ namespace SADWebApi.Migrations
                 schema: "catalog",
                 columns: table => new
                 {
-                    CreditCardProductId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductCode = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    ProductName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    CreditCardProductId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProductCode = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
+                    ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,10 +42,10 @@ namespace SADWebApi.Migrations
                 schema: "catalog",
                 columns: table => new
                 {
-                    IdentityProviderId = table.Column<byte>(type: "tinyint", nullable: false),
-                    ProviderCode = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
-                    ProviderName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IdentityProviderId = table.Column<byte>(type: "smallint", nullable: false),
+                    ProviderCode = table.Column<string>(type: "character varying(20)", unicode: false, maxLength: 20, nullable: false),
+                    ProviderName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,11 +57,11 @@ namespace SADWebApi.Migrations
                 schema: "catalog",
                 columns: table => new
                 {
-                    MembershipProductId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductCode = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    ProductName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    MembershipProductId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProductCode = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
+                    ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,15 +69,37 @@ namespace SADWebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Sales",
+                schema: "sales",
+                columns: table => new
+                {
+                    SaleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StoreId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SaleDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Subtotal = table.Column<decimal>(type: "numeric(12,2)", precision: 12, scale: 2, nullable: false),
+                    Tax = table.Column<decimal>(type: "numeric(12,2)", precision: 12, scale: 2, nullable: false),
+                    Total = table.Column<decimal>(type: "numeric(12,2)", precision: 12, scale: 2, nullable: false),
+                    PaymentMethod = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: true),
+                    Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sales", x => x.SaleId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SaleStatus",
                 schema: "catalog",
                 columns: table => new
                 {
-                    StatusId = table.Column<byte>(type: "tinyint", nullable: false),
-                    StatusCode = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
-                    StatusName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IsFinal = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    StatusId = table.Column<byte>(type: "smallint", nullable: false),
+                    StatusCode = table.Column<string>(type: "character varying(20)", unicode: false, maxLength: 20, nullable: false),
+                    StatusName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    IsFinal = table.Column<bool>(type: "boolean", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,11 +111,11 @@ namespace SADWebApi.Migrations
                 schema: "catalog",
                 columns: table => new
                 {
-                    StoreId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StoreNumber = table.Column<int>(type: "int", nullable: false),
-                    StoreName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    StoreId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StoreNumber = table.Column<int>(type: "integer", nullable: false),
+                    StoreName = table.Column<string>(type: "text", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,12 +127,14 @@ namespace SADWebApi.Migrations
                 schema: "auth",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    LastLoginAtUtc = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: true),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DisplayName = table.Column<string>(type: "text", nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    LastLoginAtUtc = table.Column<DateTime>(type: "timestamp(0) with time zone", precision: 0, nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp(0) with time zone", precision: 0, nullable: false),
+                    StoreId = table.Column<int>(type: "integer", nullable: true),
+                    Anumber = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -122,18 +147,18 @@ namespace SADWebApi.Migrations
                 columns: table => new
                 {
                     CreditCardApplicationId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StoreId = table.Column<int>(type: "int", nullable: false),
-                    CreditCardProductId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<byte>(type: "tinyint", nullable: false),
-                    SubmittedAtUtc = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StoreId = table.Column<int>(type: "integer", nullable: false),
+                    CreditCardProductId = table.Column<int>(type: "integer", nullable: false),
+                    StatusId = table.Column<byte>(type: "smallint", nullable: false),
+                    SubmittedAtUtc = table.Column<DateTime>(type: "timestamp(0) with time zone", precision: 0, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CreditCardApplications", x => x.CreditCardApplicationId);
                     table.ForeignKey(
-                        name: "FK_CreditCardApplications_CreditCardProducts_CreditCardProductId",
+                        name: "FK_CreditCardApplications_CreditCardProducts_CreditCardProduct~",
                         column: x => x.CreditCardProductId,
                         principalSchema: "catalog",
                         principalTable: "CreditCardProducts",
@@ -168,12 +193,12 @@ namespace SADWebApi.Migrations
                 columns: table => new
                 {
                     MembershipSaleId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StoreId = table.Column<int>(type: "int", nullable: false),
-                    MembershipProductId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<byte>(type: "tinyint", nullable: false),
-                    SoldAtUtc = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StoreId = table.Column<int>(type: "integer", nullable: false),
+                    MembershipProductId = table.Column<int>(type: "integer", nullable: false),
+                    StatusId = table.Column<byte>(type: "smallint", nullable: false),
+                    SoldAtUtc = table.Column<DateTime>(type: "timestamp(0) with time zone", precision: 0, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -209,16 +234,52 @@ namespace SADWebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserDailySettings",
+                schema: "catalog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SettingDate = table.Column<DateTime>(type: "date", nullable: false),
+                    SalesGoalAmount = table.Column<decimal>(type: "numeric(12,2)", precision: 12, scale: 2, nullable: false),
+                    AppsGoal = table.Column<int>(type: "integer", nullable: false),
+                    MembershipsGoal = table.Column<int>(type: "integer", nullable: false),
+                    StoreId = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserDailySettings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserDailySettings_Stores_StoreId",
+                        column: x => x.StoreId,
+                        principalSchema: "catalog",
+                        principalTable: "Stores",
+                        principalColumn: "StoreId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserDailySettings_Users_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "auth",
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserExternalLogins",
                 schema: "auth",
                 columns: table => new
                 {
                     UserExternalLoginId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdentityProviderId = table.Column<byte>(type: "tinyint", nullable: false),
-                    ProviderSubject = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdentityProviderId = table.Column<byte>(type: "smallint", nullable: false),
+                    ProviderSubject = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "timestamp(0) with time zone", precision: 0, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -309,6 +370,18 @@ namespace SADWebApi.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Sales_StoreId_SaleDate",
+                schema: "sales",
+                table: "Sales",
+                columns: new[] { "StoreId", "SaleDate" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sales_UserId_SaleDate",
+                schema: "sales",
+                table: "Sales",
+                columns: new[] { "UserId", "SaleDate" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SaleStatus_StatusCode",
                 schema: "catalog",
                 table: "SaleStatus",
@@ -320,6 +393,19 @@ namespace SADWebApi.Migrations
                 schema: "catalog",
                 table: "Stores",
                 column: "StoreNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserDailySettings_StoreId",
+                schema: "catalog",
+                table: "UserDailySettings",
+                column: "StoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserDailySettings_UserId_SettingDate",
+                schema: "catalog",
+                table: "UserDailySettings",
+                columns: new[] { "UserId", "SettingDate" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -340,7 +426,7 @@ namespace SADWebApi.Migrations
                 schema: "auth",
                 table: "Users",
                 column: "Email",
-                filter: "[Email] IS NOT NULL");
+                filter: "\"Email\" IS NOT NULL");
         }
 
         /// <inheritdoc />
@@ -353,6 +439,14 @@ namespace SADWebApi.Migrations
             migrationBuilder.DropTable(
                 name: "MembershipSales",
                 schema: "sales");
+
+            migrationBuilder.DropTable(
+                name: "Sales",
+                schema: "sales");
+
+            migrationBuilder.DropTable(
+                name: "UserDailySettings",
+                schema: "catalog");
 
             migrationBuilder.DropTable(
                 name: "UserExternalLogins",
