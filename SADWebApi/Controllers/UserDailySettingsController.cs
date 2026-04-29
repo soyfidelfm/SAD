@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SADWebApi.Contracts.UserDailySettings;
 using SADWebApi.Services.Sales;
 using System.Security.Claims;
@@ -34,23 +34,21 @@ namespace SADWebApi.Controllers
 			return Ok(item);
 		}
 
-		[HttpGet("today")]
-		public async Task<ActionResult<UserDailySettingDto>> GetTodayByUser()
-		{
-			var userIdRaw = User.FindFirst("uid")?.Value
-					?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    [HttpGet("today")]
+    public async Task<ActionResult<UserDailySettingDto?>> GetTodayByUser()
+    {
+      var userIdRaw = User.FindFirst("uid")?.Value
+        ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (string.IsNullOrWhiteSpace(userIdRaw) || !Guid.TryParse(userIdRaw, out var userId))
-				return Unauthorized("Invalid or missing user id in token.");
-			var item = await _service.GetTodayByUserAsync(userId);
+      if (string.IsNullOrWhiteSpace(userIdRaw) || !Guid.TryParse(userIdRaw, out var userId))
+        return Unauthorized("Invalid or missing user id in token.");
 
-			if (item is null)
-				return NotFound();
+      var item = await _service.GetTodayByUserAsync(userId);
 
-			return Ok(item);
-		}
+      return Ok(item);
+    }
 
-		[HttpPost]
+    [HttpPost]
 		public async Task<ActionResult<UserDailySettingDto>> Create(CreateUserDailySettingDto dto)
 		{
 			var userIdRaw = User.FindFirst("uid")?.Value
