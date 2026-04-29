@@ -12,38 +12,33 @@ public class AuthService : IAuthService
 
 	public AuthService(SadDbContext db) => _db = db;
 
-	public async Task<Guid> UpsertUserFromExternalLoginAsync(
-		ExternalLoginRequestDto dto,
-		CancellationToken ct)
-	{
-		var p1 = new NpgsqlParameter("@IdentityProviderCode", dto.IdentityProviderCode);
-		var p2 = new NpgsqlParameter("@ProviderSubject", dto.ProviderSubject);
-		var p3 = new NpgsqlParameter("@Email", (object?)dto.Email ?? DBNull.Value);
-		var p4 = new NpgsqlParameter("@DisplayName", (object?)dto.DisplayName ?? DBNull.Value);
-		var p5 = new NpgsqlParameter("@Anumber", dto.Anumber);
-		var p6 = new NpgsqlParameter("@StoreId", dto.StoreId);		
+  public async Task<Guid> UpsertUserFromExternalLoginAsync(
+    ExternalLoginRequestDto dto,
+    CancellationToken ct)
+  {
+    var userId = await _db.Database
+        .SqlQueryRaw<Guid>(@"
+            SELECT auth.upsert_user_from_external_login(
+                @IdentityProviderCode,
+                @ProviderSubject,
+                @Email,
+                @DisplayName,
+                @StoreId,
+                @Anumber
+            ) AS ""Value""
+        ",
+        new NpgsqlParameter("@IdentityProviderCode", dto.IdentityProviderCode),
+        new NpgsqlParameter("@ProviderSubject", dto.ProviderSubject),
+        new NpgsqlParameter("@Email", (object?)dto.Email ?? DBNull.Value),
+        new NpgsqlParameter("@DisplayName", (object?)dto.DisplayName ?? DBNull.Value),
+        new NpgsqlParameter("@StoreId", dto.StoreId),
+        new NpgsqlParameter("@Anumber", dto.Anumber))
+        .FirstAsync(ct);
 
-		var outUserId = new NpgsqlParameter("@UserId", SqlDbType.UniqueIdentifier)
-		{
-			Direction = ParameterDirection.Output
-		};
+    return userId;
+  }
 
-		await _db.Database.ExecuteSqlRawAsync(@"
-    EXEC auth.UpsertUserFromExternalLogin
-        @IdentityProviderCode,
-        @ProviderSubject,
-        @Email,
-        @DisplayName,
-        @StoreId,
-        @Anumber,
-        @UserId OUTPUT
-", new[] { p1, p2, p3, p4, p6, p5, outUserId }, ct);
-
-
-		return (Guid)outUserId.Value!;
-	}
-
-	public async Task<UserDto?> GetUserByIdAsync(
+  public async Task<UserDto?> GetUserByIdAsync(
 		Guid userId,
 		CancellationToken ct)
 	{
