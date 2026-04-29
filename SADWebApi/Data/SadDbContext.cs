@@ -85,14 +85,14 @@ public class SadDbContext : DbContext
 			e.Property(x => x.SalesGoalAmount)
 				.HasPrecision(12, 2);
 
-			e.Property(x => x.CreatedAt)
-				.HasColumnType("timestamp without time zone");
+      e.Property(x => x.CreatedAt)
+  .HasColumnType("timestamp with time zone");
 
-			e.Property(x => x.UpdatedAt)
-				.HasColumnType("timestamp without time zone");
+      e.Property(x => x.UpdatedAt)
+        .HasColumnType("timestamp with time zone");
 
-			// FK -> Users (auth schema)
-			e.HasOne(x => x.User)
+      // FK -> Users (auth schema)
+      e.HasOne(x => x.User)
 				.WithMany()
 				.HasForeignKey(x => x.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
