@@ -1,4 +1,4 @@
-﻿using Sad.Api.Data.Entities;
+using Sad.Api.Data.Entities;
 
 namespace SADWebApi.Data.Entities
 {
@@ -7,9 +7,9 @@ namespace SADWebApi.Data.Entities
 		public int Id { get; set; }
 
 		public Guid UserId { get; set; }
-		public DateTime SettingDate { get; set; }
+    public DateOnly SettingDate { get; set; }
 
-		public decimal SalesGoalAmount { get; set; }
+    public decimal SalesGoalAmount { get; set; }
 		public int AppsGoal { get; set; }
 		public int MembershipsGoal { get; set; }
 

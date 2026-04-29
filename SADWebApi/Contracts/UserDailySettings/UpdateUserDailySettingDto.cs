@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace SADWebApi.Contracts.UserDailySettings
 {
 	public class UpdateUserDailySettingDto
 	{
 		[Required]
-		public DateTime SettingDate { get; set; }
+		public DateOnly SettingDate { get; set; }
 
 		[Range(0, 9999999999.99)]
 		public decimal SalesGoalAmount { get; set; }
