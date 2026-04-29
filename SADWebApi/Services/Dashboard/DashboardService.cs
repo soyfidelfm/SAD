@@ -38,8 +38,8 @@ public sealed class DashboardService : IDashboardService
 
     var (startUtcRaw, endUtcRaw) = DateTimeHelper.GetTodayUtcFromPst();
 
-    var startUtc = DateTime.SpecifyKind(startUtcRaw, DateTimeKind.Unspecified);
-    var endUtc = DateTime.SpecifyKind(endUtcRaw, DateTimeKind.Unspecified);
+    var startUtc = DateTime.SpecifyKind(startUtcRaw, DateTimeKind.Utc);
+    var endUtc = DateTime.SpecifyKind(endUtcRaw, DateTimeKind.Utc);
 
     var todaySalesTotal = await _db.Sales
       .AsNoTracking()
@@ -95,8 +95,8 @@ public sealed class DashboardService : IDashboardService
   {
     var (startUtcRaw, endUtcRaw) = DateTimeHelper.GetTodayUtcFromPst();
 
-    var startUtc = DateTime.SpecifyKind(startUtcRaw, DateTimeKind.Unspecified);
-    var endUtc = DateTime.SpecifyKind(endUtcRaw, DateTimeKind.Unspecified);
+    var startUtc = DateTime.SpecifyKind(startUtcRaw, DateTimeKind.Utc);
+    var endUtc = DateTime.SpecifyKind(endUtcRaw, DateTimeKind.Utc);
 
     var pacificZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
