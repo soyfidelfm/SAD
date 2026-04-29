@@ -1,4 +1,5 @@
-﻿using Sad.Api.Contracts.Sales;
+using Sad.Api.Contracts.Sales;
+using System.Security.Cryptography.X509Certificates;
 
 public record DashboardSummaryDto(
 	CreditCardApplicationsSummaryDto CreditCards,

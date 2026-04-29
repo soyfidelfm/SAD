@@ -13,7 +13,6 @@ export interface UserDailySetting {
 }
 
 export interface CreateUserDailySetting {
-  userId: string;
   settingDate: string;
   salesGoalAmount: number;
   appsGoal: number;

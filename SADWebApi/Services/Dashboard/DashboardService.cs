@@ -12,15 +12,17 @@ public sealed class DashboardService : IDashboardService
   private readonly SadDbContext _db;
   private readonly ICreditCardApplicationsService _creditCardSvc;
   private readonly IMembershipSalesService _membershipSvc;
+  private readonly ISalesService _salesSvc;
 
   public DashboardService(
     SadDbContext db,
     ICreditCardApplicationsService creditCardSvc,
-    IMembershipSalesService membershipSvc)
+    IMembershipSalesService membershipSvc, ISalesService salesSvc)
   {
     _db = db;
     _creditCardSvc = creditCardSvc;
     _membershipSvc = membershipSvc;
+    _salesSvc = salesSvc;
   }
 
   public async Task<DashboardSummaryDto> GetDashboardSummaryAsync(Guid userId, CancellationToken ct)
@@ -52,6 +54,8 @@ public sealed class DashboardService : IDashboardService
       new TodaySalesSummaryDto(todaySalesTotal)
     );
   }
+
+  
 
   public async Task<IEnumerable<SalesByHourDto>> GetTodaySalesByHourAsync(Guid userId, CancellationToken ct)
   {

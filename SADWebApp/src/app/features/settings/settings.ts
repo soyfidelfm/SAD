@@ -56,8 +56,6 @@ export class SettingsComponent implements OnInit {
     'actions'
   ];
 
-  // ⚠️ cámbialo luego por el user real desde token / auth service
-  userId = '';
 
   form = this.fb.group({
     settingDate: [this.getTodayDate(), Validators.required],
@@ -72,8 +70,6 @@ export class SettingsComponent implements OnInit {
     this.loadStores();
     this.loadSettings();
 
-    // ⚠️ temporal: aquí pon el GUID real del usuario autenticado
-    this.userId = '00000000-0000-0000-0000-000000000000';
 
     this.loadTodaySettings();
   }
@@ -112,7 +108,6 @@ export class SettingsComponent implements OnInit {
   }
 
   loadTodaySettings(): void {
-    if (!this.userId) return;
 
     this.loading = true;
     this.errorMessage = '';
@@ -148,7 +143,7 @@ export class SettingsComponent implements OnInit {
   }
 
   submit(): void {
-    if (this.form.invalid || !this.userId) {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
@@ -185,7 +180,7 @@ export class SettingsComponent implements OnInit {
     }
 
     const createPayload: CreateUserDailySetting = {
-      userId: this.userId,
+      
       settingDate: this.form.value.settingDate ?? this.getTodayDate(),
       salesGoalAmount: Number(this.form.value.salesGoalAmount ?? 0),
       appsGoal: Number(this.form.value.appsGoal ?? 0),
