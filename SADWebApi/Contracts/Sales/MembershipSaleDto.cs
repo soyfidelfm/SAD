@@ -1,4 +1,4 @@
-﻿namespace Sad.Api.Contracts.Sales;
+namespace Sad.Api.Contracts.Sales;
 
 public record MembershipSaleDto(
     long MembershipSaleId,
@@ -6,5 +6,6 @@ public record MembershipSaleDto(
     int StoreId,
     int MembershipProductId,
     byte StatusId,
+    string StatusName,
     DateTime SoldAtUtc
 );

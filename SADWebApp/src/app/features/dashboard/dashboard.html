@@ -212,9 +212,9 @@
   <div class="card">
     <div class="card-header">
       <div>
-        <div class="card-title">Latest Credit Card Applications</div>
+        <div class="card-title">Latest Transactions</div>
         <div class="card-subtitle">
-          Most recent submitted applications
+          Most recent submitted transactions, including credit card applications, memberships and sales.
         </div>
       </div>      
     </div>
@@ -228,43 +228,44 @@
     </div>
 
     <div
-      *ngIf="!loadingLatest && !latestError && latestCreditApps.length === 0"
+      *ngIf="!loadingLatest && !latestError && latestTransactions.length === 0"
       class="empty-state">
       No records yet.
     </div>
 
     <div
-      *ngIf="!loadingLatest && latestCreditApps.length > 0"
+      *ngIf="!loadingLatest && latestTransactions.length > 0"
       class="table-wrapper">
 
       <table class="app-table">
         <thead>
           <tr>
-            <th>Store</th>
-            <th>Approved</th>
+            <th>Transaction</th>
+            <th>Status</th>
             <th>Date</th>
           </tr>
         </thead>
 
         <tbody>
           <tr
-            *ngFor="let x of latestCreditApps; trackBy: trackById">
+            *ngFor="let x of latestTransactions; traclkBy: trackById">
 
             <td>
-              {{ x.storeNumber }} - {{ x.storeName }}
+              {{ x.transactionName }}
             </td>
 
             <td>
-              <span
+                {{ x.status }}
+              <!-- <span
                 class="badge"
                 [ngClass]="x.statusId == 1 ? 'badge-success' : 'badge-danger'">
 
                 {{ x.statusId == 1 ? 'Approved' : 'Not approved' }}
-              </span>
+              </span> -->
             </td>
 
             <td>
-              {{ x.submittedAtUtc | date:'short' }}
+              {{ x.transactionDate| date:'short' }}
             </td>
           </tr>
         </tbody>

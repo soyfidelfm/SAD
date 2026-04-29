@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Sad.Api.Contracts.Sales;
 using Sad.Api.Data;
 using Sad.Api.Data.Entities.Sales;
@@ -45,8 +45,7 @@ public class SalesService : ISalesService
 
 		return sale is null ? null : ToDto(sale);
 	}
-
-	public async Task<IReadOnlyList<SaleDto>> GetAsync(
+  public async Task<IReadOnlyList<SaleDto>> GetAsync(
 		int? storeId,
 		Guid? userId,
 		DateTime? fromLocal,
@@ -152,4 +151,15 @@ public class SalesService : ISalesService
 			s.CreatedAt,
 			s.UpdatedAt
 		);
+
+  public async Task<IReadOnlyList<SaleDto>> GetLatestAsync(int top, CancellationToken ct,  Guid? userId = null)
+  {
+    return await _db.Sales
+      .AsNoTracking()
+      .Where(x => !userId.HasValue || x.UserId == userId.Value)
+      .OrderByDescending(x => x.SaleDate)
+      .Take(top)
+      .Select(x => ToDto(x))
+      .ToListAsync(ct);
+  }
 }

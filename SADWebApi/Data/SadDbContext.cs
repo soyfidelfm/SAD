@@ -139,70 +139,134 @@ public class SadDbContext : DbContext
             e.HasIndex(x => x.UserId);
         });
 
-        // ===== sales =====
-        modelBuilder.Entity<SalesCreditCardApplication>(e =>
-        {
-            e.ToTable("CreditCardApplications", "sales");
-            e.HasKey(x => x.CreditCardApplicationId);
-            e.Property(x => x.SubmittedAtUtc).HasPrecision(0);
+    // ===== sales =====
+    // ===== sales =====
+    modelBuilder.Entity<SalesCreditCardApplication>(e =>
+    {
+      e.ToTable("CreditCardApplications", "sales");
+      e.HasKey(x => x.CreditCardApplicationId);
 
-            e.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
-            e.HasOne(x => x.Store).WithMany().HasForeignKey(x => x.StoreId);
-            e.HasOne(x => x.CreditCardProduct).WithMany().HasForeignKey(x => x.CreditCardProductId);
-            e.HasOne(x => x.Status).WithMany(s => s.CreditCardApplications).HasForeignKey(x => x.StatusId);
-        });
+      e.Property(x => x.SubmittedAtUtc)
+          .HasColumnType("timestamp with time zone")
+          .HasPrecision(0);
 
-        modelBuilder.Entity<SalesMembershipSale>(e =>
-        {
-            e.ToTable("MembershipSales", "sales");
-            e.HasKey(x => x.MembershipSaleId);
-            e.Property(x => x.SoldAtUtc).HasPrecision(0);
+      e.HasOne(x => x.User)
+          .WithMany()
+          .HasForeignKey(x => x.UserId)
+          .OnDelete(DeleteBehavior.Restrict);
 
-            e.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
-            e.HasOne(x => x.Store).WithMany().HasForeignKey(x => x.StoreId);
-            e.HasOne(x => x.MembershipProduct).WithMany().HasForeignKey(x => x.MembershipProductId);
-            e.HasOne(x => x.Status).WithMany(s => s.MembershipSales).HasForeignKey(x => x.StatusId);
-        });
+      e.HasOne(x => x.Store)
+          .WithMany()
+          .HasForeignKey(x => x.StoreId)
+          .OnDelete(DeleteBehavior.Restrict);
 
-		modelBuilder.Entity<Sale>(e =>
-		{
-			e.ToTable("Sales", "sales");
-			e.HasKey(x => x.SaleId);
+      e.HasOne(x => x.CreditCardProduct)
+          .WithMany()
+          .HasForeignKey(x => x.CreditCardProductId)
+          .OnDelete(DeleteBehavior.Restrict);
 
-			e.Property(x => x.SaleId).ValueGeneratedOnAdd();
+      e.HasOne(x => x.Status)
+          .WithMany(s => s.CreditCardApplications)
+          .HasForeignKey(x => x.StatusId)
+          .OnDelete(DeleteBehavior.Restrict);
 
-			e.Property(x => x.SaleDate)
-				.HasColumnType("timestamp without time zone");
+      e.HasIndex(x => new { x.UserId, x.SubmittedAtUtc });
+      e.HasIndex(x => new { x.StoreId, x.SubmittedAtUtc });
+      e.HasIndex(x => x.StatusId);
+    });
 
-			e.Property(x => x.Subtotal)
-				.HasPrecision(12, 2);
+    modelBuilder.Entity<SalesMembershipSale>(e =>
+    {
+      e.ToTable("MembershipSales", "sales");
+      e.HasKey(x => x.MembershipSaleId);
 
-			e.Property(x => x.Tax)
-				.HasPrecision(12, 2);
+      e.Property(x => x.SoldAtUtc)
+          .HasColumnType("timestamp with time zone")
+          .HasPrecision(0);
 
-			// Computed column
-			e.Property(x => x.Total)
-				.HasPrecision(12, 2)
-				.ValueGeneratedOnAddOrUpdate();
+      e.HasOne(x => x.User)
+          .WithMany()
+          .HasForeignKey(x => x.UserId)
+          .OnDelete(DeleteBehavior.Restrict);
 
-			e.Property(x => x.PaymentMethod)
-				.HasMaxLength(30)
-				.IsUnicode(false);
+      e.HasOne(x => x.Store)
+          .WithMany()
+          .HasForeignKey(x => x.StoreId)
+          .OnDelete(DeleteBehavior.Restrict);
 
-			e.Property(x => x.Notes)
-				.HasMaxLength(500)
-				.IsUnicode(true);
+      e.HasOne(x => x.MembershipProduct)
+          .WithMany()
+          .HasForeignKey(x => x.MembershipProductId)
+          .OnDelete(DeleteBehavior.Restrict);
 
-			e.Property(x => x.CreatedAt)
-				.HasColumnType("timestamp without time zone");
+      e.HasOne(x => x.Status)
+          .WithMany(s => s.MembershipSales)
+          .HasForeignKey(x => x.StatusId)
+          .OnDelete(DeleteBehavior.Restrict);
 
-			e.Property(x => x.UpdatedAt)
-				.HasColumnType("timestamp without time zone");
+      e.HasIndex(x => new { x.UserId, x.SoldAtUtc });
+      e.HasIndex(x => new { x.StoreId, x.SoldAtUtc });
+      e.HasIndex(x => x.StatusId);
+    });
 
-			e.HasIndex(x => new { x.StoreId, x.SaleDate });
-			e.HasIndex(x => new { x.UserId, x.SaleDate });
-		});
-	}
+    modelBuilder.Entity<Sale>(e =>
+    {
+      e.ToTable("Sales", "sales");
+      e.HasKey(x => x.SaleId);
+
+      e.Property(x => x.SaleId)
+          .ValueGeneratedOnAdd();
+
+      e.Property(x => x.SaleDate)
+          .HasColumnType("timestamp with time zone")
+          .HasPrecision(0);
+
+      e.Property(x => x.Subtotal)
+          .HasPrecision(12, 2);
+
+      e.Property(x => x.Tax)
+          .HasPrecision(12, 2);
+
+      e.Property(x => x.Total)
+          .HasPrecision(12, 2)
+          .ValueGeneratedOnAddOrUpdate();
+
+      e.Property(x => x.PaymentMethod)
+          .HasMaxLength(30)
+          .IsUnicode(false);
+
+      e.Property(x => x.Notes)
+          .HasMaxLength(500)
+          .IsUnicode(true);
+
+      e.Property(x => x.CreatedAt)
+          .HasColumnType("timestamp with time zone")
+          .HasPrecision(0);
+
+      e.Property(x => x.UpdatedAt)
+          .HasColumnType("timestamp with time zone")
+          .HasPrecision(0);
+
+      e.HasOne(x => x.User)
+          .WithMany()
+          .HasForeignKey(x => x.UserId)
+          .OnDelete(DeleteBehavior.Restrict);
+
+      e.HasOne(x => x.Store)
+          .WithMany()
+          .HasForeignKey(x => x.StoreId)
+          .OnDelete(DeleteBehavior.Restrict);
+
+      e.HasOne(x => x.Status)
+    .WithMany()
+    .HasForeignKey(x => x.StatusId)
+    .OnDelete(DeleteBehavior.Restrict);
+
+      e.HasIndex(x => new { x.StoreId, x.SaleDate });
+      e.HasIndex(x => new { x.UserId, x.SaleDate });
+      e.HasIndex(x => x.StatusId);
+    });
+  }
 }
 
 

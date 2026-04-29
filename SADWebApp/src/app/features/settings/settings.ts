@@ -69,8 +69,6 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.loadStores();
     this.loadSettings();
-
-
     this.loadTodaySettings();
   }
 
@@ -168,6 +166,7 @@ export class SettingsComponent implements OnInit {
           this.successMessage = 'Settings updated successfully.';
           this.loadTodaySettings();
           this.resetForm();
+          this.loadSettings();
         },
         error: (err) => {
           this.saving = false;
@@ -197,6 +196,7 @@ export class SettingsComponent implements OnInit {
         this.isEditMode = true;
         this.mapForm(created);
         this.resetForm();
+        this.loadSettings();
       },
       error: (err) => {
         this.saving = false;

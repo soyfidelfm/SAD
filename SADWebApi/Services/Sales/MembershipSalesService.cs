@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Sad.Api.Contracts.Sales;
 using Sad.Api.Data;
 using Sad.Api.Data.Entities;
@@ -32,10 +32,11 @@ public class MembershipSalesService : IMembershipSalesService
 		return entity.MembershipSaleId;
 	}
 
-    public async Task<IReadOnlyList<MembershipSaleDto>> GetLatestAsync(int top, CancellationToken ct)
+    public async Task<IReadOnlyList<MembershipSaleDto>> GetLatestAsync(int top, CancellationToken ct, Guid? userId = null)
     {
         return await _db.MembershipSales
             .AsNoTracking()
+            .Where(x => !userId.HasValue || x.UserId == userId.Value)
             .OrderByDescending(x => x.SoldAtUtc)
             .Take(top)
             .Select(x => new MembershipSaleDto(
@@ -44,6 +45,7 @@ public class MembershipSalesService : IMembershipSalesService
                 x.StoreId,
                 x.MembershipProductId,
                 x.StatusId,
+                x.Status.StatusName,
                 x.SoldAtUtc
             ))
             .ToListAsync(ct);

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sad.Api.Services.Dashboard;
 using SADWebApi.Contracts.Dashboard;
@@ -37,7 +37,16 @@ public class DashboardController : ControllerBase
 
 		return userId;
 	}
-	[HttpGet("today/by-hour")]
+
+  [HttpGet("latestTransactions")]
+  public async Task<ActionResult<IEnumerable<LatestTransactionDto>>> GetLatestTransactions(int top, CancellationToken ct)
+  {
+    var userId = GetUserIdFromClaims();
+    var transactions = await _dashboard.GetLastTransactionsAsync(top, ct, userId);
+    return Ok(transactions);
+  }
+
+  [HttpGet("today/by-hour")]
 	public async Task<ActionResult<IEnumerable<SalesByHourDto>>> GetTodaySalesByHour(
 	
 	CancellationToken ct)

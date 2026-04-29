@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sad.Api.Contracts.Sales;
 using Sad.Api.Security;
@@ -26,7 +26,15 @@ public class SalesController : ControllerBase
 		return CreatedAtAction(nameof(GetById), new { saleId = created.SaleId }, created);
 	}
 
-	[HttpGet("{saleId:guid}")]
+  [HttpGet("latest")]
+  public async Task<ActionResult<SaleDto>> GetLatest(int top, CancellationToken ct)
+  {
+    var userId = User.GetUserIdOrThrow();
+    var latest = await _sales.GetLatestAsync(top, ct, userId);
+    return latest is null ? NotFound() : Ok(latest);
+  }
+
+  [HttpGet("{saleId:guid}")]
 	public async Task<ActionResult<SaleDto>> GetById(Guid saleId, CancellationToken ct)
 	{
 		var sale = await _sales.GetByIdAsync(saleId, ct);

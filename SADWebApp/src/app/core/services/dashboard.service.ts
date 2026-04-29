@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
 import { DashboardSummaryDto } from '../models/dashboard.models';
+import { LatestTransactionDto } from '../models/latest-transaction.model';
 import { API_BASE_URL } from './api.config';
 
 export interface SalesByHour {
@@ -37,6 +38,16 @@ export class DashboardService {
 
     return this.http.get<DashboardSummaryDto>(`${this.baseUrl}/summary`);
   }
+
+  getLatestTransactions(top: number = 10): Observable<LatestTransactionDto[]> {
+  if (!this.isBrowser) {
+    return of([]);
+  }
+
+  return this.http.get<LatestTransactionDto[]>(
+    `${this.baseUrl}/latestTransactions?top=${top}`
+  );
+}
 
   getTodaySalesByHour(): Observable<SalesByHour[]> {
     if (!this.isBrowser) {

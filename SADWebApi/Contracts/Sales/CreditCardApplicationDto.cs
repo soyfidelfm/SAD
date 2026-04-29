@@ -1,4 +1,4 @@
-﻿namespace Sad.Api.Contracts.Sales;
+namespace Sad.Api.Contracts.Sales;
 
 public record CreditCardApplicationDto(
     long CreditCardApplicationId,
@@ -6,6 +6,7 @@ public record CreditCardApplicationDto(
     int StoreId,
     int CreditCardProductId,
     byte StatusId,
+    string StatusName,
     DateTime SubmittedAtUtc,
     string StoreName,
     int StoreNumber

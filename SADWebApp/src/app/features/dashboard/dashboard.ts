@@ -19,6 +19,8 @@ import { SaleCreateDto } from '../../core/models/sale.model';
 
 import { UserDailySettingsService } from '../../core/services/user-daily-settings.service';
 
+import { LatestTransactionDto } from '../../core/models/latest-transaction.model';
+
 @Component({
   standalone: true,
   imports: [CommonModule, AddPopupComponent],
@@ -48,19 +50,21 @@ export class DashboardComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
+  
+
   // popup
   popupOpen = false;
   popupMode: AddPopupMode = 'credit';
 
   // latest list
-  latestCreditApps: CreditCardApplicationDto[] = [];
+  latestTransactions: LatestTransactionDto[] = [];
   loadingLatest = false;
   latestError = '';
 
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
-    this.loadLatestCreditApps();
+    this.loadLatestTransactions();
     this.loadSalesByHour();
     this.loadSettings();
   }
@@ -115,7 +119,7 @@ export class DashboardComponent implements OnInit {
         next: (id) => {
 
           // refresca tabla
-          this.loadLatestCreditApps();
+          this.loadLatestTransactions();
 
           // ✅ refresca summary (3 cards) para que el total suba al instante
           this.refreshSummary();
@@ -186,21 +190,15 @@ export class DashboardComponent implements OnInit {
   // ----------------------------
   // LATEST CREDIT APPS
   // ----------------------------
-  loadLatestCreditApps(): void {
-    this.loadingLatest = true;
-    this.latestError = '';
-
-    this.creditService.getLatest(10).subscribe({
-      next: (items) => {
-        this.latestCreditApps = items ?? [];
-        this.loadingLatest = false;
-      },
-      error: (err) => {
-        console.error('❌ Error loading latest credit applications', err);
-        this.latestError = 'Error loading latest credit card applications.';
-        this.loadingLatest = false;
-      }
-    });
+  loadLatestTransactions(): void {
+    this.dashboardService.getLatestTransactions(10).subscribe({
+  next: (data) => {
+    this.latestTransactions = data;
+  },
+  error: (err) => {
+    console.error(err);
+  }
+});
   }
 
   loadSettings(): void {
@@ -221,7 +219,7 @@ export class DashboardComponent implements OnInit {
 
   // ✅ helper: vuelve a pedir el summary al API
   refreshSummary(): void {
-    this.loadLatestCreditApps();
+    this.loadLatestTransactions();
     this.loadSalesByHour();
     this.loadSettings();
   }

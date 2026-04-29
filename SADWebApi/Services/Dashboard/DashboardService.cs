@@ -55,7 +55,41 @@ public sealed class DashboardService : IDashboardService
     );
   }
 
-  
+  public async Task<IEnumerable<LatestTransactionDto>> GetLastTransactionsAsync(int top, CancellationToken ct, Guid? userId = null)
+  {
+    var creditCardTransactions = await _creditCardSvc.GetLatestAsync(top, ct, userId);
+    var membershipTransactions = await _membershipSvc.GetLatestAsync(top, ct, userId);
+    var salesTransactions = await _salesSvc.GetLatestAsync(top, ct, userId);
+
+    // 🔹 MAPEAR cada fuente
+    var creditMapped = creditCardTransactions.Select(x => new LatestTransactionDto(
+        "Credit Card",
+        x.SubmittedAtUtc,          // <-- ajusta al campo real
+        x.StatusName         // <-- ajusta al campo real
+    ));
+
+    var membershipMapped = membershipTransactions.Select(x => new LatestTransactionDto(
+        "Membership",
+        x.SoldAtUtc,
+        x.StatusName           // o lo que aplique
+    ));
+
+    var salesMapped = salesTransactions.Select(x => new LatestTransactionDto(
+        "Sale",
+        x.SaleDate,
+        "Completed"           // o lo que aplique
+    ));
+
+    // 🔹 UNIR + ORDENAR + LIMITAR
+    return creditMapped
+        .Concat(membershipMapped)
+        .Concat(salesMapped)
+        .OrderByDescending(x => x.TransactionDate)
+        .Take(top)
+        .ToList();
+  }
+
+
 
   public async Task<IEnumerable<SalesByHourDto>> GetTodaySalesByHourAsync(Guid userId, CancellationToken ct)
   {
@@ -96,4 +130,5 @@ public sealed class DashboardService : IDashboardService
     var dt = DateTime.Today.AddHours(hour);
     return dt.ToString("h tt");
   }
+
 }
