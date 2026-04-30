@@ -232,7 +232,7 @@ export class AddPopupComponent implements OnInit, OnChanges {
         storeNumber: v.storeNumber,
         approved: v.approved,
         creditCardProductId: 1,
-        statusId: 1
+        statusId: v.approved ? 1 : 3 // 👈 FIX
       };
     } else if (this.mode === 'membership') {
       payload = {
