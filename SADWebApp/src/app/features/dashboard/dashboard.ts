@@ -178,7 +178,7 @@ export class DashboardComponent implements OnInit {
     this.loadingLatest = true;
     this.latestError = '';
 
-    this.dashboardService.getLatestTransactions(10).subscribe({
+    this.dashboardService.getLatestTransactions(5).subscribe({
       next: (data) => {
         this.latestTransactions = data;
         this.loadingLatest = false;
