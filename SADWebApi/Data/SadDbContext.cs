@@ -222,14 +222,17 @@ public class SadDbContext : DbContext
           .HasPrecision(0);
 
       e.Property(x => x.Subtotal)
-          .HasPrecision(12, 2);
+          .HasPrecision(12, 2)
+          .IsRequired();
 
       e.Property(x => x.Tax)
-          .HasPrecision(12, 2);
+          .HasPrecision(12, 2)
+          .IsRequired();
 
       e.Property(x => x.Total)
           .HasPrecision(12, 2)
-          .ValueGeneratedOnAddOrUpdate();
+          .IsRequired()
+          .ValueGeneratedNever();
 
       e.Property(x => x.PaymentMethod)
           .HasMaxLength(30)
@@ -258,9 +261,9 @@ public class SadDbContext : DbContext
           .OnDelete(DeleteBehavior.Restrict);
 
       e.HasOne(x => x.Status)
-    .WithMany()
-    .HasForeignKey(x => x.StatusId)
-    .OnDelete(DeleteBehavior.Restrict);
+          .WithMany()
+          .HasForeignKey(x => x.StatusId)
+          .OnDelete(DeleteBehavior.Restrict);
 
       e.HasIndex(x => new { x.StoreId, x.SaleDate });
       e.HasIndex(x => new { x.UserId, x.SaleDate });
