@@ -147,6 +147,35 @@
   color: var(--text-main);
 }
 
+
+/* =========================
+   VIEW ACTIONS BUTTONS
+========================= */
+
+.view-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px; // separación entre refresh y Add new
+  position: relative;
+}
+
+.view-actions .btn-secondary {
+  height: 42px;
+}
+
+.view-actions .btn-secondary:first-child {
+  width: 48px;
+  padding: 0;
+  justify-content: center;
+}
+
+.add-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 20;
+}
+
 /* =========================
    RESPONSIVE
 ========================= */
