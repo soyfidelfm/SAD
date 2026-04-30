@@ -31,7 +31,8 @@ public class SalesService : ISalesService
       PaymentMethod = dto.PaymentMethod,
       Notes = dto.Notes,
       CreatedAt = nowUtc,
-      UpdatedAt = nowUtc
+      UpdatedAt = nowUtc,
+      StatusId = 4 // Assuming 1 is the default status for a new sale
     };
 
     _db.Sales.Add(sale);
