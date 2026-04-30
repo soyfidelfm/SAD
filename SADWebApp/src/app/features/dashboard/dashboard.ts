@@ -86,14 +86,17 @@ export class DashboardComponent implements OnInit {
   onPopupSubmit(e: { mode: AddPopupMode; payload: any }): void {
     if (e.mode === 'credit') {
       this.createCreditCardApplication(e.payload);
+      this.refreshSummary();
     }
 
     if (e.mode === 'membership') {
       this.createMembership(e.payload);
+      this.refreshSummary();
     }
 
     if (e.mode === 'sale') {
       this.createSale(e.payload);
+      this.refreshSummary();
     }
   }
 
@@ -141,6 +144,8 @@ export class DashboardComponent implements OnInit {
     this.membershipSalesService.create(payload).subscribe({
       next: (membershipSaleId) => {
 
+        // refresca tabla
+          this.loadLatestTransactions();
         this.refreshSummary();
 
         // opcional
@@ -176,6 +181,8 @@ export class DashboardComponent implements OnInit {
     this.salesService.create(dto).subscribe({
       next: (sale) => {
 
+        // refresca tabla
+          this.loadLatestTransactions();
         this.refreshSummary();
 
         // opcional
