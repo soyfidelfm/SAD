@@ -15,7 +15,7 @@ public class Sale
   public decimal Subtotal { get; set; }
   public decimal Tax { get; set; }
 
-  public decimal Total { get; private set; }
+  public decimal Total { get; set; }
 
   public string? PaymentMethod { get; set; }
   public string? Notes { get; set; }

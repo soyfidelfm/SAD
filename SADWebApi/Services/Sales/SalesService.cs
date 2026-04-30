@@ -24,8 +24,9 @@ public class SalesService : ISalesService
 			UserId = userId, // ✅ desde token
 			SaleDate = saleDateUtc, // ✅ guardado UTC
 			Subtotal = dto.Subtotal,
-			Tax = dto.Tax,
-			PaymentMethod = dto.PaymentMethod,
+      Tax = dto.Tax,
+      Total = dto.Subtotal + dto.Tax, // ✅ consistente
+      PaymentMethod = dto.PaymentMethod,
 			Notes = dto.Notes,
 			CreatedAt = DateTime.UtcNow
 		};
