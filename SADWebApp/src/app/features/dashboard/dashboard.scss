@@ -164,12 +164,13 @@
   right: 0;
   z-index: 20;
   padding: var(--space-sm);
-  background: var(--bg-hover);
+  background: var(--bg-app);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   padding: 8px;
   backdrop-filter: none;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
 }
 
 .view-actions {
