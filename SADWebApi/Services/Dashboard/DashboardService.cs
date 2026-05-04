@@ -25,10 +25,14 @@ public sealed class DashboardService : IDashboardService
     _salesSvc = salesSvc;
   }
 
-  public async Task<DashboardSummaryDto> GetDashboardSummaryAsync(Guid userId, CancellationToken ct)
+  public async Task<DashboardSummaryDto> GetDashboardSummaryAsync(
+  Guid userId,
+  DateOnly date,
+  string timeZone,
+  CancellationToken ct)
   {
-    var creditCards = await _creditCardSvc.GetSummaryAsync(userId, ct);
-    var memberships = await _membershipSvc.GetSummaryAsync(userId, ct);
+    var creditCards = await _creditCardSvc.GetSummaryAsync(userId, date, timeZone, ct);
+    var memberships = await _membershipSvc.GetSummaryAsync(userId, date, timeZone, ct);
 
     var lastLoginUtc = await _db.Users
       .AsNoTracking()
@@ -36,10 +40,13 @@ public sealed class DashboardService : IDashboardService
       .Select(x => x.LastLoginAtUtc)
       .SingleOrDefaultAsync(ct);
 
-    var (startUtcRaw, endUtcRaw) = DateTimeHelper.GetTodayUtcFromPst();
+    var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
 
-    var startUtc = DateTime.SpecifyKind(startUtcRaw, DateTimeKind.Utc);
-    var endUtc = DateTime.SpecifyKind(endUtcRaw, DateTimeKind.Utc);
+    var startLocal = date.ToDateTime(TimeOnly.MinValue);
+    var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
+
+    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
+    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
 
     var todaySalesTotal = await _db.Sales
       .AsNoTracking()

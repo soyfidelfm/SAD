@@ -7,5 +7,5 @@ public interface IMembershipSalesService
 {
     Task<long> CreateAsync(Guid userId,CreateMembershipSaleDto dto, CancellationToken ct);
     Task<IReadOnlyList<MembershipSaleDto>> GetLatestAsync(int top, CancellationToken ct, Guid? userId = null);
-	Task<MembershipSalesSummaryDto> GetSummaryAsync(Guid userId, CancellationToken ct);
+	Task<MembershipSalesSummaryDto> GetSummaryAsync(Guid userId, DateOnly date, string timeZone, CancellationToken ct);
   }

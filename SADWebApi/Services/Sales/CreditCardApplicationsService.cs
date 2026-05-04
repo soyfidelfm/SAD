@@ -56,9 +56,23 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
         .ToListAsync(ct);
   }
 
-  public async Task<CreditCardApplicationsSummaryDto> GetSummaryAsync(Guid userId, CancellationToken ct)
+  public async Task<CreditCardApplicationsSummaryDto> GetSummaryAsync(
+  Guid userId,
+  DateOnly date,
+  string timeZone,
+  CancellationToken ct)
   {
-    var today = DateTime.UtcNow.Date;
+    // Fallback por si no mandan timezone
+    var tz = string.IsNullOrWhiteSpace(timeZone)
+        ? TimeZoneInfo.Utc
+        : TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+
+    // Convertir el día LOCAL a rango UTC
+    var startLocal = date.ToDateTime(TimeOnly.MinValue);
+    var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
+
+    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
+    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
 
     var query = _db.CreditCardApplications
         .AsNoTracking()
@@ -67,7 +81,7 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
     var total = await query.CountAsync(ct);
 
     var todayCount = await query
-        .Where(x => x.SubmittedAtUtc.Date == today)
+        .Where(x => x.SubmittedAtUtc >= startUtc && x.SubmittedAtUtc < endUtc)
         .CountAsync(ct);
 
     var approved = await query

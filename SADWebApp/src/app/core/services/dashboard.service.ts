@@ -28,16 +28,29 @@ export class DashboardService {
   }
 
   getSummary(): Observable<DashboardSummaryDto> {
-    if (!this.isBrowser) {
-      return of({
-        creditCards: { total: 0, today: 0, approved: 0, declined: 0, pending: 0 },
-        memberships: { total: 0, today: 0 },
-        todaySales: { todaySalesTotal: 0 }
-      });
-    }
-
-    return this.http.get<DashboardSummaryDto>(`${this.baseUrl}/summary`);
+  if (!this.isBrowser) {
+    return of({
+      creditCards: { total: 0, today: 0, approved: 0, declined: 0, pending: 0 },
+      memberships: { total: 0, today: 0 },
+      todaySales: { todaySalesTotal: 0 }
+    });
   }
+
+  const today = new Date();
+
+  const date =
+    today.getFullYear() +
+    '-' +
+    String(today.getMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(today.getDate()).padStart(2, '0');
+
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  return this.http.get<DashboardSummaryDto>(
+    `${this.baseUrl}/summary?date=${date}&timeZone=${encodeURIComponent(timeZone)}`
+  );
+}
 
   getLatestTransactions(top: number = 10): Observable<LatestTransactionDto[]> {
   if (!this.isBrowser) {

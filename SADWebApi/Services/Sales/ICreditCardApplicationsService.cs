@@ -14,5 +14,7 @@ public interface ICreditCardApplicationsService
 
   Task<CreditCardApplicationsSummaryDto> GetSummaryAsync(
       Guid userId,
+      DateOnly date,
+      string timeZone,
       CancellationToken ct);
 }

@@ -51,28 +51,38 @@ public class MembershipSalesService : IMembershipSalesService
             .ToListAsync(ct);
     }
 
-	public async Task<MembershipSalesSummaryDto> GetSummaryAsync(Guid userId, CancellationToken ct)
-	{
-		// “Hoy” definido en PST, convertido a rango UTC
-		var (startUtc, endUtc) = DateTimeHelper.GetTodayUtcFromPst();
+  public async Task<MembershipSalesSummaryDto> GetSummaryAsync(
+  Guid userId,
+  DateOnly date,
+  string timeZone,
+  CancellationToken ct)
+  {
+    // Fallback seguro
+    var tz = string.IsNullOrWhiteSpace(timeZone)
+        ? TimeZoneInfo.Utc
+        : TimeZoneInfo.FindSystemTimeZoneById(timeZone);
 
-		var r = await _db.MembershipSales
-			.AsNoTracking()
-			.Where(x =>
-				x.UserId == userId &&
-				x.SoldAtUtc >= startUtc &&
-				x.SoldAtUtc < endUtc
-			)
-			.GroupBy(_ => 1)
-			.Select(g => new
-			{
-				Total = g.Count(),
-				Today = g.Count() // ya es “hoy” por el WHERE
-			})
-			.FirstOrDefaultAsync(ct);
+    // Convertir día local → rango UTC
+    var startLocal = date.ToDateTime(TimeOnly.MinValue);
+    var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
 
-		return r is null
-			? new MembershipSalesSummaryDto(0, 0)
-			: new MembershipSalesSummaryDto(r.Total, r.Today);
-	}
+    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
+    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
+
+    var total = await _db.MembershipSales
+        .AsNoTracking()
+        .Where(x => x.UserId == userId)
+        .CountAsync(ct);
+
+    var today = await _db.MembershipSales
+        .AsNoTracking()
+        .Where(x =>
+            x.UserId == userId &&
+            x.SoldAtUtc >= startUtc &&
+            x.SoldAtUtc < endUtc
+        )
+        .CountAsync(ct);
+
+    return new MembershipSalesSummaryDto(total, today);
+  }
 }
