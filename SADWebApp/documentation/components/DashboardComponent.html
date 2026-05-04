@@ -1,0 +1,3186 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>sadweb-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">sadweb-app documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  DashboardComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/dashboard/dashboard.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="https://angular.io/api/common/CommonModule" target="_blank" >CommonModule</a></code>
+                                <code><a href="../components/AddPopupComponent.html" target="_self" >AddPopupComponent</a></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./dashboard.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./dashboard.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#creditService" >creditService</a>
+                            </li>
+                            <li>
+                                <a href="#dailyCreditAppGoal" >dailyCreditAppGoal</a>
+                            </li>
+                            <li>
+                                <a href="#dailyMembershipGoal" >dailyMembershipGoal</a>
+                            </li>
+                            <li>
+                                <a href="#dailySalesGoal" >dailySalesGoal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#dashboardService" >dashboardService</a>
+                            </li>
+                            <li>
+                                <a href="#errorMessage" >errorMessage</a>
+                            </li>
+                            <li>
+                                <a href="#latestError" >latestError</a>
+                            </li>
+                            <li>
+                                <a href="#latestTransactions" >latestTransactions</a>
+                            </li>
+                            <li>
+                                <a href="#loadingLatest" >loadingLatest</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#membershipSalesService" >membershipSalesService</a>
+                            </li>
+                            <li>
+                                <a href="#menuOpen" >menuOpen</a>
+                            </li>
+                            <li>
+                                <a href="#popupMode" >popupMode</a>
+                            </li>
+                            <li>
+                                <a href="#popupOpen" >popupOpen</a>
+                            </li>
+                            <li>
+                                <a href="#salesByHour" >salesByHour</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#salesService" >salesService</a>
+                            </li>
+                            <li>
+                                <a href="#successMessage" >successMessage</a>
+                            </li>
+                            <li>
+                                <a href="#summary$" >summary$</a>
+                            </li>
+                            <li>
+                                <a href="#today" >today</a>
+                            </li>
+                            <li>
+                                <a href="#trackById" >trackById</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#userDailySettingsService" >userDailySettingsService</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#closePopup" >closePopup</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createCreditCardApplication" >createCreditCardApplication</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createMembership" >createMembership</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createSale" >createSale</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#formatDate" >formatDate</a>
+                            </li>
+                            <li>
+                                <a href="#getHourlyBarHeight" >getHourlyBarHeight</a>
+                            </li>
+                            <li>
+                                <a href="#getSalesAmountClass" >getSalesAmountClass</a>
+                            </li>
+                            <li>
+                                <a href="#getSalesBarClass" >getSalesBarClass</a>
+                            </li>
+                            <li>
+                                <a href="#getSalesPercent" >getSalesPercent</a>
+                            </li>
+                            <li>
+                                <a href="#getSalesProgressText" >getSalesProgressText</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusClass" >getStatusClass</a>
+                            </li>
+                            <li>
+                                <a href="#loadLatestTransactions" >loadLatestTransactions</a>
+                            </li>
+                            <li>
+                                <a href="#loadSalesByHour" >loadSalesByHour</a>
+                            </li>
+                            <li>
+                                <a href="#loadSettings" >loadSettings</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#onClickOutside" >onClickOutside</a>
+                            </li>
+                            <li>
+                                <a href="#onPopupSubmit" >onPopupSubmit</a>
+                            </li>
+                            <li>
+                                <a href="#openPopup" >openPopup</a>
+                            </li>
+                            <li>
+                                <a href="#refreshSummary" >refreshSummary</a>
+                            </li>
+                            <li>
+                                <a href="#toggleMenu" >toggleMenu</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>HostListeners</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#document:click" >document:click</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(elementRef: <a href="https://angular.io/api/core/ElementRef" target="_blank">ElementRef</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/features/dashboard/dashboard.ts:58</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>elementRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/ElementRef" target="_blank" >ElementRef</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section data-compodoc="block-methods">
+    <h3>HostListeners</h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="document:click"></a>
+                    <span class="name">
+                        <span ><b>document:click</b></span>
+                        <a href="#document:click"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <i>Arguments : </i><code>'$event' </code>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>document:click(event: MouseEvent)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="293"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:293</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="closePopup"></a>
+                    <span class="name">
+                        <span ><b>closePopup</b></span>
+                        <a href="#closePopup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>closePopup()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createCreditCardApplication"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>createCreditCardApplication</b></span>
+                        <a href="#createCreditCardApplication"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createCreditCardApplication(payload: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createMembership"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>createMembership</b></span>
+                        <a href="#createMembership"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createMembership(payload: <a href="../interfaces/CreateMembershipSaleDto.html" target="_self">CreateMembershipSaleDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CreateMembershipSaleDto.html" target="_self" >CreateMembershipSaleDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createSale"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>createSale</b></span>
+                        <a href="#createSale"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createSale(payload: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="142"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:142</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatDate"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>formatDate</b></span>
+                        <a href="#formatDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>formatDate(date: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="281"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:281</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>date</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getHourlyBarHeight"></a>
+                    <span class="name">
+                        <span ><b>getHourlyBarHeight</b></span>
+                        <a href="#getHourlyBarHeight"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getHourlyBarHeight(total: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="271"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:271</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>total</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSalesAmountClass"></a>
+                    <span class="name">
+                        <span ><b>getSalesAmountClass</b></span>
+                        <a href="#getSalesAmountClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getSalesAmountClass(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="228"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:228</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSalesBarClass"></a>
+                    <span class="name">
+                        <span ><b>getSalesBarClass</b></span>
+                        <a href="#getSalesBarClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getSalesBarClass(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="262"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:262</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSalesPercent"></a>
+                    <span class="name">
+                        <span ><b>getSalesPercent</b></span>
+                        <a href="#getSalesPercent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getSalesPercent(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="252"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:252</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSalesProgressText"></a>
+                    <span class="name">
+                        <span ><b>getSalesProgressText</b></span>
+                        <a href="#getSalesProgressText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getSalesProgressText(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="237"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:237</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusClass"></a>
+                    <span class="name">
+                        <span ><b>getStatusClass</b></span>
+                        <a href="#getStatusClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusClass(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="222"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:222</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadLatestTransactions"></a>
+                    <span class="name">
+                        <span ><b>loadLatestTransactions</b></span>
+                        <a href="#loadLatestTransactions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadLatestTransactions()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:177</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadSalesByHour"></a>
+                    <span class="name">
+                        <span ><b>loadSalesByHour</b></span>
+                        <a href="#loadSalesByHour"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadSalesByHour()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:210</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadSettings"></a>
+                    <span class="name">
+                        <span ><b>loadSettings</b></span>
+                        <a href="#loadSettings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadSettings()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:194</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="62"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onClickOutside"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>onClickOutside</b></span>
+                        <a href="#onClickOutside"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onClickOutside(event: MouseEvent)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HostListener(&#x27;document:click&#x27;, [&#x27;$event&#x27;])<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="293"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:293</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>MouseEvent</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onPopupSubmit"></a>
+                    <span class="name">
+                        <span ><b>onPopupSubmit</b></span>
+                        <a href="#onPopupSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onPopupSubmit(e: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="82"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:82</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openPopup"></a>
+                    <span class="name">
+                        <span ><b>openPopup</b></span>
+                        <a href="#openPopup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openPopup(mode: <a href="../miscellaneous/typealiases.html#AddPopupMode" target="_self">AddPopupMode</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>mode</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#AddPopupMode" target="_self" >AddPopupMode</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="refreshSummary"></a>
+                    <span class="name">
+                        <span ><b>refreshSummary</b></span>
+                        <a href="#refreshSummary"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>refreshSummary()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="169"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:169</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleMenu"></a>
+                    <span class="name">
+                        <span ><b>toggleMenu</b></span>
+                        <a href="#toggleMenu"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleMenu()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="66"
+                                    class="link-to-prism">src/app/features/dashboard/dashboard.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="creditService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>creditService</b></span>
+                        <a href="#creditService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CreditCardApplicationsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/features/dashboard/dashboard.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dailyCreditAppGoal"></a>
+                    <span class="name">
+                        <span ><b>dailyCreditAppGoal</b></span>
+                        <a href="#dailyCreditAppGoal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/features/dashboard/dashboard.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dailyMembershipGoal"></a>
+                    <span class="name">
+                        <span ><b>dailyMembershipGoal</b></span>
+                        <a href="#dailyMembershipGoal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/features/dashboard/dashboard.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dailySalesGoal"></a>
+                    <span class="name">
+                        <span ><b>dailySalesGoal</b></span>
+                        <a href="#dailySalesGoal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/features/dashboard/dashboard.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dashboardService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>dashboardService</b></span>
+                        <a href="#dashboardService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(DashboardService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/features/dashboard/dashboard.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="errorMessage"></a>
+                    <span class="name">
+                        <span ><b>errorMessage</b></span>
+                        <a href="#errorMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/features/dashboard/dashboard.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="latestError"></a>
+                    <span class="name">
+                        <span ><b>latestError</b></span>
+                        <a href="#latestError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/features/dashboard/dashboard.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="latestTransactions"></a>
+                    <span class="name">
+                        <span ><b>latestTransactions</b></span>
+                        <a href="#latestTransactions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/LatestTransactionDto.html" target="_self" >LatestTransactionDto[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/features/dashboard/dashboard.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingLatest"></a>
+                    <span class="name">
+                        <span ><b>loadingLatest</b></span>
+                        <a href="#loadingLatest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/features/dashboard/dashboard.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="membershipSalesService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>membershipSalesService</b></span>
+                        <a href="#membershipSalesService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(MembershipSalesService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/features/dashboard/dashboard.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="menuOpen"></a>
+                    <span class="name">
+                        <span ><b>menuOpen</b></span>
+                        <a href="#menuOpen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/features/dashboard/dashboard.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="popupMode"></a>
+                    <span class="name">
+                        <span ><b>popupMode</b></span>
+                        <a href="#popupMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#AddPopupMode" target="_self" >AddPopupMode</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;credit&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/features/dashboard/dashboard.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="popupOpen"></a>
+                    <span class="name">
+                        <span ><b>popupOpen</b></span>
+                        <a href="#popupOpen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/features/dashboard/dashboard.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="salesByHour"></a>
+                    <span class="name">
+                        <span ><b>salesByHour</b></span>
+                        <a href="#salesByHour"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/features/dashboard/dashboard.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="salesService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>salesService</b></span>
+                        <a href="#salesService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(SalesService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/features/dashboard/dashboard.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="successMessage"></a>
+                    <span class="name">
+                        <span ><b>successMessage</b></span>
+                        <a href="#successMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/features/dashboard/dashboard.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="summary$"></a>
+                    <span class="name">
+                        <span ><b>summary$</b></span>
+                        <a href="#summary$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.dashboardService.getSummary().pipe(shareReplay(1))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/features/dashboard/dashboard.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="today"></a>
+                    <span class="name">
+                        <span ><b>today</b></span>
+                        <a href="#today"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Date()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/features/dashboard/dashboard.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackById"></a>
+                    <span class="name">
+                        <span ><b>trackById</b></span>
+                        <a href="#trackById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="289" class="link-to-prism">src/app/features/dashboard/dashboard.ts:289</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userDailySettingsService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>userDailySettingsService</b></span>
+                        <a href="#userDailySettingsService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(UserDailySettingsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/features/dashboard/dashboard.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, ElementRef, HostListener, OnInit, inject } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { shareReplay } from &#x27;rxjs/operators&#x27;;
+
+import { AddPopupComponent, AddPopupMode } from &#x27;../add-popup/add-popup&#x27;;
+
+import { CreditCardApplicationsService } from &#x27;../../core/services/credit-card-applications.service&#x27;;
+import { CreditCardApplicationDto } from &#x27;../../core/models/credit-card-application.models&#x27;;
+
+import { DashboardService } from &#x27;../../core/services/dashboard.service&#x27;;
+import { DashboardSummaryDto } from &#x27;../../core/models/dashboard.models&#x27;;
+
+import { MembershipSalesService } from &#x27;../../core/services/membership-sales.service&#x27;;
+import { CreateMembershipSaleDto } from &#x27;../../core/models/create-membership-sale.dto&#x27;;
+
+import { SalesService } from &#x27;../../core/services/sales.service&#x27;;
+import { SaleCreateDto } from &#x27;../../core/models/sale.model&#x27;;
+
+import { UserDailySettingsService } from &#x27;../../core/services/user-daily-settings.service&#x27;;
+import { LatestTransactionDto } from &#x27;../../core/models/latest-transaction.model&#x27;;
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, AddPopupComponent],
+  templateUrl: &#x27;./dashboard.html&#x27;,
+  styleUrls: [&#x27;./dashboard.scss&#x27;]
+})
+export class DashboardComponent implements OnInit {
+  private creditService &#x3D; inject(CreditCardApplicationsService);
+  private dashboardService &#x3D; inject(DashboardService);
+  private membershipSalesService &#x3D; inject(MembershipSalesService);
+  private userDailySettingsService &#x3D; inject(UserDailySettingsService);
+  private salesService &#x3D; inject(SalesService);
+
+  summary$ &#x3D; this.dashboardService.getSummary().pipe(shareReplay(1));
+
+  menuOpen &#x3D; false;
+  today &#x3D; new Date();
+
+  dailyCreditAppGoal &#x3D; 0;
+  dailyMembershipGoal &#x3D; 0;
+  dailySalesGoal &#x3D; 0;
+
+  errorMessage &#x3D; &#x27;&#x27;;
+  successMessage &#x3D; &#x27;&#x27;;
+
+  popupOpen &#x3D; false;
+  popupMode: AddPopupMode &#x3D; &#x27;credit&#x27;;
+
+  latestTransactions: LatestTransactionDto[] &#x3D; [];
+  loadingLatest &#x3D; false;
+  latestError &#x3D; &#x27;&#x27;;
+
+  salesByHour: {
+    hour: number;
+    hourLabel: string;
+    total: number;
+  }[] &#x3D; [];
+
+  constructor(private elementRef: ElementRef) {}
+
+  ngOnInit(): void {
+    this.refreshSummary();
+  }
+
+  toggleMenu(): void {
+    this.menuOpen &#x3D; !this.menuOpen;
+  }
+
+  openPopup(mode: AddPopupMode): void {
+    this.menuOpen &#x3D; false;
+    this.popupMode &#x3D; mode;
+    this.popupOpen &#x3D; true;
+    this.errorMessage &#x3D; &#x27;&#x27;;
+    this.successMessage &#x3D; &#x27;&#x27;;
+  }
+
+  closePopup(): void {
+    this.popupOpen &#x3D; false;
+  }
+
+  onPopupSubmit(e: { mode: AddPopupMode; payload: any }): void {
+    if (e.mode &#x3D;&#x3D;&#x3D; &#x27;credit&#x27;) {
+      this.createCreditCardApplication(e.payload);
+      return;
+    }
+
+    if (e.mode &#x3D;&#x3D;&#x3D; &#x27;membership&#x27;) {
+      this.createMembership(e.payload);
+      return;
+    }
+
+    if (e.mode &#x3D;&#x3D;&#x3D; &#x27;sale&#x27;) {
+      this.createSale(e.payload);
+      return;
+    }
+  }
+
+  private createCreditCardApplication(payload: {
+    storeId: number;
+    storeNumber: number;
+    approved: boolean;
+    creditCardProductId: number;
+    statusId?: number;
+  }): void {
+    this.creditService
+      .create({
+        statusId: payload.statusId ?? 1,
+        creditCardProductId: payload.creditCardProductId ?? 1,
+        storeId: payload.storeId,
+        storeNumber: payload.storeNumber,
+        approved: payload.approved
+      })
+      .subscribe({
+        next: () &#x3D;&gt; {
+          this.successMessage &#x3D; &#x27;Credit card application saved.&#x27;;
+          this.closePopup();
+          this.refreshSummary();
+        },
+        error: (err) &#x3D;&gt; {
+          console.error(&#x27;❌ Error creating credit application&#x27;, err);
+          this.latestError &#x3D; &#x27;Error creating credit card application.&#x27;;
+          this.errorMessage &#x3D; &#x27;Error creating credit card application.&#x27;;
+        }
+      });
+  }
+
+  private createMembership(payload: CreateMembershipSaleDto): void {
+    this.membershipSalesService.create(payload).subscribe({
+      next: () &#x3D;&gt; {
+        this.successMessage &#x3D; &#x27;Membership sale saved.&#x27;;
+        this.closePopup();
+        this.refreshSummary();
+      },
+      error: (err) &#x3D;&gt; {
+        console.error(&#x27;❌ Error saving membership sale&#x27;, err);
+        this.errorMessage &#x3D; &#x27;Error saving membership sale.&#x27;;
+      }
+    });
+  }
+
+  private createSale(payload: {
+    storeId: number;
+    saleAmount: number;
+    notes?: string;
+    paymentMethod?: string | null;
+  }): void {
+    const dto: SaleCreateDto &#x3D; {
+      storeId: payload.storeId,
+      subtotal: Number(payload.saleAmount),
+      tax: 0,
+      notes: payload.notes ?? null,
+      paymentMethod: payload.paymentMethod ?? null
+    };
+
+    this.salesService.create(dto).subscribe({
+      next: () &#x3D;&gt; {
+        this.successMessage &#x3D; &#x27;Sale saved.&#x27;;
+        this.closePopup();
+        this.refreshSummary();
+      },
+      error: (err) &#x3D;&gt; {
+        console.error(&#x27;❌ Error saving sale&#x27;, err);
+        this.errorMessage &#x3D; &#x27;Error saving sale.&#x27;;
+      }
+    });
+  }
+
+  refreshSummary(): void {
+    this.summary$ &#x3D; this.dashboardService.getSummary().pipe(shareReplay(1));
+
+    this.loadLatestTransactions();
+    this.loadSalesByHour();
+    this.loadSettings();
+  }
+
+  loadLatestTransactions(): void {
+    this.loadingLatest &#x3D; true;
+    this.latestError &#x3D; &#x27;&#x27;;
+
+    this.dashboardService.getLatestTransactions(5).subscribe({
+      next: (data) &#x3D;&gt; {
+        this.latestTransactions &#x3D; data;
+        this.loadingLatest &#x3D; false;
+      },
+      error: (err) &#x3D;&gt; {
+        console.error(err);
+        this.latestError &#x3D; &#x27;Error loading latest transactions.&#x27;;
+        this.loadingLatest &#x3D; false;
+      }
+    });
+  }
+
+  loadSettings(): void {
+    this.userDailySettingsService.getToday().subscribe({
+      next: (setting) &#x3D;&gt; {
+        if (setting) {
+          this.dailyCreditAppGoal &#x3D; setting.appsGoal ?? 0;
+          this.dailyMembershipGoal &#x3D; setting.membershipsGoal ?? 0;
+          this.dailySalesGoal &#x3D; setting.salesGoalAmount ?? 0;
+        }
+      },
+      error: (err) &#x3D;&gt; {
+        console.error(&#x27;Error loading settings&#x27;, err);
+        this.errorMessage &#x3D; &#x27;Could not load settings.&#x27;;
+      }
+    });
+  }
+
+  loadSalesByHour(): void {
+    this.dashboardService.getTodaySalesByHour().subscribe({
+      next: (data) &#x3D;&gt; {
+        this.salesByHour &#x3D; data;
+      },
+      error: (err) &#x3D;&gt; {
+        console.error(&#x27;Error loading sales by hour&#x27;, err);
+        this.salesByHour &#x3D; [];
+      }
+    });
+  }
+
+  getStatusClass(value: number): string {
+    if (value &#x3D;&#x3D;&#x3D; 0) return &#x27;status-red&#x27;;
+    if (value &#x3D;&#x3D;&#x3D; 1) return &#x27;status-yellow&#x27;;
+    return &#x27;status-green&#x27;;
+  }
+
+  getSalesAmountClass(amount: number): string {
+    const dailyTarget &#x3D; this.dailySalesGoal || 6400;
+    const lowThreshold &#x3D; dailyTarget / 3;
+
+    if (amount &gt;&#x3D; dailyTarget) return &#x27;status-green&#x27;;
+    if (amount &gt;&#x3D; lowThreshold) return &#x27;status-yellow&#x27;;
+    return &#x27;status-red&#x27;;
+  }
+
+  getSalesProgressText(amount: number): string {
+    if (!amount || amount &lt;&#x3D; 0) {
+      return &#x27;0% of daily goal&#x27;;
+    }
+
+    const goal &#x3D; this.dailySalesGoal || 1;
+    const percent &#x3D; Math.round((amount / goal) * 100);
+
+    if (percent &gt;&#x3D; 100) {
+      return &#x60;${percent}% of daily goal · Goal met 🎉&#x60;;
+    }
+
+    return &#x60;${percent}% of daily goal&#x60;;
+  }
+
+  getSalesPercent(amount: number): number {
+    const goal &#x3D; this.dailySalesGoal || 1;
+    const safeAmount &#x3D; Number(amount ?? 0);
+
+    if (safeAmount &lt;&#x3D; 0) return 0;
+
+    const pct &#x3D; Math.round((safeAmount / goal) * 100);
+    return Math.max(0, Math.min(100, pct));
+  }
+
+  getSalesBarClass(amount: number): string {
+    const goal &#x3D; this.dailySalesGoal || 1;
+    const safeAmount &#x3D; Number(amount ?? 0);
+
+    if (safeAmount &gt;&#x3D; goal) return &#x27;green&#x27;;
+    if (safeAmount &gt;&#x3D; goal / 3) return &#x27;yellow&#x27;;
+    return &#x27;red&#x27;;
+  }
+
+  getHourlyBarHeight(total: number): number {
+    const max &#x3D; Math.max(...this.salesByHour.map(x &#x3D;&gt; x.total), 0);
+
+    if (max &#x3D;&#x3D;&#x3D; 0) {
+      return 0;
+    }
+
+    return Math.max((total / max) * 100, 8);
+  }
+
+  private formatDate(date: Date): string {
+    return date.toLocaleDateString(&#x27;en-US&#x27;, {
+      month: &#x27;short&#x27;,
+      day: &#x27;numeric&#x27;,
+      year: &#x27;numeric&#x27;
+    });
+  }
+
+  trackById &#x3D; (_: number, item: CreditCardApplicationDto) &#x3D;&gt;
+    item.creditCardApplicationId;
+
+  @HostListener(&#x27;document:click&#x27;, [&#x27;$event&#x27;])
+  onClickOutside(event: MouseEvent): void {
+    if (!this.menuOpen) return;
+
+    const clickedInside &#x3D; this.elementRef.nativeElement.contains(event.target as Node);
+
+    if (!clickedInside) {
+      this.menuOpen &#x3D; false;
+    }
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;dashboard-page page-shell&quot;&gt;
+  &lt;!-- HEADER --&gt;
+  &lt;div class&#x3D;&quot;view-header&quot;&gt;
+    &lt;div class&#x3D;&quot;title-section&quot;&gt;
+      &lt;span class&#x3D;&quot;eyebrow&quot;&gt;Overview&lt;/span&gt;
+      &lt;h1 class&#x3D;&quot;view-title&quot;&gt;Dashboard&lt;/h1&gt;
+      &lt;p class&#x3D;&quot;view-subtitle&quot;&gt;Sales Advisor Overview&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;view-actions&quot;&gt;
+      &lt;button       
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn-secondary&quot;
+          (click)&#x3D;&quot;refreshSummary()&quot;&gt;
+          &lt;i class&#x3D;&quot;fa-solid fa-arrow-rotate-right&quot;&gt;&lt;/i&gt;
+        &lt;/button&gt;      
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;btn-secondary&quot;
+        (click)&#x3D;&quot;toggleMenu()&quot;&gt;
+        &lt;i class&#x3D;&quot;fa-solid fa-plus&quot;&gt;&lt;/i&gt; Add new
+      &lt;/button&gt;
+
+      &lt;div class&#x3D;&quot;card add-menu&quot; *ngIf&#x3D;&quot;menuOpen&quot;&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn-secondary&quot;
+          (click)&#x3D;&quot;openPopup(&#x27;credit&#x27;)&quot;&gt;
+          New Credit Card
+        &lt;/button&gt;
+
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn-secondary&quot;
+          (click)&#x3D;&quot;openPopup(&#x27;membership&#x27;)&quot;&gt;
+          New Membership
+        &lt;/button&gt;
+
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn-secondary&quot;
+          (click)&#x3D;&quot;openPopup(&#x27;sale&#x27;)&quot;&gt;
+          New Sale
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- POPUP --&gt;
+  &lt;app-add-popup
+    *ngIf&#x3D;&quot;popupOpen&quot;
+    [mode]&#x3D;&quot;popupMode&quot;
+    (close)&#x3D;&quot;closePopup()&quot;
+    (submitForm)&#x3D;&quot;onPopupSubmit($event)&quot;&gt;
+  &lt;/app-add-popup&gt;
+
+  &lt;!-- SUMMARY --&gt;
+  &lt;ng-container *ngIf&#x3D;&quot;summary$ | async as s; else loadingCards&quot;&gt;
+    &lt;div class&#x3D;&quot;kpi-grid&quot;&gt;
+      &lt;!-- CREDIT APPS --&gt;
+      &lt;div class&#x3D;&quot;kpi-card&quot;&gt;
+        &lt;div class&#x3D;&quot;kpi-label&quot;&gt;Credit Card Applications&lt;/div&gt;
+
+        &lt;div
+          class&#x3D;&quot;kpi-value&quot;
+          [ngClass]&#x3D;&quot;getStatusClass(s.creditCards.total)&quot;&gt;
+          {{ s.creditCards.total }}
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;kpi-hint&quot;&gt;
+          Today&#x27;s goal - {{ dailyCreditAppGoal }} apps
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- MEMBERSHIPS --&gt;
+      &lt;div class&#x3D;&quot;kpi-card&quot;&gt;
+        &lt;div class&#x3D;&quot;kpi-label&quot;&gt;Membership Sales&lt;/div&gt;
+
+        &lt;div
+          class&#x3D;&quot;kpi-value&quot;
+          [ngClass]&#x3D;&quot;getStatusClass(s.memberships.total)&quot;&gt;
+          {{ s.memberships.total }}
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;kpi-hint&quot;&gt;
+          Today&#x27;s goal - {{ dailyMembershipGoal }} memberships
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- SALES --&gt;
+      &lt;div class&#x3D;&quot;kpi-card&quot;&gt;
+        &lt;div class&#x3D;&quot;kpi-label&quot;&gt;
+          Total Sales for Today - {{ today | date:&#x27;MMM d, y&#x27; }}
+        &lt;/div&gt;
+
+        &lt;div
+          class&#x3D;&quot;kpi-value&quot;
+          [ngClass]&#x3D;&quot;getSalesAmountClass(s.todaySales.todaySalesTotal)&quot;&gt;
+          {{ s.todaySales.todaySalesTotal | currency:&#x27;USD&#x27;:&#x27;symbol&#x27;:&#x27;1.2-2&#x27; }}
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;kpi-hint&quot;&gt;
+          Goal:
+          {{ dailySalesGoal | currency:&#x27;USD&#x27;:&#x27;symbol&#x27;:&#x27;1.0-0&#x27; }}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- STATUS PANEL --&gt;
+    &lt;div class&#x3D;&quot;card&quot;&gt;
+      &lt;div class&#x3D;&quot;card-header&quot;&gt;
+        &lt;div&gt;
+          &lt;div class&#x3D;&quot;card-title&quot;&gt;Status&lt;/div&gt;
+          &lt;div class&#x3D;&quot;card-subtitle&quot;&gt;Today&#x27;s progress against goals&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- SALES BAR --&gt;
+      &lt;div class&#x3D;&quot;progress-block&quot;&gt;
+        &lt;div class&#x3D;&quot;progress-head&quot;&gt;
+          &lt;span&gt;Sales progress (today)&lt;/span&gt;
+          &lt;span&gt;{{ getSalesPercent(s.todaySales.todaySalesTotal) }}%&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div
+          class&#x3D;&quot;progress-track&quot;
+          role&#x3D;&quot;progressbar&quot;
+          [attr.aria-valuenow]&#x3D;&quot;getSalesPercent(s.todaySales.todaySalesTotal)&quot;
+          aria-valuemin&#x3D;&quot;0&quot;
+          aria-valuemax&#x3D;&quot;100&quot;&gt;
+
+          &lt;div
+            class&#x3D;&quot;progress-fill&quot;
+            [style.width.%]&#x3D;&quot;getSalesPercent(s.todaySales.todaySalesTotal)&quot;
+            [ngClass]&#x3D;&quot;getSalesBarClass(s.todaySales.todaySalesTotal)&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;progress-sub muted&quot;&gt;
+          {{ s.todaySales.todaySalesTotal | currency:&#x27;USD&#x27;:&#x27;symbol&#x27;:&#x27;1.0-0&#x27; }}
+          of
+          {{ dailySalesGoal | currency:&#x27;USD&#x27;:&#x27;symbol&#x27;:&#x27;1.0-0&#x27; }}
+          ·
+          {{ getSalesProgressText(s.todaySales.todaySalesTotal) }}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- SALES BY HOUR CHART --&gt;
+&lt;div class&#x3D;&quot;card mt-lg&quot;&gt;
+  &lt;div class&#x3D;&quot;card-header&quot;&gt;
+    &lt;div&gt;
+      &lt;div class&#x3D;&quot;card-title&quot;&gt;Sales by Hour&lt;/div&gt;
+      &lt;div class&#x3D;&quot;card-subtitle&quot;&gt;Total sales amount per hour today&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class&#x3D;&quot;hourly-chart&quot; *ngIf&#x3D;&quot;salesByHour.length &gt; 0; else noHourlySales&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;hour-bar&quot;
+      *ngFor&#x3D;&quot;let item of salesByHour&quot;&gt;
+
+      &lt;div class&#x3D;&quot;bar-value&quot;&gt;
+        {{ item.total | currency:&#x27;USD&#x27;:&#x27;symbol&#x27;:&#x27;1.0-0&#x27; }}
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;bar-wrapper&quot;&gt;
+        &lt;div
+          class&#x3D;&quot;bar-fill&quot;
+          [style.height.%]&#x3D;&quot;getHourlyBarHeight(item.total)&quot;&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;bar-label&quot;&gt;
+        {{ item.hourLabel }}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;ng-template #noHourlySales&gt;
+    &lt;div class&#x3D;&quot;empty-state&quot;&gt;
+      No sales registered today.
+    &lt;/div&gt;
+  &lt;/ng-template&gt;
+&lt;/div&gt;
+  &lt;/ng-container&gt;
+
+  &lt;!-- LOADING --&gt;
+  &lt;ng-template #loadingCards&gt;
+    &lt;div class&#x3D;&quot;kpi-grid&quot;&gt;
+      &lt;div class&#x3D;&quot;kpi-card&quot;&gt;
+        &lt;div class&#x3D;&quot;kpi-label&quot;&gt;Credit Card Applications&lt;/div&gt;
+        &lt;div class&#x3D;&quot;kpi-value&quot;&gt;—&lt;/div&gt;
+        &lt;div class&#x3D;&quot;kpi-hint&quot;&gt;Loading...&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;kpi-card&quot;&gt;
+        &lt;div class&#x3D;&quot;kpi-label&quot;&gt;Membership Sales&lt;/div&gt;
+        &lt;div class&#x3D;&quot;kpi-value&quot;&gt;—&lt;/div&gt;
+        &lt;div class&#x3D;&quot;kpi-hint&quot;&gt;Loading...&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;kpi-card&quot;&gt;
+        &lt;div class&#x3D;&quot;kpi-label&quot;&gt;Total Sales&lt;/div&gt;
+        &lt;div class&#x3D;&quot;kpi-value&quot;&gt;—&lt;/div&gt;
+        &lt;div class&#x3D;&quot;kpi-hint&quot;&gt;Loading...&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/ng-template&gt;
+
+  &lt;!-- LATEST CREDIT APPS --&gt;
+  &lt;div class&#x3D;&quot;card&quot;&gt;
+    &lt;div class&#x3D;&quot;card-header&quot;&gt;
+      &lt;div&gt;
+        &lt;div class&#x3D;&quot;card-title&quot;&gt;Latest Transactions&lt;/div&gt;
+        &lt;div class&#x3D;&quot;card-subtitle&quot;&gt;
+          Most recent submitted transactions, including credit card applications, memberships and sales.
+        &lt;/div&gt;
+      &lt;/div&gt;      
+    &lt;/div&gt;
+
+    &lt;div *ngIf&#x3D;&quot;loadingLatest&quot; class&#x3D;&quot;muted&quot;&gt;
+      Loading...
+    &lt;/div&gt;
+
+    &lt;div *ngIf&#x3D;&quot;!loadingLatest &amp;&amp; latestError&quot; class&#x3D;&quot;error-box&quot;&gt;
+      {{ latestError }}
+    &lt;/div&gt;
+
+    &lt;div
+      *ngIf&#x3D;&quot;!loadingLatest &amp;&amp; !latestError &amp;&amp; latestTransactions.length &#x3D;&#x3D;&#x3D; 0&quot;
+      class&#x3D;&quot;empty-state&quot;&gt;
+      No records yet.
+    &lt;/div&gt;
+
+    &lt;div
+      *ngIf&#x3D;&quot;!loadingLatest &amp;&amp; latestTransactions.length &gt; 0&quot;
+      class&#x3D;&quot;table-wrapper&quot;&gt;
+
+      &lt;table class&#x3D;&quot;app-table&quot;&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Transaction&lt;/th&gt;
+            &lt;th&gt;Status&lt;/th&gt;
+            &lt;th&gt;Date&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+
+        &lt;tbody&gt;
+          &lt;tr
+            *ngFor&#x3D;&quot;let x of latestTransactions; traclkBy: trackById&quot;&gt;
+
+            &lt;td&gt;
+              {{ x.transactionName }}
+            &lt;/td&gt;
+
+            &lt;td&gt;
+                {{ x.status }}
+              &lt;!-- &lt;span
+                class&#x3D;&quot;badge&quot;
+                [ngClass]&#x3D;&quot;x.statusId &#x3D;&#x3D; 1 ? &#x27;badge-success&#x27; : &#x27;badge-danger&#x27;&quot;&gt;
+
+                {{ x.statusId &#x3D;&#x3D; 1 ? &#x27;Approved&#x27; : &#x27;Not approved&#x27; }}
+              &lt;/span&gt; --&gt;
+            &lt;/td&gt;
+
+            &lt;td&gt;
+              {{ x.transactionDate| date:&#x27;short&#x27; }}
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./dashboard.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">@import &#x27;../../../styles/colors.scss&#x27;;
+:host {
+  display: block;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   DASHBOARD LAYOUT
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dashboard-main {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.map-panel,
+.side-panel {
+  min-width: 0;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.map-surface {
+  min-height: 420px;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   CHART CARDS
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+.chart-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.chart-card {
+  min-height: 320px;
+}
+
+.chart-host {
+  width: 100%;
+  min-height: 240px;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   SALES BY HOUR
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+.hourly-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  min-height: 240px;
+  padding: 24px 0 8px;
+  overflow-x: auto;
+}
+
+.hour-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 58px;
+  height: 220px;
+}
+
+.bar-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.bar-wrapper {
+  width: 34px;
+  height: 150px;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  width: 100%;
+  min-height: 8px;
+  background: #3b82f6;
+  border-radius: 10px 10px 0 0;
+  transition: height 0.25s ease;
+}
+
+.bar-label {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   ACTIVITY LIST
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+.list-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.activity-item:last-child {
+  border-bottom: 0;
+}
+
+.activity-copy {
+  min-width: 0;
+}
+
+.activity-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.activity-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.activity-value {
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   VIEW ACTIONS BUTTONS
+   AND ADD MENU
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   ADD MENU DROPDOWN
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.add-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 20;
+  padding: var(--space-sm);
+  background: var(--bg-app);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 8px;
+  backdrop-filter: none;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+}
+
+.view-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px; // separación entre refresh y Add new
+  position: relative;
+}
+
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   RESPONSIVE
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+@media (max-width: 1100px) {
+  .dashboard-main {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hourly-chart {
+    gap: 12px;
+    min-height: 220px;
+  }
+
+  .hour-bar {
+    min-width: 48px;
+    height: 200px;
+  }
+
+  .bar-wrapper {
+    width: 28px;
+    height: 130px;
+  }
+
+  .bar-value,
+  .bar-label {
+    font-size: 0.78rem;
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="dashboard-page page-shell">  <!-- HEADER -->  <div class="view-header">    <div class="title-section">      <span class="eyebrow">Overview</span>      <h1 class="view-title">Dashboard</h1>      <p class="view-subtitle">Sales Advisor Overview</p>    </div>    <div class="view-actions">      <button                 type="button"          class="btn-secondary"          (click)="refreshSummary()">          <i class="fa-solid fa-arrow-rotate-right"></i>        </button>            <button        type="button"        class="btn-secondary"        (click)="toggleMenu()">        <i class="fa-solid fa-plus"></i> Add new      </button>      <div class="card add-menu" *ngIf="menuOpen">        <button          type="button"          class="btn-secondary"          (click)="openPopup(\'credit\')">          New Credit Card        </button>        <button          type="button"          class="btn-secondary"          (click)="openPopup(\'membership\')">          New Membership        </button>        <button          type="button"          class="btn-secondary"          (click)="openPopup(\'sale\')">          New Sale        </button>      </div>    </div>  </div>  <!-- POPUP -->  <app-add-popup    *ngIf="popupOpen"    [mode]="popupMode"    (close)="closePopup()"    (submitForm)="onPopupSubmit($event)">  </app-add-popup>  <!-- SUMMARY -->  <ng-container *ngIf="summary$ | async as s; else loadingCards">    <div class="kpi-grid">      <!-- CREDIT APPS -->      <div class="kpi-card">        <div class="kpi-label">Credit Card Applications</div>        <div          class="kpi-value"          [ngClass]="getStatusClass(s.creditCards.total)">          {{ s.creditCards.total }}        </div>        <div class="kpi-hint">          Today\'s goal - {{ dailyCreditAppGoal }} apps        </div>      </div>      <!-- MEMBERSHIPS -->      <div class="kpi-card">        <div class="kpi-label">Membership Sales</div>        <div          class="kpi-value"          [ngClass]="getStatusClass(s.memberships.total)">          {{ s.memberships.total }}        </div>        <div class="kpi-hint">          Today\'s goal - {{ dailyMembershipGoal }} memberships        </div>      </div>      <!-- SALES -->      <div class="kpi-card">        <div class="kpi-label">          Total Sales for Today - {{ today | date:\'MMM d, y\' }}        </div>        <div          class="kpi-value"          [ngClass]="getSalesAmountClass(s.todaySales.todaySalesTotal)">          {{ s.todaySales.todaySalesTotal | currency:\'USD\':\'symbol\':\'1.2-2\' }}        </div>        <div class="kpi-hint">          Goal:          {{ dailySalesGoal | currency:\'USD\':\'symbol\':\'1.0-0\' }}        </div>      </div>    </div>    <!-- STATUS PANEL -->    <div class="card">      <div class="card-header">        <div>          <div class="card-title">Status</div>          <div class="card-subtitle">Today\'s progress against goals</div>        </div>      </div>      <!-- SALES BAR -->      <div class="progress-block">        <div class="progress-head">          <span>Sales progress (today)</span>          <span>{{ getSalesPercent(s.todaySales.todaySalesTotal) }}%</span>        </div>        <div          class="progress-track"          role="progressbar"          [attr.aria-valuenow]="getSalesPercent(s.todaySales.todaySalesTotal)"          aria-valuemin="0"          aria-valuemax="100">          <div            class="progress-fill"            [style.width.%]="getSalesPercent(s.todaySales.todaySalesTotal)"            [ngClass]="getSalesBarClass(s.todaySales.todaySalesTotal)">          </div>        </div>        <div class="progress-sub muted">          {{ s.todaySales.todaySalesTotal | currency:\'USD\':\'symbol\':\'1.0-0\' }}          of          {{ dailySalesGoal | currency:\'USD\':\'symbol\':\'1.0-0\' }}          ·          {{ getSalesProgressText(s.todaySales.todaySalesTotal) }}        </div>      </div>    </div>    <!-- SALES BY HOUR CHART --><div class="card mt-lg">  <div class="card-header">    <div>      <div class="card-title">Sales by Hour</div>      <div class="card-subtitle">Total sales amount per hour today</div>    </div>  </div>  <div class="hourly-chart" *ngIf="salesByHour.length > 0; else noHourlySales">    <div      class="hour-bar"      *ngFor="let item of salesByHour">      <div class="bar-value">        {{ item.total | currency:\'USD\':\'symbol\':\'1.0-0\' }}      </div>      <div class="bar-wrapper">        <div          class="bar-fill"          [style.height.%]="getHourlyBarHeight(item.total)">        </div>      </div>      <div class="bar-label">        {{ item.hourLabel }}      </div>    </div>  </div>  <ng-template #noHourlySales>    <div class="empty-state">      No sales registered today.    </div>  </ng-template></div>  </ng-container>  <!-- LOADING -->  <ng-template #loadingCards>    <div class="kpi-grid">      <div class="kpi-card">        <div class="kpi-label">Credit Card Applications</div>        <div class="kpi-value">—</div>        <div class="kpi-hint">Loading...</div>      </div>      <div class="kpi-card">        <div class="kpi-label">Membership Sales</div>        <div class="kpi-value">—</div>        <div class="kpi-hint">Loading...</div>      </div>      <div class="kpi-card">        <div class="kpi-label">Total Sales</div>        <div class="kpi-value">—</div>        <div class="kpi-hint">Loading...</div>      </div>    </div>  </ng-template>  <!-- LATEST CREDIT APPS -->  <div class="card">    <div class="card-header">      <div>        <div class="card-title">Latest Transactions</div>        <div class="card-subtitle">          Most recent submitted transactions, including credit card applications, memberships and sales.        </div>      </div>          </div>    <div *ngIf="loadingLatest" class="muted">      Loading...    </div>    <div *ngIf="!loadingLatest && latestError" class="error-box">      {{ latestError }}    </div>    <div      *ngIf="!loadingLatest && !latestError && latestTransactions.length === 0"      class="empty-state">      No records yet.    </div>    <div      *ngIf="!loadingLatest && latestTransactions.length > 0"      class="table-wrapper">      <table class="app-table">        <thead>          <tr>            <th>Transaction</th>            <th>Status</th>            <th>Date</th>          </tr>        </thead>        <tbody>          <tr            *ngFor="let x of latestTransactions; traclkBy: trackById">            <td>              {{ x.transactionName }}            </td>            <td>                {{ x.status }}              <!-- <span                class="badge"                [ngClass]="x.statusId == 1 ? \'badge-success\' : \'badge-danger\'">                {{ x.statusId == 1 ? \'Approved\' : \'Not approved\' }}              </span> -->            </td>            <td>              {{ x.transactionDate| date:\'short\' }}            </td>          </tr>        </tbody>      </table>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AddPopupComponent', 'selector': 'app-add-popup'},{'name': 'App', 'selector': 'app-root'},{'name': 'AuthCallbackComponent', 'selector': ''},{'name': 'DashboardComponent', 'selector': ''},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'SalesComponent', 'selector': 'app-sales'},{'name': 'SettingsComponent', 'selector': 'app-settings'},{'name': 'ShellComponent', 'selector': ''},{'name': 'StoresComponent', 'selector': 'app-stores'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'DashboardComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'DashboardComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

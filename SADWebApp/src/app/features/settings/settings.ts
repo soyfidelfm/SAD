@@ -16,10 +16,12 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 
+  import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
+
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatProgressSpinnerModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatProgressSpinnerModule, MatIconModule, LocalDatePipe],
   templateUrl: './settings.html',
   styleUrl: './settings.scss'
 })

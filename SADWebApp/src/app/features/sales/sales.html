@@ -60,7 +60,7 @@
       <ng-container matColumnDef="saleDate">
         <th mat-header-cell *matHeaderCellDef>Date</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.saleDate | date:'MMM d, y, h:mm a' }}
+          {{ row.saleDate | localDate }}
         </td>
       </ng-container>
 

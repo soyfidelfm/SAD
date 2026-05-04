@@ -19,9 +19,11 @@ import { SaleCreateDto } from '../../core/models/sale.model';
 import { UserDailySettingsService } from '../../core/services/user-daily-settings.service';
 import { LatestTransactionDto } from '../../core/models/latest-transaction.model';
 
+import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
+
 @Component({
   standalone: true,
-  imports: [CommonModule, AddPopupComponent],
+  imports: [CommonModule, AddPopupComponent, LocalDatePipe],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })

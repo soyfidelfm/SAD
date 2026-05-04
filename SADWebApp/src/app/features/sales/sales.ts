@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SalesService } from '../../core/services/sales.service';
 import { Sale } from '../../core/models/sale.model';
 
+import { LocalDatePipe } from '../../shared/pipes/local-date-pipe'
 @Component({
   selector: 'app-sales',
   standalone: true,
@@ -24,7 +25,8 @@ import { Sale } from '../../core/models/sale.model';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    LocalDatePipe
   ],
   templateUrl: './sales.html',
   styleUrls: ['./sales.scss']

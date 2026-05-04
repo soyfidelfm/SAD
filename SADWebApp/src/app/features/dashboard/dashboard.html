@@ -90,7 +90,7 @@
       <!-- SALES -->
       <div class="kpi-card">
         <div class="kpi-label">
-          Total Sales for Today - {{ today | date:'MMM d, y' }}
+          Total Sales for Today - {{ today | localDate }}
         </div>
 
         <div
@@ -264,7 +264,7 @@
             </td>
 
             <td>
-              {{ x.transactionDate| date:'short' }}
+              {{ x.transactionDate | localDate }}
             </td>
           </tr>
         </tbody>

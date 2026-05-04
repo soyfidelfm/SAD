@@ -109,7 +109,7 @@
       <ng-container matColumnDef="settingDate">
         <th mat-header-cell *matHeaderCellDef>Date</th>
         <td mat-cell *matCellDef="let row">
-          {{ row.settingDate | date:'MMM d, y, h:mm a' }}
+          {{ row.settingDate | localDate }} 
         </td>
       </ng-container>
 

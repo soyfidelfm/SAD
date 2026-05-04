@@ -1,0 +1,1695 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>sadweb-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">sadweb-app documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  SalesComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/sales/sales.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-sales</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                                <code><a href="https://angular.io/api/common/CommonModule" target="_blank" >CommonModule</a></code>
+                                <code><a href="https://angular.io/api/forms/ReactiveFormsModule" target="_blank" >ReactiveFormsModule</a></code>
+                            <code>MatTableModule</code>
+                            <code>MatButtonModule</code>
+                            <code>MatIconModule</code>
+                            <code>MatFormFieldModule</code>
+                            <code>MatInputModule</code>
+                            <code>MatProgressSpinnerModule</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./sales.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./sales.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#dataSource" >dataSource</a>
+                            </li>
+                            <li>
+                                <a href="#deletingId" >deletingId</a>
+                            </li>
+                            <li>
+                                <a href="#displayedColumnsDesktop" >displayedColumnsDesktop</a>
+                            </li>
+                            <li>
+                                <a href="#displayedColumnsMobile" >displayedColumnsMobile</a>
+                            </li>
+                            <li>
+                                <a href="#form" >form</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isBrowser" >isBrowser</a>
+                            </li>
+                            <li>
+                                <a href="#isMobile" >isMobile</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#mq" >mq</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#mqHandler" >mqHandler</a>
+                            </li>
+                            <li>
+                                <a href="#storeId" >storeId</a>
+                            </li>
+                            <li>
+                                <a href="#storeName" >storeName</a>
+                            </li>
+                            <li>
+                                <a href="#trackById" >trackById</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#deleteSale" >deleteSale</a>
+                            </li>
+                            <li>
+                                <a href="#getSaleId" >getSaleId</a>
+                            </li>
+                            <li>
+                                <a href="#isDeleting" >isDeleting</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#toLocalInput" >toLocalInput</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#displayedColumns" >displayedColumns</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fb: <a href="https://angular.io/api/forms/FormBuilder" target="_blank">FormBuilder</a>, salesService: <a href="../injectables/SalesService.html" target="_self">SalesService</a>, platformId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank">object</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/features/sales/sales.ts:66</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fb</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/forms/FormBuilder" target="_blank" >FormBuilder</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>salesService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SalesService.html" target="_self" >SalesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>platformId</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteSale"></a>
+                    <span class="name">
+                        <span ><b>deleteSale</b></span>
+                        <a href="#deleteSale"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>deleteSale(row: <a href="../interfaces/Sale.html" target="_self">Sale</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="160"
+                                    class="link-to-prism">src/app/features/sales/sales.ts:160</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>row</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Sale.html" target="_self" >Sale</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSaleId"></a>
+                    <span class="name">
+                        <span ><b>getSaleId</b></span>
+                        <a href="#getSaleId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getSaleId(row: <a href="../interfaces/Sale.html" target="_self">Sale</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="151"
+                                    class="link-to-prism">src/app/features/sales/sales.ts:151</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>row</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Sale.html" target="_self" >Sale</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isDeleting"></a>
+                    <span class="name">
+                        <span ><b>isDeleting</b></span>
+                        <a href="#isDeleting"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isDeleting(row: <a href="../interfaces/Sale.html" target="_self">Sale</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="156"
+                                    class="link-to-prism">src/app/features/sales/sales.ts:156</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>row</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Sale.html" target="_self" >Sale</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="118"
+                                    class="link-to-prism">src/app/features/sales/sales.ts:118</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="124"
+                                    class="link-to-prism">src/app/features/sales/sales.ts:124</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toLocalInput"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>toLocalInput</b></span>
+                        <a href="#toLocalInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>toLocalInput(d: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="188"
+                                    class="link-to-prism">src/app/features/sales/sales.ts:188</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>d</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dataSource"></a>
+                    <span class="name">
+                        <span ><b>dataSource</b></span>
+                        <a href="#dataSource"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new MatTableDataSource&lt;Sale&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/features/sales/sales.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deletingId"></a>
+                    <span class="name">
+                        <span ><b>deletingId</b></span>
+                        <a href="#deletingId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/features/sales/sales.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="displayedColumnsDesktop"></a>
+                    <span class="name">
+                        <span ><b>displayedColumnsDesktop</b></span>
+                        <a href="#displayedColumnsDesktop"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &#x27;saleDate&#x27;,
+    &#x27;subtotal&#x27;,
+    &#x27;tax&#x27;,
+    &#x27;total&#x27;,
+    &#x27;paymentMethod&#x27;,
+    &#x27;notes&#x27;,
+    &#x27;actions&#x27;
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/features/sales/sales.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="displayedColumnsMobile"></a>
+                    <span class="name">
+                        <span ><b>displayedColumnsMobile</b></span>
+                        <a href="#displayedColumnsMobile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &#x27;saleDate&#x27;,
+    &#x27;total&#x27;
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/features/sales/sales.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="form"></a>
+                    <span class="name">
+                        <span ><b>form</b></span>
+                        <a href="#form"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://angular.io/api/forms/FormGroup" target="_blank" >FormGroup</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/features/sales/sales.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isBrowser"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isBrowser</b></span>
+                        <a href="#isBrowser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/features/sales/sales.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isMobile"></a>
+                    <span class="name">
+                        <span ><b>isMobile</b></span>
+                        <a href="#isMobile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/features/sales/sales.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/features/sales/sales.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mq"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>mq</b></span>
+                        <a href="#mq"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MediaQueryList</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/features/sales/sales.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mqHandler"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>mqHandler</b></span>
+                        <a href="#mqHandler"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/features/sales/sales.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="storeId"></a>
+                    <span class="name">
+                        <span ><b>storeId</b></span>
+                        <a href="#storeId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/features/sales/sales.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="storeName"></a>
+                    <span class="name">
+                        <span ><b>storeName</b></span>
+                        <a href="#storeName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/features/sales/sales.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackById"></a>
+                    <span class="name">
+                        <span ><b>trackById</b></span>
+                        <a href="#trackById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="184" class="link-to-prism">src/app/features/sales/sales.ts:184</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="displayedColumns"></a>
+                        <span class="name"><b>displayedColumns</b><a href="#displayedColumns"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>displayedColumns()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/features/sales/sales.ts:61</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Inject, PLATFORM_ID, afterNextRender, OnDestroy } from &#x27;@angular/core&#x27;;
+import { CommonModule, isPlatformBrowser } from &#x27;@angular/common&#x27;;
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from &#x27;@angular/forms&#x27;;
+import { finalize } from &#x27;rxjs&#x27;;
+
+import { MatTableDataSource, MatTableModule } from &#x27;@angular/material/table&#x27;;
+import { MatButtonModule } from &#x27;@angular/material/button&#x27;;
+import { MatIconModule } from &#x27;@angular/material/icon&#x27;;
+import { MatFormFieldModule } from &#x27;@angular/material/form-field&#x27;;
+import { MatInputModule } from &#x27;@angular/material/input&#x27;;
+import { MatProgressSpinnerModule } from &#x27;@angular/material/progress-spinner&#x27;;
+
+import { SalesService } from &#x27;../../core/services/sales.service&#x27;;
+import { Sale } from &#x27;../../core/models/sale.model&#x27;;
+
+@Component({
+  selector: &#x27;app-sales&#x27;,
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule
+  ],
+  templateUrl: &#x27;./sales.html&#x27;,
+  styleUrls: [&#x27;./sales.scss&#x27;]
+})
+export class SalesComponent implements OnDestroy {
+  private isBrowser: boolean;
+
+  storeId!: number;
+  storeName: string | null &#x3D; null;
+
+  form: FormGroup;
+  loading &#x3D; false;
+  deletingId: string | null &#x3D; null;
+
+  dataSource &#x3D; new MatTableDataSource&lt;Sale&gt;([]);
+
+  displayedColumnsDesktop: string[] &#x3D; [
+    &#x27;saleDate&#x27;,
+    &#x27;subtotal&#x27;,
+    &#x27;tax&#x27;,
+    &#x27;total&#x27;,
+    &#x27;paymentMethod&#x27;,
+    &#x27;notes&#x27;,
+    &#x27;actions&#x27;
+  ];
+
+  displayedColumnsMobile: string[] &#x3D; [
+    &#x27;saleDate&#x27;,
+    &#x27;total&#x27;
+  ];
+
+  isMobile &#x3D; false;
+
+  get displayedColumns(): string[] {
+    return this.isMobile ? this.displayedColumnsMobile : this.displayedColumnsDesktop;
+  }
+
+  private mq?: MediaQueryList;
+  private mqHandler?: (e: MediaQueryListEvent) &#x3D;&gt; void;
+
+  constructor(
+    private fb: FormBuilder,
+    private salesService: SalesService,
+    @Inject(PLATFORM_ID) platformId: object
+  ) {
+    this.isBrowser &#x3D; isPlatformBrowser(platformId);
+
+    const to &#x3D; new Date();
+    const from &#x3D; new Date(to);
+    from.setDate(to.getDate() - 30);
+
+    this.form &#x3D; this.fb.group({
+      fromDateTime: [this.toLocalInput(from), Validators.required],
+      toDateTime: [this.toLocalInput(to), Validators.required]
+    });
+
+    if (this.isBrowser) {
+      this.mq &#x3D; window.matchMedia(&#x27;(max-width: 640px)&#x27;);
+      this.isMobile &#x3D; this.mq.matches;
+
+      this.mqHandler &#x3D; (e: MediaQueryListEvent) &#x3D;&gt; {
+        this.isMobile &#x3D; e.matches;
+      };
+
+      this.mq.addEventListener(&#x27;change&#x27;, this.mqHandler);
+
+      afterNextRender(() &#x3D;&gt; {
+        const storedStoreId &#x3D; sessionStorage.getItem(&#x27;storeId&#x27;);
+        const storedStoreName &#x3D; sessionStorage.getItem(&#x27;storeName&#x27;);
+
+        if (!storedStoreId) {
+          console.error(&#x27;StoreId not found in sessionStorage&#x27;);
+          window.location.href &#x3D; &#x27;/login&#x27;;
+          return;
+        }
+
+        this.storeId &#x3D; Number(storedStoreId);
+
+        if (Number.isNaN(this.storeId)) {
+          console.error(&#x27;Invalid storeId value:&#x27;, storedStoreId);
+          window.location.href &#x3D; &#x27;/login&#x27;;
+          return;
+        }
+
+        this.storeName &#x3D; storedStoreName;
+        this.search();
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.mq &amp;&amp; this.mqHandler) {
+      this.mq.removeEventListener(&#x27;change&#x27;, this.mqHandler);
+    }
+  }
+
+  search(): void {
+    if (this.form.invalid) return;
+    if (!this.storeId) return;
+
+    const fromStr &#x3D; this.form.value.fromDateTime as string;
+    const toStr &#x3D; this.form.value.toDateTime as string;
+
+    const from &#x3D; new Date(fromStr);
+    const to &#x3D; new Date(toStr);
+
+    this.loading &#x3D; true;
+
+    this.salesService
+      .getByStoreAndRange(this.storeId, from, to)
+      .pipe(finalize(() &#x3D;&gt; (this.loading &#x3D; false)))
+      .subscribe({
+        next: rows &#x3D;&gt; {
+          this.dataSource.data &#x3D; rows ?? [];
+        },
+        error: err &#x3D;&gt; {
+          console.error(err);
+          this.dataSource.data &#x3D; [];
+          alert(&#x27;Error loading sales&#x27;);
+        }
+      });
+  }
+
+  getSaleId(row: Sale): string {
+    const r: any &#x3D; row;
+    return String(r.saleId ?? r.id ?? &#x27;&#x27;);
+  }
+
+  isDeleting(row: Sale): boolean {
+    return this.deletingId &#x3D;&#x3D;&#x3D; this.getSaleId(row);
+  }
+
+  deleteSale(row: Sale): void {
+    const id &#x3D; this.getSaleId(row);
+    if (!id) return;
+
+    if (!confirm(&#x27;Delete this sale?&#x27;)) return;
+
+    this.deletingId &#x3D; id;
+
+    this.salesService
+      .delete(id)
+      .pipe(finalize(() &#x3D;&gt; (this.deletingId &#x3D; null)))
+      .subscribe({
+        next: () &#x3D;&gt; {
+          this.dataSource.data &#x3D; this.dataSource.data.filter(
+            x &#x3D;&gt; this.getSaleId(x) !&#x3D;&#x3D; id
+          );
+        },
+        error: err &#x3D;&gt; {
+          console.error(err);
+          alert(&#x27;Error deleting sale&#x27;);
+        }
+      });
+  }
+
+  trackById &#x3D; (_: number, row: Sale): string &#x3D;&gt; {
+    return this.getSaleId(row);
+  };
+
+  private toLocalInput(d: Date): string {
+    const pad &#x3D; (n: number) &#x3D;&gt; String(n).padStart(2, &#x27;0&#x27;);
+
+    const yyyy &#x3D; d.getFullYear();
+    const mm &#x3D; pad(d.getMonth() + 1);
+    const dd &#x3D; pad(d.getDate());
+    const hh &#x3D; pad(d.getHours());
+    const mi &#x3D; pad(d.getMinutes());
+
+    return &#x60;${yyyy}-${mm}-${dd}T${hh}:${mi}&#x60;;
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;page-shell&quot;&gt;
+
+  &lt;!-- HEADER --&gt;
+  &lt;div class&#x3D;&quot;view-header&quot;&gt;
+    &lt;div class&#x3D;&quot;title-section&quot;&gt;
+      &lt;span class&#x3D;&quot;eyebrow&quot;&gt;Sales&lt;/span&gt;
+      &lt;h1 class&#x3D;&quot;view-title&quot;&gt;Sales History&lt;/h1&gt;
+      &lt;p class&#x3D;&quot;view-subtitle&quot;&gt;Default: last 30 days (Pacific)&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;actions&quot;&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        class&#x3D;&quot;btn-ghost&quot;
+        (click)&#x3D;&quot;search()&quot;
+        [disabled]&#x3D;&quot;loading || form.invalid&quot;
+      &gt;
+        &lt;i class&#x3D;&quot;fa-solid fa-magnifying-glass&quot;&gt;&lt;/i&gt;
+        Search
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- FILTERS --&gt;
+  &lt;div class&#x3D;&quot;filters&quot; [formGroup]&#x3D;&quot;form&quot;&gt;
+
+    &lt;mat-form-field appearance&#x3D;&quot;outline&quot; class&#x3D;&quot;field&quot;&gt;
+      &lt;mat-label&gt;From (Pacific)&lt;/mat-label&gt;
+      &lt;input matInput type&#x3D;&quot;datetime-local&quot; formControlName&#x3D;&quot;fromDateTime&quot; /&gt;
+    &lt;/mat-form-field&gt;
+
+    &lt;mat-form-field appearance&#x3D;&quot;outline&quot; class&#x3D;&quot;field&quot;&gt;
+      &lt;mat-label&gt;To (Pacific)&lt;/mat-label&gt;
+      &lt;input matInput type&#x3D;&quot;datetime-local&quot; formControlName&#x3D;&quot;toDateTime&quot; /&gt;
+    &lt;/mat-form-field&gt;
+
+    &lt;div class&#x3D;&quot;meta&quot;&gt;
+      &lt;span&gt;Store: {{ storeName || (&#x27;#&#x27; + storeId) }}&lt;/span&gt;
+      &lt;span&gt;Rows: {{ dataSource.data.length }}&lt;/span&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+
+  &lt;!-- TABLE --&gt;
+  &lt;div class&#x3D;&quot;table-wrap&quot;&gt;
+
+    &lt;div *ngIf&#x3D;&quot;loading&quot; class&#x3D;&quot;loading&quot;&gt;
+      &lt;mat-spinner diameter&#x3D;&quot;28&quot;&gt;&lt;/mat-spinner&gt;
+      &lt;span&gt;Loading sales...&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;table
+      mat-table
+      [dataSource]&#x3D;&quot;dataSource&quot;
+      [trackBy]&#x3D;&quot;trackById&quot;
+      *ngIf&#x3D;&quot;!loading&quot;
+    &gt;
+
+      &lt;!-- DATE --&gt;
+      &lt;ng-container matColumnDef&#x3D;&quot;saleDate&quot;&gt;
+        &lt;th mat-header-cell *matHeaderCellDef&gt;Date&lt;/th&gt;
+        &lt;td mat-cell *matCellDef&#x3D;&quot;let row&quot;&gt;
+          {{ row.saleDate | date:&#x27;MMM d, y, h:mm a&#x27; }}
+        &lt;/td&gt;
+      &lt;/ng-container&gt;
+
+      &lt;!-- SUBTOTAL --&gt;
+      &lt;ng-container matColumnDef&#x3D;&quot;subtotal&quot;&gt;
+        &lt;th mat-header-cell *matHeaderCellDef&gt;Subtotal&lt;/th&gt;
+        &lt;td mat-cell *matCellDef&#x3D;&quot;let row&quot;&gt;
+          {{ row.subtotal | currency:&#x27;USD&#x27; }}
+        &lt;/td&gt;
+      &lt;/ng-container&gt;
+
+      &lt;!-- TAX --&gt;
+      &lt;ng-container matColumnDef&#x3D;&quot;tax&quot;&gt;
+        &lt;th mat-header-cell *matHeaderCellDef&gt;Tax&lt;/th&gt;
+        &lt;td mat-cell *matCellDef&#x3D;&quot;let row&quot;&gt;
+          {{ row.tax | currency:&#x27;USD&#x27; }}
+        &lt;/td&gt;
+      &lt;/ng-container&gt;
+
+      &lt;!-- TOTAL --&gt;
+      &lt;ng-container matColumnDef&#x3D;&quot;total&quot;&gt;
+        &lt;th mat-header-cell *matHeaderCellDef&gt;Total&lt;/th&gt;
+        &lt;td mat-cell *matCellDef&#x3D;&quot;let row&quot; class&#x3D;&quot;cell-total&quot;&gt;
+          {{ row.total | currency:&#x27;USD&#x27; }}
+        &lt;/td&gt;
+      &lt;/ng-container&gt;
+
+      &lt;!-- PAYMENT --&gt;
+      &lt;ng-container matColumnDef&#x3D;&quot;paymentMethod&quot;&gt;
+        &lt;th mat-header-cell *matHeaderCellDef&gt;Payment&lt;/th&gt;
+        &lt;td mat-cell *matCellDef&#x3D;&quot;let row&quot;&gt;
+          {{ row.paymentMethod || &#x27;-&#x27; }}
+        &lt;/td&gt;
+      &lt;/ng-container&gt;
+
+      &lt;!-- NOTES --&gt;
+      &lt;ng-container matColumnDef&#x3D;&quot;notes&quot;&gt;
+        &lt;th mat-header-cell *matHeaderCellDef&gt;Notes&lt;/th&gt;
+        &lt;td mat-cell *matCellDef&#x3D;&quot;let row&quot; class&#x3D;&quot;cell-ellipsis&quot;&gt;
+          {{ row.notes || &#x27;-&#x27; }}
+        &lt;/td&gt;
+      &lt;/ng-container&gt;
+
+      &lt;!-- ACTIONS --&gt;
+      &lt;ng-container matColumnDef&#x3D;&quot;actions&quot;&gt;
+        &lt;th mat-header-cell *matHeaderCellDef class&#x3D;&quot;actions-col&quot;&gt;&lt;/th&gt;
+        &lt;td mat-cell *matCellDef&#x3D;&quot;let row&quot; class&#x3D;&quot;actions-col&quot;&gt;
+
+          &lt;button
+            mat-icon-button
+            color&#x3D;&quot;warn&quot;
+            type&#x3D;&quot;button&quot;
+            (click)&#x3D;&quot;deleteSale(row)&quot;
+            [disabled]&#x3D;&quot;isDeleting(row)&quot;
+          &gt;
+            &lt;mat-icon *ngIf&#x3D;&quot;!isDeleting(row)&quot;&gt;delete&lt;/mat-icon&gt;
+            &lt;mat-spinner *ngIf&#x3D;&quot;isDeleting(row)&quot; diameter&#x3D;&quot;18&quot;&gt;&lt;/mat-spinner&gt;
+          &lt;/button&gt;
+
+        &lt;/td&gt;
+      &lt;/ng-container&gt;
+
+      &lt;tr mat-header-row *matHeaderRowDef&#x3D;&quot;displayedColumns&quot;&gt;&lt;/tr&gt;
+
+      &lt;tr
+        mat-row
+        *matRowDef&#x3D;&quot;let row; columns: displayedColumns&quot;
+      &gt;&lt;/tr&gt;
+
+    &lt;/table&gt;
+
+    &lt;div class&#x3D;&quot;empty&quot; *ngIf&#x3D;&quot;!loading &amp;&amp; dataSource.data.length &#x3D;&#x3D;&#x3D; 0&quot;&gt;
+      No sales found for this period.
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./sales.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">
+
+/* FILTERS */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 14px;
+
+  .field {
+    width: 270px;
+    min-width: 230px;
+  }
+
+  .meta {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+    align-items: center;
+
+    span {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="page-shell">  <!-- HEADER -->  <div class="view-header">    <div class="title-section">      <span class="eyebrow">Sales</span>      <h1 class="view-title">Sales History</h1>      <p class="view-subtitle">Default: last 30 days (Pacific)</p>    </div>    <div class="actions">      <button        type="button"        class="btn-ghost"        (click)="search()"        [disabled]="loading || form.invalid"      >        <i class="fa-solid fa-magnifying-glass"></i>        Search      </button>    </div>  </div>  <!-- FILTERS -->  <div class="filters" [formGroup]="form">    <mat-form-field appearance="outline" class="field">      <mat-label>From (Pacific)</mat-label>      <input matInput type="datetime-local" formControlName="fromDateTime" />    </mat-form-field>    <mat-form-field appearance="outline" class="field">      <mat-label>To (Pacific)</mat-label>      <input matInput type="datetime-local" formControlName="toDateTime" />    </mat-form-field>    <div class="meta">      <span>Store: {{ storeName || (\'#\' + storeId) }}</span>      <span>Rows: {{ dataSource.data.length }}</span>    </div>  </div>  <!-- TABLE -->  <div class="table-wrap">    <div *ngIf="loading" class="loading">      <mat-spinner diameter="28"></mat-spinner>      <span>Loading sales...</span>    </div>    <table      mat-table      [dataSource]="dataSource"      [trackBy]="trackById"      *ngIf="!loading"    >      <!-- DATE -->      <ng-container matColumnDef="saleDate">        <th mat-header-cell *matHeaderCellDef>Date</th>        <td mat-cell *matCellDef="let row">          {{ row.saleDate | date:\'MMM d, y, h:mm a\' }}        </td>      </ng-container>      <!-- SUBTOTAL -->      <ng-container matColumnDef="subtotal">        <th mat-header-cell *matHeaderCellDef>Subtotal</th>        <td mat-cell *matCellDef="let row">          {{ row.subtotal | currency:\'USD\' }}        </td>      </ng-container>      <!-- TAX -->      <ng-container matColumnDef="tax">        <th mat-header-cell *matHeaderCellDef>Tax</th>        <td mat-cell *matCellDef="let row">          {{ row.tax | currency:\'USD\' }}        </td>      </ng-container>      <!-- TOTAL -->      <ng-container matColumnDef="total">        <th mat-header-cell *matHeaderCellDef>Total</th>        <td mat-cell *matCellDef="let row" class="cell-total">          {{ row.total | currency:\'USD\' }}        </td>      </ng-container>      <!-- PAYMENT -->      <ng-container matColumnDef="paymentMethod">        <th mat-header-cell *matHeaderCellDef>Payment</th>        <td mat-cell *matCellDef="let row">          {{ row.paymentMethod || \'-\' }}        </td>      </ng-container>      <!-- NOTES -->      <ng-container matColumnDef="notes">        <th mat-header-cell *matHeaderCellDef>Notes</th>        <td mat-cell *matCellDef="let row" class="cell-ellipsis">          {{ row.notes || \'-\' }}        </td>      </ng-container>      <!-- ACTIONS -->      <ng-container matColumnDef="actions">        <th mat-header-cell *matHeaderCellDef class="actions-col"></th>        <td mat-cell *matCellDef="let row" class="actions-col">          <button            mat-icon-button            color="warn"            type="button"            (click)="deleteSale(row)"            [disabled]="isDeleting(row)"          >            <mat-icon *ngIf="!isDeleting(row)">delete</mat-icon>            <mat-spinner *ngIf="isDeleting(row)" diameter="18"></mat-spinner>          </button>        </td>      </ng-container>      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>      <tr        mat-row        *matRowDef="let row; columns: displayedColumns"      ></tr>    </table>    <div class="empty" *ngIf="!loading && dataSource.data.length === 0">      No sales found for this period.    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AddPopupComponent', 'selector': 'app-add-popup'},{'name': 'App', 'selector': 'app-root'},{'name': 'AuthCallbackComponent', 'selector': ''},{'name': 'DashboardComponent', 'selector': ''},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'SalesComponent', 'selector': 'app-sales'},{'name': 'SettingsComponent', 'selector': 'app-settings'},{'name': 'ShellComponent', 'selector': ''},{'name': 'StoresComponent', 'selector': 'app-stores'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'SalesComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'SalesComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
