@@ -78,10 +78,23 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
         .AsNoTracking()
         .Where(x => x.UserId == userId);
 
+    // TOTAL GENERAL
     var total = await query.CountAsync(ct);
 
+    // TOTAL DEL DÍA
     var todayCount = await query
         .Where(x => x.SubmittedAtUtc >= startUtc && x.SubmittedAtUtc < endUtc)
+        .CountAsync(ct);
+
+    // TOTAL DEL MES
+    var monthStartLocal = new DateTime(date.Year, date.Month, 1);
+    var monthEndLocal = monthStartLocal.AddMonths(1);
+
+    var monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(monthStartLocal, tz);
+    var monthEndUtc = TimeZoneInfo.ConvertTimeToUtc(monthEndLocal, tz);
+
+    var monthCount = await query
+        .Where(x => x.SubmittedAtUtc >= monthStartUtc && x.SubmittedAtUtc < monthEndUtc)
         .CountAsync(ct);
 
     var approved = await query
@@ -98,6 +111,7 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
 
     return new CreditCardApplicationsSummaryDto(
         total,
+        monthCount,
         todayCount,
         approved,
         declined,

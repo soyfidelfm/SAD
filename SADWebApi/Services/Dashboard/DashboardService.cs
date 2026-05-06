@@ -33,6 +33,7 @@ public sealed class DashboardService : IDashboardService
   {
     var creditCards = await _creditCardSvc.GetSummaryAsync(userId, date, timeZone, ct);
     var memberships = await _membershipSvc.GetSummaryAsync(userId, date, timeZone, ct);
+    var sales = await _salesSvc.GetSummaryAsync(userId, date, timeZone, ct);
 
     var lastLoginUtc = await _db.Users
       .AsNoTracking()
@@ -40,25 +41,11 @@ public sealed class DashboardService : IDashboardService
       .Select(x => x.LastLoginAtUtc)
       .SingleOrDefaultAsync(ct);
 
-    var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-
-    var startLocal = date.ToDateTime(TimeOnly.MinValue);
-    var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
-
-    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
-    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
-
-    var todaySalesTotal = await _db.Sales
-      .AsNoTracking()
-      .Where(x => x.UserId == userId)
-      .Where(x => x.SaleDate >= startUtc && x.SaleDate < endUtc)
-      .SumAsync(x => (decimal?)x.Total, ct) ?? 0m;
-
     return new DashboardSummaryDto(
       creditCards,
       memberships,
       new LastLoginSummaryDto(lastLoginUtc ?? DateTime.UtcNow),
-      new TodaySalesSummaryDto(todaySalesTotal)
+      sales
     );
   }
 
@@ -71,18 +58,21 @@ public sealed class DashboardService : IDashboardService
     // 🔹 MAPEAR cada fuente
     var creditMapped = creditCardTransactions.Select(x => new LatestTransactionDto(
         "Credit Card",
+        0,
         x.SubmittedAtUtc,          // <-- ajusta al campo real
         x.StatusName         // <-- ajusta al campo real
     ));
 
     var membershipMapped = membershipTransactions.Select(x => new LatestTransactionDto(
         "Membership",
+        0,
         x.SoldAtUtc,
         x.StatusName           // o lo que aplique
     ));
 
     var salesMapped = salesTransactions.Select(x => new LatestTransactionDto(
         "Sale",
+        x.Total,
         x.SaleDate,
         "Completed"           // o lo que aplique
     ));

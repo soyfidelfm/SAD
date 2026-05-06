@@ -2,6 +2,7 @@
 
 export interface CreditCardApplicationsSummaryDto {
   total: number;
+  thisMonth: number;
   today: number;
   approved: number;
   declined: number;
@@ -10,6 +11,7 @@ export interface CreditCardApplicationsSummaryDto {
 
 export interface MembershipSalesSummaryDto {
   total: number;
+  thisMonth: number;
   today: number;
 }
 

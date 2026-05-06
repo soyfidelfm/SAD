@@ -83,6 +83,22 @@ public class MembershipSalesService : IMembershipSalesService
         )
         .CountAsync(ct);
 
-    return new MembershipSalesSummaryDto(total, today);
+    // TOTAL DEL MES
+    var monthStartLocal = new DateTime(date.Year, date.Month, 1);
+    var monthEndLocal = monthStartLocal.AddMonths(1);
+
+    var monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(monthStartLocal, tz);
+    var monthEndUtc = TimeZoneInfo.ConvertTimeToUtc(monthEndLocal, tz);
+
+    var monthTotal = await _db.MembershipSales
+        .AsNoTracking()
+        .Where(x =>
+            x.UserId == userId &&
+            x.SoldAtUtc >= monthStartUtc &&
+            x.SoldAtUtc < monthEndUtc
+        )
+        .CountAsync(ct);
+
+    return new MembershipSalesSummaryDto(total, monthTotal, today);
   }
 }

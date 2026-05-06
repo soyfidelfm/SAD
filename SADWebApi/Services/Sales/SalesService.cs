@@ -162,6 +162,44 @@ public class SalesService : ISalesService
         .ToListAsync(ct);
   }
 
+  public async Task<SalesSummaryDto> GetSummaryAsync(Guid userId,
+      DateOnly date,
+      string timeZone,
+      CancellationToken ct)
+      {
+    // Fallback por si no mandan timezone
+    var tz = string.IsNullOrWhiteSpace(timeZone)
+        ? TimeZoneInfo.Utc
+        : TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+
+    // Convertir el día LOCAL a rango UTC
+    var startLocal = date.ToDateTime(TimeOnly.MinValue);
+    var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
+
+    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
+    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
+
+    var query = _db.Sales
+        .AsNoTracking()
+        .Where(x => x.UserId == userId);
+    var total = await query.CountAsync(ct);
+    var today = await query.CountAsync(x => x.SaleDate >= startUtc && x.SaleDate < endUtc, ct);
+
+    var monthStartLocal = new DateTime(date.Year, date.Month, 1);
+    var monthEndLocal = monthStartLocal.AddMonths(1);
+
+    var monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(monthStartLocal, tz);
+    var monthEndUtc = TimeZoneInfo.ConvertTimeToUtc(monthEndLocal, tz);
+
+    var thisMonth = await query.CountAsync(x => x.SaleDate >= monthStartUtc && x.SaleDate < monthEndUtc, ct);
+
+    return new SalesSummaryDto(
+    total,
+    today,
+    thisMonth
+    );
+  }
+
   private static SaleDto ToDto(Sale s) =>
       new(
           s.SaleId,

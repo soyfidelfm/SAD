@@ -10,8 +10,9 @@ public interface ISalesService
 	Task<bool> UpdateAsync(Guid saleId, SaleUpdateDto dto, CancellationToken ct);
 	Task<bool> DeleteAsync(Guid saleId, CancellationToken ct);
 
-	// ✅ existentes
-	Task<IReadOnlyList<SaleDto>> GetByStoreIdAsync(int storeId, CancellationToken ct);
+  // ✅ existentes
+  Task<SalesSummaryDto> GetSummaryAsync(Guid userId,DateOnly date,string timeZone,CancellationToken ct);
+  Task<IReadOnlyList<SaleDto>> GetByStoreIdAsync(int storeId, CancellationToken ct);
 	Task<IReadOnlyList<SaleDto>> GetByStoreAndDateAsync(int storeId, DateTime date, CancellationToken ct);
 	Task<bool> DeleteByIdAsync(Guid saleId, CancellationToken ct);
 

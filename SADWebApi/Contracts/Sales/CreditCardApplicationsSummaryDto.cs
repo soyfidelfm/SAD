@@ -1,8 +1,9 @@
-﻿namespace Sad.Api.Contracts.Sales;
+namespace Sad.Api.Contracts.Sales;
 
 public record CreditCardApplicationsSummaryDto(
 	int Total,
-	int Today,
+  int ThisMonth,
+  int Today,
 	int Approved,
 	int Declined,
 	int Pending
