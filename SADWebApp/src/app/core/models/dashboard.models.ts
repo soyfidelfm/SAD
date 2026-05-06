@@ -1,5 +1,7 @@
 // src/app/core/models/dashboard.models.ts
 
+import { Sale } from "./sale.model";
+
 export interface CreditCardApplicationsSummaryDto {
   total: number;
   thisMonth: number;
@@ -15,12 +17,14 @@ export interface MembershipSalesSummaryDto {
   today: number;
 }
 
-export interface TodaySalesSummaryDto {
-  todaySalesTotal: number;
+export interface SalesSummaryDto {
+  total: number;
+  thisMonth: number;
+  today: number;
 }
 
 export interface DashboardSummaryDto {
-  creditCards: CreditCardApplicationsSummaryDto;
+  creditCards:CreditCardApplicationsSummaryDto;
   memberships: MembershipSalesSummaryDto;
-  todaySales: TodaySalesSummaryDto;
+  sales: SalesSummaryDto;
 }

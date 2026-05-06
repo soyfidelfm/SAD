@@ -27,28 +27,34 @@ export class DashboardService {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  getSummary(): Observable<DashboardSummaryDto> {
+getSummary(): Observable<DashboardSummaryDto> {
   if (!this.isBrowser) {
     return of({
-      creditCards: { total: 0, today: 0, approved: 0, declined: 0, pending: 0 },
-      memberships: { total: 0, today: 0 },
-      todaySales: { todaySalesTotal: 0 }
+      creditCards: {
+        total: 0,
+        thisMonth: 0,
+        today: 0,
+        approved: 0,
+        declined: 0,
+        pending: 0
+      },
+
+      memberships: {
+        total: 0,
+        thisMonth: 0,
+        today: 0
+      },
+
+      sales: {
+        total: 0,
+        thisMonth: 0,
+        today: 0
+      }
     });
   }
 
-  const today = new Date();
-
-  const date =
-    today.getFullYear() +
-    '-' +
-    String(today.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(today.getDate()).padStart(2, '0');
-
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   return this.http.get<DashboardSummaryDto>(
-    `${this.baseUrl}/summary?date=${date}&timeZone=${encodeURIComponent(timeZone)}`
+    `${this.baseUrl}/summary`
   );
 }
 

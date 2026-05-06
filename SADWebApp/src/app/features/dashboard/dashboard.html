@@ -63,8 +63,8 @@
 
         <div
           class="kpi-value"
-          [ngClass]="getStatusClass(s.creditCards.total)">
-          {{ s.creditCards.total }}
+          [ngClass]="getStatusClass(s.creditCards.today)">
+          {{ s.creditCards.today }}
         </div>
 
         <div class="kpi-hint">
@@ -77,10 +77,10 @@
         <div class="kpi-label">Membership Sales</div>
 
         <div
-          class="kpi-value"
-          [ngClass]="getStatusClass(s.memberships.total)">
-          {{ s.memberships.total }}
-        </div>
+  class="kpi-value"
+  [ngClass]="getStatusClass(s.memberships.today)">
+  {{ s.memberships.today }}
+</div>
 
         <div class="kpi-hint">
           Today's goal - {{ dailyMembershipGoal }} memberships
@@ -94,9 +94,9 @@
         </div>
 
         <div
-          class="kpi-value"
-          [ngClass]="getSalesAmountClass(s.todaySales.todaySalesTotal)">
-          {{ s.todaySales.todaySalesTotal | currency:'USD':'symbol':'1.2-2' }}
+  class="kpi-value"
+  [ngClass]="getStatusClass(s.sales.today)">
+          {{ s.sales.today | currency:'USD':'symbol':'1.2-2' }}
         </div>
 
         <div class="kpi-hint">
@@ -119,29 +119,29 @@
       <div class="progress-block">
         <div class="progress-head">
           <span>Sales progress (today)</span>
-          <span>{{ getSalesPercent(s.todaySales.todaySalesTotal) }}%</span>
+          <span>{{ getSalesPercent(s.sales.today) }}%</span>
         </div>
 
         <div
           class="progress-track"
           role="progressbar"
-          [attr.aria-valuenow]="getSalesPercent(s.todaySales.todaySalesTotal)"
+          [attr.aria-valuenow]="getSalesPercent(s.sales.today)"
           aria-valuemin="0"
           aria-valuemax="100">
 
           <div
             class="progress-fill"
-            [style.width.%]="getSalesPercent(s.todaySales.todaySalesTotal)"
-            [ngClass]="getSalesBarClass(s.todaySales.todaySalesTotal)">
+            [style.width.%]="getSalesPercent(s.sales.today)"
+            [ngClass]="getSalesBarClass(s.sales.today)">
           </div>
         </div>
 
         <div class="progress-sub muted">
-          {{ s.todaySales.todaySalesTotal | currency:'USD':'symbol':'1.0-0' }}
+          {{ s.sales.today | currency:'USD':'symbol':'1.0-0' }}
           of
           {{ dailySalesGoal | currency:'USD':'symbol':'1.0-0' }}
           ·
-          {{ getSalesProgressText(s.todaySales.todaySalesTotal) }}
+          {{ getSalesProgressText(s.sales.today) }}
         </div>
       </div>
     </div>

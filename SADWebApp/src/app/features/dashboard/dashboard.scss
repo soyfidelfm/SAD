@@ -180,6 +180,24 @@
   position: relative;
 }
 
+/* =========================
+   STATUS COLORS
+========================= */
+.status-red {
+  color: var(--danger);
+  font-weight: 800;
+}
+
+.status-yellow {
+  color: var(--warning);
+  font-weight: 800;
+}
+
+.status-green {
+  color: var(--success);
+  font-weight: 800;
+}
+
 
 /* =========================
    RESPONSIVE
