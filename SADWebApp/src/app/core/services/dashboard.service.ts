@@ -66,7 +66,7 @@ getSummary(): Observable<DashboardSummaryDto> {
     Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   return this.http.get<DashboardSummaryDto>(
-    `${this.baseUrl}/sumry`,
+    `${this.baseUrl}/summary`,
     {
       params: {
         date,
