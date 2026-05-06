@@ -49,49 +49,63 @@ public sealed class DashboardService : IDashboardService
     );
   }
 
-  public async Task<IEnumerable<LatestTransactionDto>> GetLastTransactionsAsync(int top, DateOnly date,
-  string timeZone, CancellationToken ct, Guid? userId = null)
+  public async Task<IEnumerable<LatestTransactionDto>> GetLastTransactionsAsync(
+    int top,
+    DateOnly date,
+    string timeZone,
+    CancellationToken ct,
+    Guid? userId = null)
   {
+    var tz = string.IsNullOrWhiteSpace(timeZone)
+        ? TimeZoneInfo.Utc
+        : TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+
+    var startLocal = date.ToDateTime(TimeOnly.MinValue);
+    var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
+
+    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
+    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
+
     var creditCardTransactions = await _creditCardSvc.GetLatestAsync(top, ct, userId);
     var membershipTransactions = await _membershipSvc.GetLatestAsync(top, ct, userId);
     var salesTransactions = await _salesSvc.GetLatestAsync(top, ct, userId);
 
-    // 🔹 MAPEAR cada fuente
-    var creditMapped = creditCardTransactions.Select(x => new LatestTransactionDto(
-        "Credit Card",
-        0,
-        x.SubmittedAtUtc,          // <-- ajusta al campo real
-        x.StatusName         // <-- ajusta al campo real
-    ));
+    var creditMapped = creditCardTransactions.Select(x => new
+    {
+      Type = "Credit Card",
+      Amount = 0m,
+      TransactionDateUtc = x.SubmittedAtUtc,
+      Status = x.StatusName
+    });
 
-    var membershipMapped = membershipTransactions.Select(x => new LatestTransactionDto(
-        "Membership",
-        0,
-        x.SoldAtUtc,
-        x.StatusName           // o lo que aplique
-    ));
+    var membershipMapped = membershipTransactions.Select(x => new
+    {
+      Type = "Membership",
+      Amount = 0m,
+      TransactionDateUtc = x.SoldAtUtc,
+      Status = x.StatusName
+    });
 
-    var salesMapped = salesTransactions.Select(x => new LatestTransactionDto(
-        "Sale",
-        x.Total,
-        x.SaleDate,
-        "Completed"           // o lo que aplique
-    ));
-    var tz = string.IsNullOrWhiteSpace(timeZone)
-        ? TimeZoneInfo.Utc
-        : TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-    var startLocal = date.ToDateTime(TimeOnly.MinValue);
-    var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
-    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
-    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
+    var salesMapped = salesTransactions.Select(x => new
+    {
+      Type = "Sale",
+      Amount = x.Total,
+      TransactionDateUtc = x.SaleDate,
+      Status = "Completed"
+    });
 
-    // 🔹 UNIR + ORDENAR + LIMITAR
     return creditMapped
         .Concat(membershipMapped)
         .Concat(salesMapped)
-        .Where(x => x.TransactionDate >= startUtc && x.TransactionDate < endUtc)
-        .OrderByDescending(x => x.TransactionDate)
+        .Where(x => x.TransactionDateUtc >= startUtc && x.TransactionDateUtc < endUtc)
+        .OrderByDescending(x => x.TransactionDateUtc)
         .Take(top)
+        .Select(x => new LatestTransactionDto(
+            x.Type,
+            x.Amount,
+            TimeZoneInfo.ConvertTimeFromUtc(x.TransactionDateUtc, tz),
+            x.Status
+        ))
         .ToList();
   }
 
