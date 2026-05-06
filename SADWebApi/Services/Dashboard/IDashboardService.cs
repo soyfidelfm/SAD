@@ -6,5 +6,5 @@ public interface IDashboardService
 {
 	Task<DashboardSummaryDto> GetDashboardSummaryAsync(Guid userId, DateOnly date, string timeZone, CancellationToken ct);
 	Task<IEnumerable<SalesByHourDto>> GetTodaySalesByHourAsync(Guid userId,	CancellationToken ct);
-  Task<IEnumerable<LatestTransactionDto>> GetLastTransactionsAsync(int top, CancellationToken ct, Guid? userId);
+  Task<IEnumerable<LatestTransactionDto>> GetLastTransactionsAsync(int top, DateOnly date, string timeZone, CancellationToken ct, Guid? userId = null);
 }

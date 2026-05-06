@@ -49,10 +49,11 @@ public class DashboardController : ControllerBase
 	}
 
   [HttpGet("latestTransactions")]
-  public async Task<ActionResult<IEnumerable<LatestTransactionDto>>> GetLatestTransactions(int top, CancellationToken ct)
+  public async Task<ActionResult<IEnumerable<LatestTransactionDto>>> GetLatestTransactions(int top, [FromQuery] DateOnly date,
+      [FromQuery] string timeZone, CancellationToken ct)
   {
     var userId = GetUserIdFromClaims();
-    var transactions = await _dashboard.GetLastTransactionsAsync(top, ct, userId);
+    var transactions = await _dashboard.GetLastTransactionsAsync(top, date, timeZone, ct, userId);
     return Ok(transactions);
   }
 

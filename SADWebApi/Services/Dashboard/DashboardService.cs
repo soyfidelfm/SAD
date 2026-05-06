@@ -49,7 +49,8 @@ public sealed class DashboardService : IDashboardService
     );
   }
 
-  public async Task<IEnumerable<LatestTransactionDto>> GetLastTransactionsAsync(int top, CancellationToken ct, Guid? userId = null)
+  public async Task<IEnumerable<LatestTransactionDto>> GetLastTransactionsAsync(int top, DateOnly date,
+  string timeZone, CancellationToken ct, Guid? userId = null)
   {
     var creditCardTransactions = await _creditCardSvc.GetLatestAsync(top, ct, userId);
     var membershipTransactions = await _membershipSvc.GetLatestAsync(top, ct, userId);
@@ -76,11 +77,19 @@ public sealed class DashboardService : IDashboardService
         x.SaleDate,
         "Completed"           // o lo que aplique
     ));
+    var tz = string.IsNullOrWhiteSpace(timeZone)
+        ? TimeZoneInfo.Utc
+        : TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+    var startLocal = date.ToDateTime(TimeOnly.MinValue);
+    var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
+    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
+    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
 
     // 🔹 UNIR + ORDENAR + LIMITAR
     return creditMapped
         .Concat(membershipMapped)
         .Concat(salesMapped)
+        .Where(x => x.TransactionDate >= startUtc && x.TransactionDate < endUtc)
         .OrderByDescending(x => x.TransactionDate)
         .Take(top)
         .ToList();

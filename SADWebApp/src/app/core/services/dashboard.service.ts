@@ -66,7 +66,7 @@ getSummary(): Observable<DashboardSummaryDto> {
     Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   return this.http.get<DashboardSummaryDto>(
-    `${this.baseUrl}/summary`,
+    `${this.baseUrl}/sumry`,
     {
       params: {
         date,
@@ -76,13 +76,31 @@ getSummary(): Observable<DashboardSummaryDto> {
   );
 }
 
-  getLatestTransactions(top: number = 10): Observable<LatestTransactionDto[]> {
+getLatestTransactions(top: number = 10): Observable<LatestTransactionDto[]> {
   if (!this.isBrowser) {
     return of([]);
   }
 
+  const today = new Date();
+
+  const date =
+    today.getFullYear() +
+    '-' +
+    String(today.getMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(today.getDate()).padStart(2, '0');
+
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   return this.http.get<LatestTransactionDto[]>(
-    `${this.baseUrl}/latestTransactions?top=${top}`
+    `${this.baseUrl}/latestTransactions`,
+    {
+      params: {
+        top,
+        date,
+        timeZone
+      }
+    }
   );
 }
 
