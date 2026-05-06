@@ -195,8 +195,8 @@ public class SalesService : ISalesService
 
     return new SalesSummaryDto(
     total,
-    today,
-    thisMonth
+    thisMonth,
+    today    
     );
   }
 
