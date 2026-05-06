@@ -53,8 +53,26 @@ getSummary(): Observable<DashboardSummaryDto> {
     });
   }
 
+  const today = new Date();
+
+  const date =
+    today.getFullYear() +
+    '-' +
+    String(today.getMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(today.getDate()).padStart(2, '0');
+
+  const timeZone =
+    Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   return this.http.get<DashboardSummaryDto>(
-    `${this.baseUrl}/summary`
+    `${this.baseUrl}/summary`,
+    {
+      params: {
+        date,
+        timeZone
+      }
+    }
   );
 }
 
