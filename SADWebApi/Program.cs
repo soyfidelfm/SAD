@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using Sad.Api.Auth;
 using Sad.Api.Data;
 using Sad.Api.Services.Auth;
@@ -15,7 +17,40 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers / Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+  c.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Title = "SADWebApi",
+    Version = "v1"
+  });
+
+  c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+  {
+    Name = "Authorization",
+    Type = SecuritySchemeType.Http,
+    Scheme = "bearer",
+    BearerFormat = "JWT",
+    In = ParameterLocation.Header,
+    Description = "Paste your JWT token here. Do NOT write Bearer, only the token."
+  });
+
+  c.AddSecurityRequirement(new OpenApiSecurityRequirement
+  {
+    {
+      new OpenApiSecurityScheme
+      {
+        Reference = new OpenApiReference
+        {
+          Type = ReferenceType.SecurityScheme,
+          Id = "Bearer"
+        }
+      },
+      Array.Empty<string>()
+    }
+  });
+});
 
 // Database
 var connectionString = builder.Configuration.GetConnectionString("SadDb");
@@ -49,7 +84,8 @@ builder.Services.AddCors(options =>
       .WithOrigins(
         "http://localhost:4200",
         "http://localhost:4300",
-        "https://sad.thekiddycloud.com"
+        "https://sad.thekiddycloud.com",
+        "https://sad.fidelfm.com"
       )
       .AllowAnyHeader()
       .AllowAnyMethod();
