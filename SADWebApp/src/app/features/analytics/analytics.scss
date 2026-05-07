@@ -48,6 +48,12 @@
   height: 46px;
   padding: 0 16px;
   cursor: pointer;
+  transition: 0.2s ease;
+
+  &:hover {
+    border-color: rgba(255, 94, 132, 0.35);
+    color: #ff7a9c;
+  }
 }
 
 .btn-secondary {
@@ -72,9 +78,18 @@
     background: transparent;
     border-radius: 10px;
     cursor: pointer;
+    transition: 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
 
     &.active {
-      background: linear-gradient(135deg, rgba(255, 94, 132, 0.34), rgba(255, 94, 132, 0.16));
+      background: linear-gradient(
+        135deg,
+        rgba(255, 94, 132, 0.34),
+        rgba(255, 94, 132, 0.16)
+      );
       color: #ff7a9c;
       border: 1px solid rgba(255, 94, 132, 0.28);
       font-weight: 800;
@@ -196,26 +211,45 @@
 }
 
 .fake-chart {
-  position: relative;
-  height: 260px;
   margin-top: 24px;
-  padding-left: 52px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: #aeb9c8;
+  min-height: 260px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 90px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.bar-label {
+  color: #cbd5e1;
   font-size: 13px;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 51px,
-    rgba(255, 255, 255, 0.08) 52px
-  );
+}
+
+.bar-track {
+  height: 10px;
+  background: #303642;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff5e84, #ff8aa8);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.bar-row strong {
+  color: #f8fafc;
+  font-size: 13px;
+  text-align: right;
 }
 
 .chart-empty {
-  position: absolute;
-  inset: 0;
+  min-height: 260px;
   display: grid;
   place-items: center;
   text-align: center;
@@ -234,15 +268,6 @@
   font-size: 20px;
 }
 
-.chart-labels {
-  display: flex;
-  justify-content: space-between;
-  padding-left: 52px;
-  margin-top: 12px;
-  color: #aeb9c8;
-  font-size: 13px;
-}
-
 .goal-card {
   .goal-ring {
     width: 210px;
@@ -251,12 +276,7 @@
     border-radius: 50%;
     display: grid;
     place-items: center;
-    background: conic-gradient(#2a3040 0deg, #2a3040 360deg);
-
-    &::before {
-      content: '';
-      position: absolute;
-    }
+    background: conic-gradient(#ff5e84 var(--goal, 0%), #2a3040 0);
 
     > div {
       width: 150px;
@@ -293,13 +313,14 @@
     height: 7px;
     background: #303642;
     border-radius: 999px;
+    overflow: hidden;
 
     span {
       display: block;
-      width: 0%;
       height: 100%;
-      background: #ff5e84;
+      background: linear-gradient(90deg, #ff5e84, #ff8aa8);
       border-radius: inherit;
+      transition: width 0.3s ease;
     }
   }
 
@@ -418,13 +439,14 @@
 
 .table-wrapper {
   margin-top: 20px;
-  overflow: hidden;
+  overflow: auto;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
 
   table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 760px;
   }
 
   th {
@@ -433,12 +455,14 @@
     font-weight: 600;
     color: #dbe4f0;
     background: rgba(255, 255, 255, 0.04);
+    white-space: nowrap;
   }
 
   td {
-    height: 150px;
-    text-align: center;
+    padding: 18px;
     color: #cbd5e1;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    white-space: nowrap;
   }
 }
 
@@ -446,6 +470,7 @@
   display: grid;
   place-items: center;
   padding: 26px;
+  text-align: center;
 }
 
 @media (max-width: 1100px) {
@@ -480,9 +505,12 @@
     grid-template-columns: 1fr;
   }
 
-  .chart-labels {
-    font-size: 11px;
-    overflow-x: auto;
-    gap: 18px;
+  .bar-row {
+    grid-template-columns: 58px 1fr;
+  }
+
+  .bar-row strong {
+    grid-column: 2;
+    text-align: left;
   }
 }
