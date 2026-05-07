@@ -1,8 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,6 +30,9 @@ import {
 })
 export class AnalyticsComponent implements OnInit {
 
+  @ViewChild('rangePicker')
+  rangePicker!: MatDateRangePicker<Date>;
+
   private dashboardService = inject(DashboardService);
 
   loading = false;
@@ -39,7 +42,6 @@ export class AnalyticsComponent implements OnInit {
 
   customFrom: Date | null = null;
   customTo: Date | null = null;
-  showCustomRange = false;
 
   analytics: AnalyticsSummaryDto = {
     totalSales: 0,
@@ -99,13 +101,33 @@ export class AnalyticsComponent implements OnInit {
     this.selectedPeriod = period;
 
     if (period === 'custom') {
-      this.showCustomRange = true;
+      this.updateSelectedPeriodLabel();
+
+      setTimeout(() => {
+        this.rangePicker.open();
+      });
+
       return;
     }
 
-    this.showCustomRange = false;
     this.updateSelectedPeriodLabel();
     this.loadAnalytics();
+  }
+
+  openCustomRange(): void {
+    if (this.selectedPeriod !== 'custom') {
+      return;
+    }
+
+    this.rangePicker.open();
+  }
+
+  onCustomDateChanged(): void {
+    if (!this.customFrom || !this.customTo) {
+      return;
+    }
+
+    this.applyCustomRange();
   }
 
   applyCustomRange(): void {
@@ -113,7 +135,9 @@ export class AnalyticsComponent implements OnInit {
       return;
     }
 
+    this.selectedPeriod = 'custom';
     this.selectedPeriodLabel = this.formatDateRange(this.customFrom, this.customTo);
+
     this.loadAnalytics();
   }
 
@@ -180,7 +204,6 @@ export class AnalyticsComponent implements OnInit {
         break;
 
       case 'month':
-        fromDate.setDate(1);
         this.selectedPeriodLabel =
           today.toLocaleString('en-US', {
             month: 'long',

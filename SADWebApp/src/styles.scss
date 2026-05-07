@@ -923,18 +923,216 @@ p {
   font-size: 0.9rem;
 }
 
+
+
+/* =========================
+   ANALYTICS / DASHBOARD SHARED HELPERS
+========================= */
+.icon-btn,
+.mini-select,
+.view-all {
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-hover);
+  color: var(--text-main);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.icon-btn:hover:not(:disabled),
+.mini-select:hover:not(:disabled),
+.view-all:hover:not(:disabled) {
+  background: var(--bg-hover-strong);
+  border-color: var(--brand);
+  color: var(--brand);
+  transform: translateY(-1px);
+}
+
+.mini-select {
+  height: 40px;
+}
+
+.apply-btn {
+  min-height: 56px;
+  padding: 0 22px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--brand), var(--brand-hover));
+  color: var(--brand-text);
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.apply-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px var(--brand-soft);
+}
+
+.apply-btn:disabled,
+.icon-btn:disabled,
+.mini-select:disabled,
+.view-all:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.period-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+}
+
+.period-tabs button {
+  min-height: 42px;
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.period-tabs button:hover {
+  background: var(--bg-hover);
+}
+
+.period-tabs button.active {
+  background: var(--brand-soft);
+  color: var(--brand);
+  border: 1px solid var(--brand);
+  font-weight: 800;
+}
+
+.custom-range-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, var(--bg-card-strong), var(--bg-card));
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.custom-range-card mat-form-field {
+  width: 220px;
+}
+
+.custom-range-card .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.custom-range-card .mat-datepicker-toggle {
+  color: var(--brand) !important;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(320px, 1.1fr);
+  gap: var(--space-md);
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.round-icon,
+.kpi-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.kpi-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-md);
+  font-size: 22px;
+}
+
+.pink {
+  background: rgba(255, 94, 132, 0.28);
+  color: #ff7a9c;
+}
+
+.purple {
+  background: rgba(139, 92, 246, 0.28);
+  color: #9b7cff;
+}
+
+.blue {
+  background: rgba(59, 130, 246, 0.28);
+  color: #60a5fa;
+}
+
+.green {
+  background: rgba(52, 211, 153, 0.24);
+  color: #34d399;
+}
+
+.empty-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin: 0 auto var(--space-sm);
+  background: var(--bg-hover-strong);
+  color: var(--brand);
+  font-size: 20px;
+}
+
+.empty-table {
+  display: grid;
+  place-items: center;
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--text-muted);
+}
+
 /* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 1100px) {
   .grid-4,
   .kpi-grid,
-  .stats-grid {
+  .stats-grid,
+  .main-grid,
+  .insights-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .form-grid-3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sales-trend,
+  .activity-card,
+  .table-card {
+    grid-column: 1 / -1;
   }
 }
 
@@ -951,7 +1149,9 @@ p {
   .page-actions,
   .header-actions,
   .toolbar-actions,
-  .actions {
+  .actions,
+  .view-actions,
+  .custom-range-card {
     width: 100%;
     justify-content: flex-start;
   }
@@ -961,6 +1161,10 @@ p {
   .grid-2,
   .grid-3 {
     grid-template-columns: 1fr;
+  }
+
+  .custom-range-card mat-form-field {
+    width: 100%;
   }
 
   .filters .field,
@@ -993,9 +1197,12 @@ p {
     padding: var(--space-md);
   }
 
+  .period-tabs,
   .kpi-grid,
   .stats-grid,
-  .grid-4 {
+  .grid-4,
+  .main-grid,
+  .insights-grid {
     grid-template-columns: 1fr;
   }
 

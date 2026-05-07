@@ -11,7 +11,24 @@
         <i class="fa-solid fa-arrow-rotate-right"></i>
       </button>
 
-      <button type="button" class="btn-secondary">
+      <mat-form-field class="hidden-range-picker">
+        <mat-date-range-input [rangePicker]="rangePicker">
+          <input
+            matStartDate
+            placeholder="From"
+            [(ngModel)]="customFrom">
+
+          <input
+            matEndDate
+            placeholder="To"
+            [(ngModel)]="customTo"
+            (dateChange)="onCustomDateChanged()">
+        </mat-date-range-input>
+
+        <mat-date-range-picker #rangePicker></mat-date-range-picker>
+      </mat-form-field>
+
+      <button type="button" class="btn-secondary" (click)="openCustomRange()">
         <i class="fa-regular fa-calendar"></i>
         {{ selectedPeriodLabel }}
         <i class="fa-solid fa-chevron-down"></i>
@@ -38,48 +55,6 @@
 
     <button type="button" [class.active]="selectedPeriod === 'custom'" (click)="changePeriod('custom')">
       Custom
-    </button>
-  </section>
-
-  <section class="custom-range-card" *ngIf="showCustomRange">
-    <mat-form-field appearance="outline">
-      <mat-label>From</mat-label>
-
-      <input
-        matInput
-        [matDatepicker]="fromPicker"
-        [(ngModel)]="customFrom">
-
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="fromPicker">
-      </mat-datepicker-toggle>
-
-      <mat-datepicker #fromPicker></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>To</mat-label>
-
-      <input
-        matInput
-        [matDatepicker]="toPicker"
-        [(ngModel)]="customTo">
-
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="toPicker">
-      </mat-datepicker-toggle>
-
-      <mat-datepicker #toPicker></mat-datepicker>
-    </mat-form-field>
-
-    <button
-      type="button"
-      class="apply-btn"
-      [disabled]="!customFrom || !customTo"
-      (click)="applyCustomRange()">
-      Apply Range
     </button>
   </section>
 
