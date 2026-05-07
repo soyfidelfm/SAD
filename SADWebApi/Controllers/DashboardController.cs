@@ -71,4 +71,44 @@ public class DashboardController : ControllerBase
 
 		return Ok(result);
 	}
+
+  [HttpGet("analytics-summary")]
+  public async Task<ActionResult<AnalyticsSummaryDto>> GetAnalyticsSummary(
+    [FromQuery] DateOnly from,
+    [FromQuery] DateOnly to,
+    [FromQuery] string timeZone,
+    CancellationToken ct)
+  {
+    var userId = GetUserIdFromClaims();
+
+    var result = await _dashboard.GetAnalyticsSummaryAsync(
+        userId,
+        from,
+        to,
+        timeZone,
+        ct
+    );
+
+    return Ok(result);
+  }
+
+  [HttpGet("history")]
+  public async Task<ActionResult<IEnumerable<DashboardHistoryDto>>> GetHistory(
+      [FromQuery] DateOnly from,
+      [FromQuery] DateOnly to,
+      [FromQuery] string timeZone,
+      CancellationToken ct)
+  {
+    var userId = GetUserIdFromClaims();
+
+    var result = await _dashboard.GetHistoryAsync(
+        userId,
+        from,
+        to,
+        timeZone,
+        ct
+    );
+
+    return Ok(result);
+  }
 }

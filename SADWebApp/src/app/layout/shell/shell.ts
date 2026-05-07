@@ -36,6 +36,11 @@ export class ShellComponent implements OnInit {
       exact: true
     },
     {
+      label: 'Analytics',
+      route: '/analytics',
+      icon: 'fa-solid fa-chart-pie'   
+    },
+    {
       label: 'Sales',
       route: '/sales',
       icon: 'fa-solid fa-dollar-sign'

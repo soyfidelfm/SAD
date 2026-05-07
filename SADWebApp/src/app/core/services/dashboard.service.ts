@@ -13,11 +13,29 @@ export interface SalesByHour {
   total: number;
 }
 
+export interface DashboardHistoryDto {
+  date: string;
+  totalSales: number;
+  creditCards: number;
+  memberships: number;
+  averageSale: number;
+  goalPercent: number;
+}
+
+export interface AnalyticsSummaryDto {
+  totalSales: number;
+  creditCards: number;
+  memberships: number;
+  averageSale: number;
+  goalPercent: number;
+  bestDay?: string | null;
+  bestHour?: string | null;
+  highestTransaction: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
   private isBrowser: boolean;
-
-  // ✅ Ya no proxy
   private baseUrl = `${API_BASE_URL}/api/dashboard`;
 
   constructor(
@@ -27,88 +45,134 @@ export class DashboardService {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-getSummary(): Observable<DashboardSummaryDto> {
-  if (!this.isBrowser) {
-    return of({
-      creditCards: {
-        total: 0,
-        thisMonth: 0,
-        today: 0,
-        approved: 0,
-        declined: 0,
-        pending: 0
-      },
+  getSummary(): Observable<DashboardSummaryDto> {
+    if (!this.isBrowser) {
+      return of({
+        creditCards: {
+          total: 0,
+          thisMonth: 0,
+          today: 0,
+          approved: 0,
+          declined: 0,
+          pending: 0
+        },
+        memberships: {
+          total: 0,
+          thisMonth: 0,
+          today: 0
+        },
+        sales: {
+          total: 0,
+          thisMonth: 0,
+          today: 0
+        }
+      });
+    }
 
-      memberships: {
-        total: 0,
-        thisMonth: 0,
-        today: 0
-      },
+    const date = this.getTodayLocalDate();
+    const timeZone = this.getUserTimeZone();
 
-      sales: {
-        total: 0,
-        thisMonth: 0,
-        today: 0
+    return this.http.get<DashboardSummaryDto>(`${this.baseUrl}/summary`, {
+      params: {
+        date,
+        timeZone
       }
     });
   }
 
-  const today = new Date();
-
-  const date =
-    today.getFullYear() +
-    '-' +
-    String(today.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(today.getDate()).padStart(2, '0');
-
-  const timeZone =
-    Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  return this.http.get<DashboardSummaryDto>(
-    `${this.baseUrl}/summary`,
-    {
-      params: {
-        date,
-        timeZone
-      }
+  getLatestTransactions(top: number = 10): Observable<LatestTransactionDto[]> {
+    if (!this.isBrowser) {
+      return of([]);
     }
-  );
-}
 
-getLatestTransactions(top: number = 10): Observable<LatestTransactionDto[]> {
-  if (!this.isBrowser) {
-    return of([]);
+    const date = this.getTodayLocalDate();
+    const timeZone = this.getUserTimeZone();
+
+    return this.http.get<LatestTransactionDto[]>(
+      `${this.baseUrl}/latestTransactions`,
+      {
+        params: {
+          top,
+          date,
+          timeZone
+        }
+      }
+    );
   }
-
-  const today = new Date();
-
-  const date =
-    today.getFullYear() +
-    '-' +
-    String(today.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(today.getDate()).padStart(2, '0');
-
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  return this.http.get<LatestTransactionDto[]>(
-    `${this.baseUrl}/latestTransactions`,
-    {
-      params: {
-        top,
-        date,
-        timeZone
-      }
-    }
-  );
-}
 
   getTodaySalesByHour(): Observable<SalesByHour[]> {
     if (!this.isBrowser) {
       return of([]);
     }
 
-    return this.http.get<SalesByHour[]>(`${this.baseUrl}/today/by-hour`);
+    const date = this.getTodayLocalDate();
+    const timeZone = this.getUserTimeZone();
+
+    return this.http.get<SalesByHour[]>(`${this.baseUrl}/today/by-hour`, {
+      params: {
+        date,
+        timeZone
+      }
+    });
+  }
+
+  getHistory(from: string, to: string): Observable<DashboardHistoryDto[]> {
+    if (!this.isBrowser) {
+      return of([]);
+    }
+
+    const timeZone = this.getUserTimeZone();
+
+    return this.http.get<DashboardHistoryDto[]>(`${this.baseUrl}/history`, {
+      params: {
+        from,
+        to,
+        timeZone
+      }
+    });
+  }
+
+  getAnalyticsSummary(from: string, to: string): Observable<AnalyticsSummaryDto> {
+    if (!this.isBrowser) {
+      return of({
+        totalSales: 0,
+        creditCards: 0,
+        memberships: 0,
+        averageSale: 0,
+        goalPercent: 0,
+        bestDay: null,
+        bestHour: null,
+        highestTransaction: 0
+      });
+    }
+
+    const timeZone = this.getUserTimeZone();
+
+    return this.http.get<AnalyticsSummaryDto>(
+      `${this.baseUrl}/analytics-summary`,
+      {
+        params: {
+          from,
+          to,
+          timeZone
+        }
+      }
+    );
+  }
+
+  private getTodayLocalDate(): string {
+    const today = new Date();
+
+    return (
+      today.getFullYear() +
+      '-' +
+      String(today.getMonth() + 1).padStart(2, '0') +
+      '-' +
+      String(today.getDate()).padStart(2, '0')
+    );
+  }
+
+  private getUserTimeZone(): string {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
   }
 }

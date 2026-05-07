@@ -151,4 +151,95 @@ public sealed class DashboardService : IDashboardService
     return dt.ToString("h tt");
   }
 
+  /*ANALYTICS*/
+  public async Task<AnalyticsSummaryDto> GetAnalyticsSummaryAsync(
+  Guid userId,
+  DateOnly from,
+  DateOnly to,
+  string timeZone,
+  CancellationToken ct)
+  {
+    var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+
+    var startUtc = TimeZoneInfo.ConvertTimeToUtc(from.ToDateTime(TimeOnly.MinValue), tz);
+    var endUtc = TimeZoneInfo.ConvertTimeToUtc(to.AddDays(1).ToDateTime(TimeOnly.MinValue), tz);
+
+    var sales = await _db.Sales
+      .AsNoTracking()
+      .Where(x =>
+        x.UserId == userId &&
+        x.SaleDate >= startUtc &&
+        x.SaleDate < endUtc)
+      .ToListAsync(ct);
+
+    var creditCards = await _db.CreditCardApplications
+      .AsNoTracking()
+      .CountAsync(x =>
+        x.UserId == userId &&
+        x.SubmittedAtUtc >= startUtc &&
+        x.SubmittedAtUtc < endUtc, ct);
+
+    var memberships = await _db.MembershipSales
+      .AsNoTracking()
+      .CountAsync(x =>
+        x.UserId == userId &&
+        x.SoldAtUtc >= startUtc &&
+        x.SoldAtUtc < endUtc, ct);
+
+    var totalSales = sales.Sum(x => x.Total);
+    var averageSale = sales.Any() ? sales.Average(x => x.Total) : 0;
+    var highestTransaction = sales.Any() ? sales.Max(x => x.Total) : 0;
+
+    return new AnalyticsSummaryDto(
+      totalSales,
+      creditCards,
+      memberships,
+      averageSale,
+      0,
+      null,
+      null,
+      highestTransaction
+    );
+  }
+
+  public async Task<IEnumerable<DashboardHistoryDto>> GetHistoryAsync(
+  Guid userId,
+  DateOnly from,
+  DateOnly to,
+  string timeZone,
+  CancellationToken ct)
+  {
+    var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+
+    var startUtc = TimeZoneInfo.ConvertTimeToUtc(from.ToDateTime(TimeOnly.MinValue), tz);
+    var endUtc = TimeZoneInfo.ConvertTimeToUtc(to.AddDays(1).ToDateTime(TimeOnly.MinValue), tz);
+
+    var sales = await _db.Sales
+      .AsNoTracking()
+      .Where(x =>
+        x.UserId == userId &&
+        x.SaleDate >= startUtc &&
+        x.SaleDate < endUtc)
+      .ToListAsync(ct);
+
+    var result = sales
+      .GroupBy(x =>
+      {
+        var utc = DateTime.SpecifyKind(x.SaleDate, DateTimeKind.Utc);
+        return DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(utc, tz));
+      })
+      .Select(g => new DashboardHistoryDto(
+        g.Key,
+        g.Sum(x => x.Total),
+        0,
+        0,
+        g.Any() ? g.Average(x => x.Total) : 0,
+        0
+      ))
+      .OrderByDescending(x => x.Date)
+      .ToList();
+
+    return result;
+  }
+
 }

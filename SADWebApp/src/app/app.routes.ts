@@ -24,6 +24,11 @@ export const routes: Routes = [
             m => m.DashboardComponent
           ),
       },
+      {
+        path: 'analytics',
+        loadComponent: () =>
+          import('./features/analytics/analytics').then(m => m.AnalyticsComponent),
+      },
 
       // ✅ STORES dentro del layout
       {

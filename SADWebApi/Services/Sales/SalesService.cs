@@ -182,8 +182,10 @@ public class SalesService : ISalesService
     var query = _db.Sales
         .AsNoTracking()
         .Where(x => x.UserId == userId);
-    var total = await query.CountAsync(ct);
-    var today = await query.CountAsync(x => x.SaleDate >= startUtc && x.SaleDate < endUtc, ct);
+    var total = await query.SumAsync(x => x.Total, ct);
+    var today = await query
+    .Where(x => x.SaleDate >= startUtc && x.SaleDate < endUtc)
+    .SumAsync(x => x.Total, ct);
 
     var monthStartLocal = new DateTime(date.Year, date.Month, 1);
     var monthEndLocal = monthStartLocal.AddMonths(1);
@@ -191,7 +193,8 @@ public class SalesService : ISalesService
     var monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(monthStartLocal, tz);
     var monthEndUtc = TimeZoneInfo.ConvertTimeToUtc(monthEndLocal, tz);
 
-    var thisMonth = await query.CountAsync(x => x.SaleDate >= monthStartUtc && x.SaleDate < monthEndUtc, ct);
+    var thisMonth = await query.Where(x => x.SaleDate >= monthStartUtc && x.SaleDate < monthEndUtc)
+    .SumAsync(x => x.Total, ct);
 
     return new SalesSummaryDto(
     total,
