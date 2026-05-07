@@ -97,6 +97,57 @@
   }
 }
 
+.custom-range-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 20px;
+  margin-bottom: 18px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #171c26, #10151f);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  mat-form-field {
+    width: 220px;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: #111827;
+    border-radius: 12px;
+  }
+
+  ::ng-deep .mat-mdc-form-field-label,
+  ::ng-deep .mat-mdc-floating-label,
+  ::ng-deep input {
+    color: #f8fafc !important;
+  }
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  ::ng-deep .mat-datepicker-toggle {
+    color: #ff7a9c;
+  }
+}
+
+.apply-btn {
+  height: 56px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff5e84, #ff7ca1);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(255, 94, 132, 0.24);
+  }
+}
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -429,14 +480,6 @@
   }
 }
 
-.table-card {
-  .view-all {
-    background: rgba(255, 94, 132, 0.2);
-    color: #ffd0dc;
-    border-color: rgba(255, 94, 132, 0.28);
-  }
-}
-
 .table-wrapper {
   margin-top: 20px;
   overflow: auto;
@@ -494,8 +537,10 @@
 
   .view-header,
   .view-actions,
-  .activity-content {
+  .activity-content,
+  .custom-range-card {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .period-tabs,
@@ -503,6 +548,12 @@
   .main-grid,
   .insights-grid {
     grid-template-columns: 1fr;
+  }
+
+  .custom-range-card {
+    mat-form-field {
+      width: 100%;
+    }
   }
 
   .bar-row {
