@@ -12,21 +12,19 @@
       </button>
 
       <mat-form-field class="hidden-range-picker">
-        <mat-date-range-input [rangePicker]="rangePicker">
-          <input
-            matStartDate
-            placeholder="From"
-            [(ngModel)]="customFrom">
+  <mat-date-range-input [rangePicker]="rangePicker">
+    <input
+      matStartDate
+      [(ngModel)]="customFrom">
 
-          <input
-            matEndDate
-            placeholder="To"
-            [(ngModel)]="customTo"
-            (dateChange)="onCustomDateChanged()">
-        </mat-date-range-input>
+    <input
+      matEndDate
+      [(ngModel)]="customTo"
+      (dateChange)="onCustomDateChanged()">
+  </mat-date-range-input>
 
-        <mat-date-range-picker #rangePicker></mat-date-range-picker>
-      </mat-form-field>
+  <mat-date-range-picker #rangePicker></mat-date-range-picker>
+</mat-form-field>
 
       <button type="button" class="btn-secondary" (click)="openCustomRange()">
         <i class="fa-regular fa-calendar"></i>

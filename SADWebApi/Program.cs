@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using Sad.Api.Auth;
 using Sad.Api.Data;
@@ -93,7 +92,10 @@ builder.Services.AddCors(options =>
 });
 
 // Options
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<JwtOptions>(
+  builder.Configuration.GetSection("Jwt")
+);
+
 builder.Services.Configure<MicrosoftOAuthOptions>(
   builder.Configuration.GetSection("Auth:Microsoft")
 );
@@ -104,12 +106,30 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
 
 if (jwt is null ||
-  string.IsNullOrWhiteSpace(jwt.Issuer) ||
-  string.IsNullOrWhiteSpace(jwt.Audience) ||
-  string.IsNullOrWhiteSpace(jwt.SigningKey))
+    string.IsNullOrWhiteSpace(jwt.Issuer) ||
+    string.IsNullOrWhiteSpace(jwt.Audience) ||
+    string.IsNullOrWhiteSpace(jwt.SigningKey))
 {
   throw new InvalidOperationException(
-    "Missing JWT configuration. Check Jwt__Issuer, Jwt__Audience, Jwt__SigningKey in Render."
+    "Missing JWT configuration. Check Jwt__Issuer, Jwt__Audience, Jwt__SigningKey in Render or User Secrets locally."
+  );
+}
+
+// Microsoft OAuth config validation
+var microsoftOAuth = builder.Configuration
+  .GetSection("Auth:Microsoft")
+  .Get<MicrosoftOAuthOptions>();
+
+if (microsoftOAuth is null ||
+    string.IsNullOrWhiteSpace(microsoftOAuth.TenantId) ||
+    string.IsNullOrWhiteSpace(microsoftOAuth.ClientId) ||
+    string.IsNullOrWhiteSpace(microsoftOAuth.ClientSecret) ||
+    string.IsNullOrWhiteSpace(microsoftOAuth.RedirectUri) ||
+    string.IsNullOrWhiteSpace(microsoftOAuth.FrontendLoginUrl) ||
+    string.IsNullOrWhiteSpace(microsoftOAuth.FrontendSuccessUrl))
+{
+  throw new InvalidOperationException(
+    "Missing Microsoft OAuth configuration. Check Auth__Microsoft__TenantId, Auth__Microsoft__ClientId, Auth__Microsoft__ClientSecret, Auth__Microsoft__RedirectUri, Auth__Microsoft__FrontendLoginUrl, Auth__Microsoft__FrontendSuccessUrl in Render or User Secrets locally."
   );
 }
 
