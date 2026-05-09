@@ -3,7 +3,7 @@
 /* =========================
    IMPORT COLORS
 ========================= */
-@import './styles/colors.scss';
+@use './styles/colors.scss' as *;
 
 /* =========================
    MATERIAL THEME
