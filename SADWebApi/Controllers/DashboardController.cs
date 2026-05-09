@@ -92,6 +92,26 @@ public class DashboardController : ControllerBase
     return Ok(result);
   }
 
+  [HttpGet("sales/by-hour-by-date")]
+  public async Task<ActionResult<IEnumerable<SalesByHourByDateDto>>> GetSalesByHourByDate(
+    [FromQuery] DateOnly from,
+    [FromQuery] DateOnly to,
+    [FromQuery] string timeZone,
+    CancellationToken ct)
+  {
+    var userId = GetUserIdFromClaims();
+
+    var result = await _dashboard.GetSalesByHourByDateAsync(
+        userId,
+        from,
+        to,
+        timeZone,
+        ct
+    );
+
+    return Ok(result);
+  }
+
   [HttpGet("history")]
   public async Task<ActionResult<IEnumerable<DashboardHistoryDto>>> GetHistory(
       [FromQuery] DateOnly from,

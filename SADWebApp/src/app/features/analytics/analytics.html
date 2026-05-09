@@ -12,19 +12,14 @@
       </button>
 
       <mat-form-field class="hidden-range-picker">
-  <mat-date-range-input [rangePicker]="rangePicker">
-    <input
-      matStartDate
-      [(ngModel)]="customFrom">
+        <mat-date-range-input [rangePicker]="rangePicker">
+          <input matStartDate [(ngModel)]="customFrom">
 
-    <input
-      matEndDate
-      [(ngModel)]="customTo"
-      (dateChange)="onCustomDateChanged()">
-  </mat-date-range-input>
+          <input matEndDate [(ngModel)]="customTo" (dateChange)="onCustomDateChanged()">
+        </mat-date-range-input>
 
-  <mat-date-range-picker #rangePicker></mat-date-range-picker>
-</mat-form-field>
+        <mat-date-range-picker #rangePicker></mat-date-range-picker>
+      </mat-form-field>
 
       <button type="button" class="btn-secondary" (click)="openCustomRange()">
         <i class="fa-regular fa-calendar"></i>
@@ -57,184 +52,131 @@
   </section>
 
   <section class="kpi-grid">
-    <article class="kpi-card">
+  <article class="kpi-card">
+    <div>
+      <p>Total Sales</p>
+      <h2>{{ analytics.totalSales | currency }}</h2>
+      <span>Goal progress {{ analytics.goalPercent }}%</span>
+    </div>
+
+    <div class="kpi-icon pink">
+      <i class="fa-solid fa-dollar-sign"></i>
+    </div>
+  </article>
+
+  <article class="kpi-card">
+    <div>
+      <p>Credit Cards</p>
+      <h2>{{ analytics.creditCards }}</h2>
+      <span>Applications submitted</span>
+    </div>
+
+    <div class="kpi-icon purple">
+      <i class="fa-regular fa-credit-card"></i>
+    </div>
+  </article>
+
+  <article class="kpi-card">
+    <div>
+      <p>Memberships</p>
+      <h2>{{ analytics.memberships }}</h2>
+      <span>Memberships sold</span>
+    </div>
+
+    <div class="kpi-icon blue">
+      <i class="fa-regular fa-user"></i>
+    </div>
+  </article>
+
+  <article class="kpi-card">
+    <div>
+      <p>Average Sale</p>
+      <h2>{{ analytics.averageSale | currency }}</h2>
+      <span>Per transaction</span>
+    </div>
+
+    <div class="kpi-icon green">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+    </div>
+  </article>
+
+  <article class="card goal-card kpi-goal-card">
+    <h3>Goal Progress</h3>
+    <p>Current progress against sales goal</p>
+
+    <div
+      class="goal-ring"
+      [style.--goal.%]="analytics.goalPercent > 100 ? 100 : analytics.goalPercent">
       <div>
-        <p>Total Sales</p>
-        <h2>{{ analytics.totalSales | currency }}</h2>
-        <span>Goal progress {{ analytics.goalPercent }}%</span>
+        <strong>{{ analytics.goalPercent }}%</strong>
+        <span>{{ analytics.totalSales | currency }}</span>
       </div>
+    </div>
 
-      <div class="kpi-icon pink">
-        <i class="fa-solid fa-dollar-sign"></i>
-      </div>
-    </article>
-
-    <article class="kpi-card">
+    <div class="goal-bottom">
       <div>
-        <p>Credit Cards</p>
-        <h2>{{ analytics.creditCards }}</h2>
-        <span>Applications submitted</span>
+        <span>Current Sales</span>
+        <strong>{{ analytics.totalSales | currency }}</strong>
       </div>
 
-      <div class="kpi-icon purple">
-        <i class="fa-regular fa-credit-card"></i>
-      </div>
-    </article>
-
-    <article class="kpi-card">
-      <div>
-        <p>Memberships</p>
-        <h2>{{ analytics.memberships }}</h2>
-        <span>Memberships sold</span>
+      <div class="progress-line">
+        <span [style.width.%]="analytics.goalPercent > 100 ? 100 : analytics.goalPercent"></span>
       </div>
 
-      <div class="kpi-icon blue">
-        <i class="fa-regular fa-user"></i>
-      </div>
-    </article>
+      <small>{{ analytics.goalPercent }}%</small>
+    </div>
+  </article>
+</section>
 
-    <article class="kpi-card">
-      <div>
-        <p>Average Sale</p>
-        <h2>{{ analytics.averageSale | currency }}</h2>
-        <span>Per transaction</span>
-      </div>
-
-      <div class="kpi-icon green">
-        <i class="fa-solid fa-arrow-trend-up"></i>
-      </div>
-    </article>
-  </section>
-
-  <section class="main-grid">
-    <article class="card sales-trend">
-      <div class="card-header">
+  <!-- <section class="main-grid"> -->
+    <section class="heatmap-card">
+      <div class="heatmap-header">
         <div>
-          <h3>Sales by Hour</h3>
-          <p>Today’s sales activity by hour</p>
-        </div>
-
-        <button type="button" class="mini-select">
-          Hourly <i class="fa-solid fa-chevron-down"></i>
-        </button>
-      </div>
-
-      <div class="fake-chart" *ngIf="salesByHour.length > 0; else noSalesByHour">
-        <div class="bar-row" *ngFor="let item of salesByHour">
-          <span class="bar-label">{{ item.hourLabel }}</span>
-
-          <div class="bar-track">
-            <div
-              class="bar-fill"
-              [style.width.%]="analytics.totalSales > 0 ? (item.total / analytics.totalSales) * 100 : 0">
-            </div>
-          </div>
-
-          <strong>{{ item.total | currency }}</strong>
+          <h2>Sales by Hour by Date</h2>
+          <p>See sales distribution across hours of the day.</p>
         </div>
       </div>
 
-      <ng-template #noSalesByHour>
-        <div class="chart-empty">
-          <div>
-            <div class="empty-icon">
-              <i class="fa-solid fa-chart-simple"></i>
-            </div>
+      <div class="heatmap-scroll">
+        <table class="heatmap-table">
+          <thead>
+            <tr>
+              <th class="date-col">Date</th>
 
-            <p>No sales data available yet.</p>
-          </div>
-        </div>
-      </ng-template>
-    </article>
+              <th *ngFor="let hour of hours">
+                {{ formatHour(hour) }}
+              </th>
 
-    <article class="card goal-card">
-      <h3>Goal Progress</h3>
-      <p>Current progress against sales goal</p>
+              <th class="total-col">Total Sales</th>
+            </tr>
+          </thead>
 
-      <div class="goal-ring">
-        <div>
-          <strong>{{ analytics.goalPercent }}%</strong>
-          <span>{{ analytics.totalSales | currency }}</span>
-        </div>
+          <tbody>
+            <tr *ngFor="let row of heatmapRows">
+              <td class="date-col">
+                {{ row.date | localDate:'date' }}
+              </td>
+
+              <td *ngFor="let cell of row.hours" class="heat-cell" [ngStyle]="getHeatmapCellStyle(cell.intensity)"
+                [title]="'$' + cell.totalSales">
+                <span *ngIf="cell.totalSales > 0">
+                  {{ cell.totalSales | currency }}
+                </span>
+              </td>
+
+              <td class="total-col">
+                {{ row.total | currency }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <div class="goal-bottom">
-        <div>
-          <span>Current Sales</span>
-          <strong>{{ analytics.totalSales | currency }}</strong>
-        </div>
-
-        <div class="progress-line">
-          <span [style.width.%]="analytics.goalPercent > 100 ? 100 : analytics.goalPercent"></span>
-        </div>
-
-        <small>{{ analytics.goalPercent }}%</small>
-      </div>
-    </article>
-  </section>
+    </section>
+  <!-- </section> -->
 
   <section class="insights-grid">
-    <article class="card activity-card">
-      <h3>Activity Mix</h3>
-      <p>Sales, credit cards and memberships</p>
 
-      <div class="activity-content">
-        <div class="donut"></div>
-
-        <div class="legend">
-          <div>
-            <span class="dot blue-dot"></span>
-            Sales
-            <strong>{{ analytics.totalSales | currency }}</strong>
-          </div>
-
-          <div>
-            <span class="dot purple-dot"></span>
-            Credit Cards
-            <strong>{{ analytics.creditCards }}</strong>
-          </div>
-
-          <div>
-            <span class="dot green-dot"></span>
-            Memberships
-            <strong>{{ analytics.memberships }}</strong>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <article class="card mini-card">
-      <div class="round-icon pink">
-        <i class="fa-regular fa-calendar"></i>
-      </div>
-
-      <h3>Best Day</h3>
-      <strong>{{ analytics.bestDay || 'No data' }}</strong>
-      <p>Highest sales day in selected period.</p>
-    </article>
-
-    <article class="card mini-card">
-      <div class="round-icon purple">
-        <i class="fa-regular fa-clock"></i>
-      </div>
-
-      <h3>Best Hour</h3>
-      <strong>{{ analytics.bestHour || 'No data' }}</strong>
-      <p>Hour with strongest transaction activity.</p>
-    </article>
-
-    <article class="card mini-card">
-      <div class="round-icon green">
-        <i class="fa-solid fa-arrow-trend-up"></i>
-      </div>
-
-      <h3>Highest Transaction</h3>
-      <strong class="green-text">{{ analytics.highestTransaction | currency }}</strong>
-      <p>Largest sale recorded in this period.</p>
-    </article>
-  </section>
-
-  <section class="card table-card">
+  <section class="card table-card history-card">
     <div class="card-header">
       <div>
         <h3>Historical Summary</h3>
@@ -257,7 +199,7 @@
 
         <tbody>
           <tr *ngFor="let row of history">
-            <td>{{ row.date | date: 'MMM d, y' }}</td>
+            <td>{{ row.date | localDate:'date' }}</td>
             <td>{{ row.totalSales | currency }}</td>
             <td>{{ row.creditCards }}</td>
             <td>{{ row.memberships }}</td>
@@ -280,4 +222,41 @@
       </table>
     </div>
   </section>
+
+  <article class="card mini-card">
+    <div class="round-icon pink">
+      <i class="fa-regular fa-calendar"></i>
+    </div>
+
+    <h3>Best Day</h3>
+    <strong>{{ analytics.bestDay | localDate:'pretty' }}</strong>
+    <p>Highest sales day in selected period.</p>
+  </article>
+
+  <article class="card mini-card">
+    <div class="round-icon purple">
+      <i class="fa-regular fa-clock"></i>
+    </div>
+
+    <h3>Best Hour</h3>
+    <strong>{{ analytics.bestHour || 'No data' }}</strong>
+    <p>Hour with strongest transaction activity.</p>
+  </article>
+
+  <article class="card mini-card">
+    <div class="round-icon green">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+    </div>
+
+    <h3>Highest Transaction</h3>
+    <strong class="green-text">
+      {{ analytics.highestTransaction | currency }}
+    </strong>
+
+    <p>Largest sale recorded in this period.</p>
+  </article>
+
+</section>
+
+  
 </div>

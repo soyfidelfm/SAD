@@ -7,11 +7,14 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
+import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
+
 import {
   DashboardService,
   AnalyticsSummaryDto,
   DashboardHistoryDto,
-  SalesByHour
+  SalesByHour,
+  SalesByHourByDateDto
 } from '../../core/services/dashboard.service';
 
 @Component({
@@ -23,7 +26,8 @@ import {
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    LocalDatePipe
   ],
   templateUrl: './analytics.html',
   styleUrl: './analytics.scss',
@@ -34,6 +38,13 @@ export class AnalyticsComponent implements OnInit {
   rangePicker!: MatDateRangePicker<Date>;
 
   private dashboardService = inject(DashboardService);
+
+  hours = Array.from({ length: 11 }, (_, i) => i + 10);
+  heatmapRows: {
+    date: string;
+    total: number;
+    hours: { hour: number; totalSales: number; intensity: number }[];
+  }[] = [];
 
   loading = false;
 
@@ -93,6 +104,12 @@ export class AnalyticsComponent implements OnInit {
       error: (err) => {
         console.error('Error loading hourly sales', err);
         this.loading = false;
+      }
+    });
+
+    this.dashboardService.getSalesByHourByDate(range.from, range.to).subscribe({
+      next: (res) => {
+        this.buildHeatmap(res);
       }
     });
   }
@@ -224,6 +241,63 @@ export class AnalyticsComponent implements OnInit {
         this.selectedPeriodLabel = this.formatDateRange(fromDate, today);
         break;
     }
+  }
+
+  buildHeatmap(data: SalesByHourByDateDto[]): void {
+    const maxSales = Math.max(...data.map(x => x.totalSales), 1);
+
+    const grouped = new Map<string, SalesByHourByDateDto[]>();
+
+    data.forEach(item => {
+      if (!grouped.has(item.date)) {
+        grouped.set(item.date, []);
+      }
+
+      grouped.get(item.date)!.push(item);
+    });
+
+    this.heatmapRows = Array.from(grouped.entries())
+      .map(([date, items]) => {
+        const total = items.reduce((sum, x) => sum + x.totalSales, 0);
+
+        return {
+          date,
+          total,
+          hours: this.hours.map(hour => {
+            const found = items.find(x => x.hour === hour);
+            const totalSales = found?.totalSales ?? 0;
+
+            return {
+              hour,
+              totalSales,
+              intensity: totalSales / maxSales
+            };
+          })
+        };
+      })
+      .sort((a, b) => b.date.localeCompare(a.date));
+  }
+
+  getHeatmapCellStyle(intensity: number): any {
+  if (intensity <= 0) {
+    return {
+      background: 'var(--bg-hover)',
+      color: 'var(--text-muted)'
+    };
+  }
+
+  const opacity = Math.max(intensity, 0.18);
+
+  return {
+    background: `rgba(59, 130, 246, ${opacity})`,
+    color: '#ffffff'
+  };
+}
+
+  formatHour(hour: number): string {
+    if (hour === 0) return '12 AM';
+    if (hour === 12) return '12 PM';
+    return hour < 12 ? `${hour} AM` : `${hour - 12} PM`;
   }
 
   private formatPrettyDate(date: Date): string {

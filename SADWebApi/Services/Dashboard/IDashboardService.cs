@@ -20,4 +20,11 @@ public interface IDashboardService
       DateOnly to,
       string timeZone,
       CancellationToken ct);
+
+  Task<IEnumerable<SalesByHourByDateDto>> GetSalesByHourByDateAsync(
+      Guid userId,
+      DateOnly from,
+      DateOnly to,
+      string timeZone,
+      CancellationToken ct);
 }

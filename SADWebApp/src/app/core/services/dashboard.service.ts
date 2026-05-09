@@ -6,11 +6,17 @@ import { Observable, of } from 'rxjs';
 import { DashboardSummaryDto } from '../models/dashboard.models';
 import { LatestTransactionDto } from '../models/latest-transaction.model';
 import { API_BASE_URL } from './api.config';
+import { I } from '@angular/cdk/keycodes';
 
 export interface SalesByHour {
   hour: number;
   hourLabel: string;
   total: number;
+}
+export interface SalesByHourByDateDto {
+  date: string;        // "2026-05-08"
+  hour: number;        // 0-23
+  totalSales: number;
 }
 
 export interface DashboardHistoryDto {
@@ -111,6 +117,22 @@ export class DashboardService {
     return this.http.get<SalesByHour[]>(`${this.baseUrl}/today/by-hour`, {
       params: {
         date,
+        timeZone
+      }
+    });
+  }
+
+  getSalesByHourByDate(from: string, to: string): Observable<SalesByHourByDateDto[]> {
+    if (!this.isBrowser) {
+      return of([]);
+    }
+
+    const timeZone = this.getUserTimeZone();
+
+    return this.http.get<SalesByHourByDateDto[]>(`${this.baseUrl}/sales/by-hour-by-date`, {
+      params: {
+        from,
+        to,
         timeZone
       }
     });

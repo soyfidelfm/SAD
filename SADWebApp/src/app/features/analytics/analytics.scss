@@ -19,8 +19,13 @@
   margin-bottom: var(--space-md);
 }
 
+/* KPI GRID */
 .kpi-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(420px, 1fr);
+  grid-template-rows: repeat(2, minmax(136px, auto));
+  gap: var(--space-md);
+  align-items: stretch;
 }
 
 .kpi-card {
@@ -29,6 +34,12 @@
   display: flex;
   justify-content: space-between;
   gap: var(--space-md);
+}
+
+.kpi-goal-card {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  min-height: 100%;
 }
 
 .kpi-card p {
@@ -57,6 +68,7 @@
   margin-top: 6px;
 }
 
+/* SALES BY HOUR */
 .fake-chart {
   margin-top: var(--space-lg);
   min-height: 260px;
@@ -103,6 +115,7 @@
   color: var(--text-main);
 }
 
+/* GOAL CARD */
 .goal-card .goal-ring {
   width: 210px;
   height: 210px;
@@ -110,7 +123,11 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: conic-gradient(var(--brand) var(--goal, 0%), var(--bg-hover-strong) 0);
+  background:
+    conic-gradient(
+      var(--brand) calc(var(--goal, 0) * 1%),
+      var(--bg-hover-strong) 0
+    );
 }
 
 .goal-card .goal-ring > div {
@@ -133,6 +150,10 @@
   display: block;
   color: var(--text-muted);
   font-size: 14px;
+}
+
+.goal-bottom {
+  margin-top: auto;
 }
 
 .goal-bottom div:first-child {
@@ -164,6 +185,157 @@
   font-weight: 800;
 }
 
+/* MAIN GRID */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+/* HEATMAP */
+.heatmap-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+}
+
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--text-main);
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+  }
+}
+
+.heatmap-scroll {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.heatmap-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1050px;
+
+  th,
+  td {
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  th {
+    background: var(--bg-hover);
+    color: var(--text-main);
+    font-weight: 800;
+  }
+}
+
+.date-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--bg-card);
+  color: var(--text-main);
+  text-align: left !important;
+  font-weight: 800;
+  min-width: 95px;
+  width: 95px;
+  padding-inline: 10px !important;
+}
+
+.total-col {
+  font-weight: 900;
+  color: var(--text-main);
+  background: var(--bg-hover);
+  min-width: 120px;
+}
+
+.heat-cell {
+  min-width: 78px;
+  height: 44px;
+  color: var(--text-main);
+  font-weight: 800;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 18px rgba(59, 130, 246, 0.35);
+    position: relative;
+    z-index: 5;
+  }
+
+  span {
+    font-size: 11px;
+  }
+}
+
+/* INSIGHTS GRID */
+.insights-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(3, minmax(220px, 1fr));
+  gap: var(--space-md);
+  align-items: stretch;
+}
+
+.history-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.history-card .table-wrapper {
+  margin-top: var(--space-md);
+  overflow-x: auto;
+}
+
+.history-card table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.history-card th,
+.history-card td {
+  padding: 16px;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.history-card th {
+  background: var(--bg-hover);
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+.history-card td {
+  color: var(--text-main);
+}
+
+.history-card tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ACTIVITY */
 .activity-content {
   display: flex;
   align-items: center;
@@ -175,7 +347,12 @@
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  background: conic-gradient(#3b82f6 0 35%, #8b5cf6 35% 70%, #34d399 70% 100%);
+  background:
+    conic-gradient(
+      #3b82f6 0 35%,
+      #8b5cf6 35% 70%,
+      #34d399 70% 100%
+    );
   position: relative;
 }
 
@@ -223,6 +400,7 @@
   background: #34d399;
 }
 
+/* MINI CARDS */
 .mini-card {
   text-align: center;
   display: grid;
@@ -253,20 +431,7 @@
   line-height: 1.5;
 }
 
-.table-wrapper {
-  margin-top: var(--space-md);
-}
-
-.table-wrapper table {
-  min-width: 760px;
-}
-
-.table-wrapper th,
-.table-wrapper td {
-  padding: 18px;
-  white-space: nowrap;
-}
-
+/* DATE PICKER */
 .hidden-range-picker {
   position: absolute;
   opacity: 0;
@@ -276,17 +441,52 @@
   overflow: hidden;
 }
 
-@media (max-width: 1100px) {
-  .kpi-grid,
-  .main-grid,
-  .insights-grid {
+
+/* RESPONSIVE */
+@media (max-width: 1400px) {
+  .kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kpi-goal-card {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .insights-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .history-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .insights-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .history-card {
+    grid-column: 1 / -1;
   }
 
   .sales-trend,
   .activity-card,
   .table-card {
     grid-column: 1 / -1;
+  }
+
+  .mini-card {
+    min-height: 190px;
   }
 }
 
@@ -295,16 +495,28 @@
     padding: 22px;
   }
 
+  .period-tabs,
+  .kpi-grid,
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-goal-card {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .history-card {
+    grid-column: auto;
+  }
+
   .activity-content {
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .period-tabs,
-  .kpi-grid,
-  .main-grid,
-  .insights-grid {
-    grid-template-columns: 1fr;
   }
 
   .bar-row {
