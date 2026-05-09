@@ -41,15 +41,14 @@
 }
 
 .logo {
-  height: 100px !important;
+  height: 65px !important;
   width: auto;
   object-fit: contain;
   display: block;
   flex: 0 0 auto;
-  margin-top: 5px;
 
   /* removes the fake transparent gap */
-  margin-right: -40px;
+  margin-right: -10px;
 
   /* optional fine tuning */
   transform: translateX(-8px);
