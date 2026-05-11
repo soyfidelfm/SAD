@@ -16,6 +16,7 @@ import {
   SalesByHour,
   SalesByHourByDateDto
 } from '../../core/services/dashboard.service';
+import { SalesGoalCardComponent } from '../dashboard/components/sales-goal-card/sales-goal-card';
 
 @Component({
   selector: 'app-analytics',
@@ -27,7 +28,8 @@ import {
     MatNativeDateModule,
     MatFormFieldModule,
     MatInputModule,
-    LocalDatePipe
+    LocalDatePipe,
+    SalesGoalCardComponent
   ],
   templateUrl: './analytics.html',
   styleUrl: './analytics.scss',

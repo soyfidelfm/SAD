@@ -14,7 +14,6 @@
       <mat-form-field class="hidden-range-picker">
         <mat-date-range-input [rangePicker]="rangePicker">
           <input matStartDate [(ngModel)]="customFrom">
-
           <input matEndDate [(ngModel)]="customTo" (dateChange)="onCustomDateChanged()">
         </mat-date-range-input>
 
@@ -99,34 +98,12 @@
         <i class="fa-solid fa-arrow-trend-up"></i>
       </div>
     </article>
-
-    <article class="card goal-card kpi-goal-card">
-      <h3>Goal Progress</h3>
-      <p>Current progress against sales goal</p>
-
-      <div class="goal-ring" [style.--goal.%]="analytics.goalPercent > 100 ? 100 : analytics.goalPercent">
-        <div>
-          <strong>{{ analytics.goalPercent }}%</strong>
-          <span>{{ analytics.totalSales | currency }}</span>
-        </div>
-      </div>
-
-      <div class="goal-bottom">
-        <div>
-          <span>Current Sales</span>
-          <strong>{{ analytics.totalSales | currency }}</strong>
-        </div>
-
-        <div class="progress-line">
-          <span [style.width.%]="analytics.goalPercent > 100 ? 100 : analytics.goalPercent"></span>
-        </div>
-
-        <small>{{ analytics.goalPercent }}%</small>
-      </div>
-    </article>
   </section>
 
-  <!-- <section class="main-grid"> -->
+  <section class="goal-chart-row">
+    <app-sales-goal-card></app-sales-goal-card>
+  </section>
+
   <section class="heatmap-card">
     <div class="heatmap-header">
       <div>
@@ -155,8 +132,12 @@
               {{ row.date | localDate:'date' }}
             </td>
 
-            <td *ngFor="let cell of row.hours" class="heat-cell" [ngStyle]="getHeatmapCellStyle(cell.intensity)"
+            <td
+              *ngFor="let cell of row.hours"
+              class="heat-cell"
+              [ngStyle]="getHeatmapCellStyle(cell.intensity)"
               [title]="'$' + cell.totalSales">
+
               <span *ngIf="cell.totalSales > 0">
                 {{ cell.totalSales | currency }}
               </span>
@@ -170,12 +151,8 @@
       </table>
     </div>
   </section>
-  <!-- </section> -->
 
   <section class="insights-grid">
-
-    
-
     <article class="card mini-card">
       <div class="round-icon" [ngClass]="getEfficiencyClass(analytics.appEfficiency)">
         <i class="fa-regular fa-credit-card"></i>
@@ -205,7 +182,6 @@
       <strong class="green-text">
         {{ analytics.highestTransaction | currency }}
       </strong>
-
       <p>Largest sale recorded in this period.</p>
     </article>
 

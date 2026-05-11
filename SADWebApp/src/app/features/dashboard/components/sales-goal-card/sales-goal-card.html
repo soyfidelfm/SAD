@@ -1,0 +1,46 @@
+<section class="goal-card">
+  <div class="goal-header">
+    <h3>Goal Progress</h3>
+    <p>Current progress against sales goal</p>
+  </div>
+
+  <div class="orb-wrapper">
+    <div class="outer-glow"></div>
+    <div class="energy-ring ring-one"></div>
+    <div class="energy-ring ring-two"></div>
+
+    <apx-chart
+      [series]="chartOptions.series!"
+      [chart]="chartOptions.chart!"
+      [plotOptions]="chartOptions.plotOptions!"
+      [fill]="chartOptions.fill!"
+      [stroke]="chartOptions.stroke!"
+      [labels]="chartOptions.labels!">
+    </apx-chart>
+
+    <div class="center-info">
+      <strong>{{ percentage }}%</strong>
+      <span>{{ currentSales | currency }}</span>
+    </div>
+
+    <span class="bonus-tag">bonus</span>
+    <span class="hundred-tag">100%</span>
+  </div>
+
+  <div class="sales-row">
+    <span>Current Sales</span>
+    <strong>{{ goal | currency }} <small>(Goal)</small></strong>
+  </div>
+
+  <div class="progress-track">
+    <div
+      class="progress-fill"
+      [style.width.%]="chartPercentage">
+    </div>
+  </div>
+
+  <div class="progress-footer">
+    <span>{{ currentSales | currency }}</span>
+    <strong>{{ percentage }}%</strong>
+  </div>
+</section>

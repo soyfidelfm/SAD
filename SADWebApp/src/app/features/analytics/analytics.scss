@@ -14,6 +14,7 @@
 .period-tabs,
 .custom-range-card,
 .kpi-grid,
+.goal-chart-row,
 .main-grid,
 .insights-grid {
   margin-bottom: var(--space-md);
@@ -22,8 +23,7 @@
 /* KPI GRID */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(420px, 1fr);
-  grid-template-rows: repeat(2, minmax(136px, auto));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-md);
   align-items: stretch;
 }
@@ -34,12 +34,6 @@
   display: flex;
   justify-content: space-between;
   gap: var(--space-md);
-}
-
-.kpi-goal-card {
-  grid-column: 3;
-  grid-row: 1 / span 2;
-  min-height: 100%;
 }
 
 .kpi-card p {
@@ -58,6 +52,24 @@
   display: block;
   margin-top: var(--space-sm);
   color: var(--text-muted);
+}
+
+/* GOAL CHART ROW */
+.goal-chart-row {
+  width: 100%;
+}
+
+.goal-chart-row app-sales-goal-card {
+  display: block;
+  width: 100%;
+}
+
+/* IMPORTANT:
+   In sales-goal-card.scss, make sure .goal-card has width: 100%;
+*/
+:host ::ng-deep app-sales-goal-card .goal-card {
+  width: 100%;
+  max-width: none;
 }
 
 .card h3 {
@@ -115,7 +127,7 @@
   color: var(--text-main);
 }
 
-/* GOAL CARD */
+/* OLD GOAL CARD - KEEP ONLY IF YOU STILL USE OLD VERSION */
 .goal-card .goal-ring {
   width: 210px;
   height: 210px;
@@ -423,9 +435,8 @@
   margin-top: var(--space-sm);
 }
 
-
 .mini-card .green-text {
-  color: #34d399; 
+  color: #34d399;
 }
 
 .mini-card p {
@@ -443,16 +454,10 @@
   overflow: hidden;
 }
 
-
 /* RESPONSIVE */
 @media (max-width: 1400px) {
   .kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .kpi-goal-card {
-    grid-column: 1 / -1;
-    grid-row: auto;
   }
 
   .main-grid {
@@ -522,9 +527,8 @@
     grid-template-columns: 1fr;
   }
 
-  .kpi-goal-card {
-    grid-column: auto;
-    grid-row: auto;
+  .goal-chart-row {
+    width: 100%;
   }
 
   .insights-grid {
