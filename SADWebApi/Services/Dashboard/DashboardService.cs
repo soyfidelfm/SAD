@@ -198,8 +198,9 @@ public sealed class DashboardService : IDashboardService
     var totalSales = sales.Sum(x => x.Total);
     var averageSale = sales.Any() ? sales.Average(x => x.Total) : 0;
     var highestTransaction = sales.Any() ? sales.Max(x => x.Total) : 0;
-    var goalPercent = totalGoalAmount > 0 ? Math.Round((totalSales / totalGoalAmount) * 100, 2): 0;
-
+    var goalPercent = totalGoalAmount > 0 ? Math.Round((totalSales / totalGoalAmount) * 100, 2): 0;    
+    var appEfficiency = creditCards > 0 ? Math.Round((totalSales / creditCards), 2) : 0;    
+    var membershipEfficiency = memberships > 0 ? Math.Round((totalSales / memberships), 2) : 0;
     var salesWithLocalDate = sales.Select(x =>
     {
       var utc = DateTime.SpecifyKind(x.SaleDate, DateTimeKind.Utc);
@@ -247,6 +248,8 @@ public sealed class DashboardService : IDashboardService
         memberships,
         averageSale,
         goalPercent,        
+        appEfficiency,        
+        membershipEfficiency,
         bestDayLabel,
         bestHourLabel,
         highestTransaction

@@ -1084,13 +1084,23 @@ p {
 }
 
 .blue {
-  background: rgba(59, 130, 246, 0.28);
-  color: #60a5fa;
+  background: var(--brand-border);
+  color: var(--brand);
 }
 
 .green {
-  background: rgba(52, 211, 153, 0.24);
-  color: #34d399;
+  background: var(--success-border);
+  color: var(--success);
+}
+
+.yellow {
+  background: var(--warning-border);
+  color: var(--warning);
+}
+
+.red {
+  background: var(--danger-border);
+  color: var(--danger);
 }
 
 .empty-icon {

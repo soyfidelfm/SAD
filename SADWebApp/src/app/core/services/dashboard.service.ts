@@ -34,6 +34,8 @@ export interface AnalyticsSummaryDto {
   memberships: number;
   averageSale: number;
   goalPercent: number;
+  appEfficiency: number;
+  membershipEfficiency: number;
   bestDay?: string | null;
   bestHour?: string | null;
   highestTransaction: number;
@@ -162,6 +164,8 @@ export class DashboardService {
         memberships: 0,
         averageSale: 0,
         goalPercent: 0,
+        appEfficiency: 0,
+        membershipEfficiency: 0,
         bestDay: null,
         bestHour: null,
         highestTransaction: 0

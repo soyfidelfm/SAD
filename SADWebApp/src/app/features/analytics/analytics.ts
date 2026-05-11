@@ -60,6 +60,8 @@ export class AnalyticsComponent implements OnInit {
     memberships: 0,
     averageSale: 0,
     goalPercent: 0,
+    appEfficiency: 0,
+    membershipEfficiency: 0,
     bestDay: null,
     bestHour: null,
     highestTransaction: 0
@@ -279,20 +281,33 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getHeatmapCellStyle(intensity: number): any {
-  if (intensity <= 0) {
+    if (intensity <= 0) {
+      return {
+        background: 'var(--bg-hover)',
+        color: 'var(--text-muted)'
+      };
+    }
+
+    const opacity = Math.max(intensity, 0.18);
+
     return {
-      background: 'var(--bg-hover)',
-      color: 'var(--text-muted)'
+      background: `rgba(59, 130, 246, ${opacity})`,
+      color: '#ffffff'
     };
   }
 
-  const opacity = Math.max(intensity, 0.18);
+  getEfficiencyClass(value: number): string {
 
-  return {
-    background: `rgba(59, 130, 246, ${opacity})`,
-    color: '#ffffff'
-  };
-}
+    if (value < 6000) {
+      return 'green';
+    }
+
+    if (value >= 6000 && value <= 8000) {
+      return 'yellow';
+    }
+
+    return 'red';
+  }
 
   formatHour(hour: number): string {
     if (hour === 0) return '12 AM';

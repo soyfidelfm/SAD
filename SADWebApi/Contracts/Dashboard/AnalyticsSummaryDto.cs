@@ -6,6 +6,8 @@ public sealed record AnalyticsSummaryDto(
     int Memberships,
     decimal AverageSale,
     decimal GoalPercent,
+    decimal AppEfficiency,
+    decimal MembershipEfficiency,
     string? BestDay,
     string? BestHour,
     decimal HighestTransaction
