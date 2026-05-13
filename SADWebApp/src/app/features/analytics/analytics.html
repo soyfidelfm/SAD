@@ -55,7 +55,9 @@
       <div>
         <p>Total Sales</p>
         <h2>{{ analytics.totalSales | currency }}</h2>
-        <span>Goal progress {{ analytics.goalPercent }}%</span>
+        <span *ngIf="analytics.goalPercent > 100">
+  +{{ (analytics.goalPercent - 100).toFixed(2) }}% Above Goal
+</span>
       </div>
 
       <div class="kpi-icon red">
@@ -101,7 +103,10 @@
   </section>
 
   <section class="goal-chart-row">
-    <app-sales-goal-card></app-sales-goal-card>
+    <app-sales-goal-card
+  [currentSales]="analytics.totalSales"
+  [percentage]="analytics.goalPercent">
+</app-sales-goal-card>
   </section>
 
   <section class="heatmap-card">

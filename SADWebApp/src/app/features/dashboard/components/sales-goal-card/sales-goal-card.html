@@ -19,12 +19,17 @@
     </apx-chart>
 
     <div class="center-info">
-      <strong>{{ percentage }}%</strong>
+      <strong>{{ safePercentage.toFixed(2) }}%</strong>
       <span>{{ currentSales | currency }}</span>
     </div>
 
-    <span class="bonus-tag">bonus</span>
-    <span class="hundred-tag">100%</span>
+    <span class="bonus-tag" *ngIf="isAboveGoal">
+      bonus
+    </span>
+
+    <span class="hundred-tag" *ngIf="isAboveGoal">
+      100%
+    </span>
   </div>
 
   <div class="sales-row">
@@ -41,6 +46,13 @@
 
   <div class="progress-footer">
     <span>{{ currentSales | currency }}</span>
-    <strong>{{ percentage }}%</strong>
+
+    <strong *ngIf="!isAboveGoal">
+      {{ safePercentage.toFixed(2) }}%
+    </strong>
+
+    <strong *ngIf="isAboveGoal">
+      {{ aboveGoalText }}
+    </strong>
   </div>
 </section>

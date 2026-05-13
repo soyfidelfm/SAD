@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
@@ -26,20 +26,30 @@ export type ChartOptions = {
   templateUrl: './sales-goal-card.html',
   styleUrl: './sales-goal-card.scss'
 })
-export class SalesGoalCardComponent {
-  currentSales = 55153.04;
-  goal = 44800.00;
+export class SalesGoalCardComponent implements OnChanges {
 
-  get percentage(): number {
-    return +(this.currentSales / this.goal * 100).toFixed(2);
+  @Input() currentSales: number = 0;
+  @Input() goal: number = 0;
+  @Input() percentage: number = 0;
+
+  get safePercentage(): number {
+    return Number(this.percentage || 0);
   }
 
   get chartPercentage(): number {
-    return Math.min(this.percentage, 100);
+    return Math.min(this.safePercentage, 100);
+  }
+
+  get isAboveGoal(): boolean {
+    return this.safePercentage > 100;
+  }
+
+  get aboveGoalText(): string {
+    return `+${(this.safePercentage - 100).toFixed(2)}% Above Goal`;
   }
 
   chartOptions: Partial<ChartOptions> = {
-    series: [100],
+    series: [0],
     chart: {
       type: 'radialBar',
       height: 270,
@@ -79,7 +89,10 @@ export class SalesGoalCardComponent {
     labels: ['Progress']
   };
 
-  constructor() {
-    this.chartOptions.series = [this.chartPercentage];
+  ngOnChanges(): void {
+    this.chartOptions = {
+      ...this.chartOptions,
+      series: [this.chartPercentage]
+    };
   }
 }
