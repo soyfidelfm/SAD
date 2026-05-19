@@ -8,38 +8,23 @@
     </div>
 
     <div class="view-actions">
-      <button       
-          type="button"
-          class="btn-secondary"
-          (click)="refreshSummary()">
-          <i class="fa-solid fa-arrow-rotate-right"></i>
-        </button>      
-      <button
-        type="button"
-        class="btn-secondary"
-        (click)="toggleMenu()">
+      <button type="button" class="btn-secondary" (click)="refreshSummary()">
+        <i class="fa-solid fa-arrow-rotate-right"></i>
+      </button>
+      <button type="button" class="btn-secondary" (click)="toggleMenu()">
         <i class="fa-solid fa-plus"></i> Add new
       </button>
 
       <div class="card add-menu" *ngIf="menuOpen">
-        <button
-          type="button"
-          class="btn-secondary"
-          (click)="openPopup('credit')">
+        <button type="button" class="btn-secondary" (click)="openPopup('credit')">
           New Credit Card
         </button>
 
-        <button
-          type="button"
-          class="btn-secondary"
-          (click)="openPopup('membership')">
+        <button type="button" class="btn-secondary" (click)="openPopup('membership')">
           New Membership
         </button>
 
-        <button
-          type="button"
-          class="btn-secondary"
-          (click)="openPopup('sale')">
+        <button type="button" class="btn-secondary" (click)="openPopup('sale')">
           New Sale
         </button>
       </div>
@@ -47,11 +32,7 @@
   </div>
 
   <!-- POPUP -->
-  <app-add-popup
-    *ngIf="popupOpen"
-    [mode]="popupMode"
-    (close)="closePopup()"
-    (submitForm)="onPopupSubmit($event)">
+  <app-add-popup *ngIf="popupOpen" [mode]="popupMode" (close)="closePopup()" (submitForm)="onPopupSubmit($event)">
   </app-add-popup>
 
   <!-- SUMMARY -->
@@ -61,9 +42,7 @@
       <div class="kpi-card">
         <div class="kpi-label">Credit Card Applications</div>
 
-        <div
-          class="kpi-value"
-          [ngClass]="getStatusClass(s.creditCards.today)">
+        <div class="kpi-value" [ngClass]="getStatusClass(s.creditCards.today)">
           {{ s.creditCards.today }}
         </div>
 
@@ -76,11 +55,9 @@
       <div class="kpi-card">
         <div class="kpi-label">Membership Sales</div>
 
-        <div
-  class="kpi-value"
-  [ngClass]="getStatusClass(s.memberships.today)">
-  {{ s.memberships.today }}
-</div>
+        <div class="kpi-value" [ngClass]="getStatusClass(s.memberships.today)">
+          {{ s.memberships.today }}
+        </div>
 
         <div class="kpi-hint">
           Today's goal - {{ dailyMembershipGoal }} memberships
@@ -93,9 +70,7 @@
           Total Sales for Today - {{ today | localDate }}
         </div>
 
-        <div
-  class="kpi-value"
-  [ngClass]="getStatusClass(s.sales.today)">
+        <div class="kpi-value" [ngClass]="getStatusClass(s.sales.today)">
           {{ s.sales.today | currency:'USD':'symbol':'1.2-2' }}
         </div>
 
@@ -122,16 +97,10 @@
           <span>{{ getSalesPercent(s.sales.today) }}%</span>
         </div>
 
-        <div
-          class="progress-track"
-          role="progressbar"
-          [attr.aria-valuenow]="getSalesPercent(s.sales.today)"
-          aria-valuemin="0"
-          aria-valuemax="100">
+        <div class="progress-track" role="progressbar" [attr.aria-valuenow]="getSalesPercent(s.sales.today)"
+          aria-valuemin="0" aria-valuemax="100">
 
-          <div
-            class="progress-fill"
-            [style.width.%]="getSalesPercent(s.sales.today)"
+          <div class="progress-fill" [style.width.%]="getSalesPercent(s.sales.today)"
             [ngClass]="getSalesBarClass(s.sales.today)">
           </div>
         </div>
@@ -146,42 +115,38 @@
       </div>
     </div>
     <!-- SALES BY HOUR CHART -->
-<div class="card mt-lg">
-  <div class="card-header">
-    <div>
-      <div class="card-title">Sales by Hour</div>
-      <div class="card-subtitle">Total sales amount per hour today</div>
-    </div>
-  </div>
-
-  <div class="hourly-chart" *ngIf="salesByHour.length > 0; else noHourlySales">
-    <div
-      class="hour-bar"
-      *ngFor="let item of salesByHour">
-
-      <div class="bar-value">
-        {{ item.total | currency:'USD':'symbol':'1.0-0' }}
-      </div>
-
-      <div class="bar-wrapper">
-        <div
-          class="bar-fill"
-          [style.height.%]="getHourlyBarHeight(item.total)">
+    <div class="card mt-lg">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Sales by Hour</div>
+          <div class="card-subtitle">Total sales amount per hour today</div>
         </div>
       </div>
 
-      <div class="bar-label">
-        {{ item.hourLabel }}
-      </div>
-    </div>
-  </div>
+      <div class="hourly-chart" *ngIf="salesByHour.length > 0; else noHourlySales">
+        <div class="hour-bar" *ngFor="let item of salesByHour">
 
-  <ng-template #noHourlySales>
-    <div class="empty-state">
-      No sales registered today.
+          <div class="bar-value">
+            {{ item.total | currency:'USD':'symbol':'1.0-0' }}
+          </div>
+
+          <div class="bar-wrapper">
+            <div class="bar-fill" [style.height.%]="getHourlyBarHeight(item.total)">
+            </div>
+          </div>
+
+          <div class="bar-label">
+            {{ item.hourLabel }}
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noHourlySales>
+        <div class="empty-state">
+          No sales registered today.
+        </div>
+      </ng-template>
     </div>
-  </ng-template>
-</div>
   </ng-container>
 
   <!-- LOADING -->
@@ -215,7 +180,7 @@
         <div class="card-subtitle">
           Most recent submitted transactions, including credit card applications, memberships and sales.
         </div>
-      </div>      
+      </div>
     </div>
 
     <div *ngIf="loadingLatest" class="muted">
@@ -226,15 +191,11 @@
       {{ latestError }}
     </div>
 
-    <div
-      *ngIf="!loadingLatest && !latestError && latestTransactions.length === 0"
-      class="empty-state">
+    <div *ngIf="!loadingLatest && !latestError && latestTransactions.length === 0" class="empty-state">
       No records yet.
     </div>
 
-    <div
-      *ngIf="!loadingLatest && latestTransactions.length > 0"
-      class="table-wrapper">
+    <div *ngIf="!loadingLatest && latestTransactions.length > 0" class="table-wrapper">
 
       <table class="app-table">
         <thead>
@@ -246,15 +207,14 @@
         </thead>
 
         <tbody>
-          <tr
-            *ngFor="let x of latestTransactions; traclkBy: trackById">
+          <tr *ngFor="let x of latestTransactions; traclkBy: trackById">
 
             <td>
               {{ x.transactionName }}
             </td>
 
             <td>
-                {{ x.status }}
+              {{ x.status }}
               <!-- <span
                 class="badge"
                 [ngClass]="x.statusId == 1 ? 'badge-success' : 'badge-danger'">

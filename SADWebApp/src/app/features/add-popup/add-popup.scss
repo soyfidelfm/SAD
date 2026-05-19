@@ -1,67 +1,117 @@
+@import '../../../styles/colors.scss';
+
+:host {
+  display: block;
+}
+
+/* =========================
+   MODAL BACKDROP
+========================= */
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(15, 23, 42, 0.72);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 1rem;
   z-index: 1000;
 }
 
+/* =========================
+   MODAL CONTAINER
+========================= */
+
 .modal {
   width: min(720px, 100%);
-  background: #0b1220;
-  color: #e5e7eb;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
   overflow: hidden;
+
+  background: var(--bg-app);
+  color: var(--text-main);
+
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
 }
+
+/* =========================
+   MODAL HEADER
+========================= */
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 1.15rem;
-  font-weight: 650;
-  color: #f9fafb;
+
+  font-size: 1.1rem;
+  font-weight: 700;
   letter-spacing: 0.2px;
+
+  color: var(--text-main);
 }
+
+/* =========================
+   ICON BUTTON
+========================= */
 
 .icon-btn {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  color: #f9fafb;
-  cursor: pointer;
+
   display: grid;
   place-items: center;
-  font-size: 1.2rem;
-  transition: background 0.2s ease, transform 0.1s ease, border-color 0.2s ease;
+
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
 }
 
 .icon-btn:hover {
-  background: rgba(255, 255, 255, 0.10);
-  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+
   transform: scale(1.03);
 }
 
+/* =========================
+   MODAL BODY
+========================= */
+
 .modal-body {
-  padding: 1.1rem 1.25rem 1.25rem;
   display: grid;
   gap: 1rem;
+
+  padding: 1.1rem 1.25rem 1.25rem;
 }
+
+/* =========================
+   FORM FIELD
+========================= */
 
 .field {
   display: grid;
@@ -70,96 +120,147 @@
 
 .field span {
   font-size: 0.85rem;
-  color: #cbd5e1;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
-/* ===========================
+/* =========================
    INPUTS / SELECTS / TEXTAREA
-   =========================== */
+========================= */
 
 input,
 select,
 textarea {
   width: 100%;
-  padding: 0.75rem 0.85rem;
+
+  padding: 0.78rem 0.9rem;
+
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  color: #f9fafb;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+
   outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* 🔑 CLAVE: forzar color correcto del dropdown */
+/* remove native styles */
 select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+
   cursor: pointer;
 }
 
-/* 🔑 CLAVE: opciones visibles */
+/* dropdown options */
 select option {
-  background: #ffffff;   // fondo del dropdown
-  color: #111827;        // texto oscuro
+  background: var(--bg-app);
+  color: var(--text-main);
 }
 
 select option:disabled {
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
-/* =========================== */
-
+/* placeholders */
 input::placeholder,
 textarea::placeholder {
-  color: rgba(226, 232, 240, 0.55);
+  color: rgba(255, 255, 255, 0.38);
 }
 
+/* focus state */
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: rgba(99, 102, 241, 0.6);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  border-color: rgba(59, 130, 246, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
 }
 
+/* =========================
+   ERROR TEXT
+========================= */
+
 .error {
-  color: #fca5a5;
   font-size: 0.78rem;
+  font-weight: 500;
+
+  color: var(--danger);
 }
+
+/* =========================
+   MODAL FOOTER
+========================= */
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 0.6rem;
-  padding: 0.95rem 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  gap: 0.7rem;
+
+  padding: 1rem 1.25rem;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+/* =========================
+   BUTTONS
+========================= */
 
 .btn {
   border: none;
   border-radius: 12px;
-  padding: 0.62rem 0.95rem;
+
+  padding: 0.68rem 1rem;
+
+  font-weight: 700;
+  font-size: 0.92rem;
+
   cursor: pointer;
-  font-weight: 600;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
 }
 
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ghost button */
 .btn.ghost {
-  background: rgba(255, 255, 255, 0.08);
-  color: #e5e7eb;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .btn.ghost:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
 }
 
+/* primary button */
 .btn.primary {
-  background: #111827;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--primary);
+  color: white;
+
+  border: 1px solid transparent;
 }
 
 .btn.primary:hover {
-  background: #0b1220;
+  filter: brightness(1.05);
+}
+
+/* disabled */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }

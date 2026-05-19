@@ -61,10 +61,10 @@ export class SettingsComponent implements OnInit {
 
   form = this.fb.group({
     settingDate: [this.getTodayDate(), Validators.required],
-    salesGoalAmount: [0, [Validators.required, Validators.min(0)]],
-    appsGoal: [0, [Validators.required, Validators.min(0)]],
-    membershipsGoal: [0, [Validators.required, Validators.min(0)]],
-    storeId: [null as number | null, Validators.required],
+    salesGoalAmount: [6400, [Validators.required, Validators.min(0)]],
+    appsGoal: [2, [Validators.required, Validators.min(0)]],
+    membershipsGoal: [2, [Validators.required, Validators.min(0)]],
+    storeId: [1, Validators.required],
     isActive: [true]
   });
 
