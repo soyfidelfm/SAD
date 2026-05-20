@@ -123,23 +123,32 @@
         </div>
       </div>
 
-      <div class="hourly-chart" *ngIf="salesByHour.length > 0; else noHourlySales">
-        <div class="hour-bar" *ngFor="let item of salesByHour">
+      <div
+  class="hourly-chart"
+  *ngIf="salesByHour.length > 0; else noHourlySales">
 
-          <div class="bar-value">
-            {{ item.total | currency:'USD':'symbol':'1.0-0' }}
-          </div>
+  <div
+    class="hour-bar"
+    *ngFor="let item of salesByHour">
 
-          <div class="bar-wrapper">
-            <div class="bar-fill" [style.height.%]="getHourlyBarHeight(item.total)">
-            </div>
-          </div>
+    <div class="bar-value">
+      {{ item.total | currency:'USD':'symbol':'1.0-0' }}
+    </div>
 
-          <div class="bar-label">
-            {{ item.hourLabel }}
-          </div>
-        </div>
+    <div class="bar-wrapper">
+      <div
+        class="bar-fill"
+        [ngClass]="getSalesBarClass(item.total)"
+        [style.height.%]="getHourlyBarHeight(item.total)">
       </div>
+    </div>
+
+    <div class="bar-label">
+      {{ item.hourLabel }}
+    </div>
+
+  </div>
+</div>
 
       <ng-template #noHourlySales>
         <div class="empty-state">
