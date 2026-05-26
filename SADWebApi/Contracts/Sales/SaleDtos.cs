@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Sad.Api.Contracts.Sales;
 
@@ -17,12 +17,13 @@ public record SaleDto(
 );
 
 public record SaleCreateDto(
-	int StoreId,
-	DateTime? SaleDate,
-	decimal Subtotal,
-	decimal Tax,
-	string? PaymentMethod,
-	string? Notes
+  int StoreId,
+  DateTime? SaleDate,
+  decimal Subtotal,
+  decimal Tax,
+  decimal Total,
+  string? PaymentMethod,
+  string? Notes
 );
 
 public record SaleUpdateDto(

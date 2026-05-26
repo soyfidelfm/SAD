@@ -71,6 +71,8 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ISalesService, SalesService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IUserDailySettingsService, UserDailySettingsService>();
+builder.Services.AddScoped<IReceiptOcrService, AzureReceiptOcrService>();
+builder.Services.AddScoped<IReceiptReaderService, ReceiptReaderService>();
 
 builder.Services.AddHttpClient();
 

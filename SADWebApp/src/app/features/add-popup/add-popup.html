@@ -40,6 +40,7 @@
 
           <label class="field">
             <span>Approved?</span>
+
             <select formControlName="approved">
               <option [ngValue]="null" disabled>Select...</option>
               <option [ngValue]="true">Approved</option>
@@ -54,7 +55,6 @@
 
         <!-- MEMBERSHIP -->
         <ng-container *ngSwitchCase="'membership'">
-
           <label class="field">
             <span>Store</span>
 
@@ -88,8 +88,7 @@
 
             <select
               formControlName="membershipProductId"
-              [disabled]="loadingMemberships || membershipsError"
-            >
+              [disabled]="loadingMemberships || membershipsError">
               <option [ngValue]="null" disabled>
                 {{
                   loadingMemberships
@@ -116,7 +115,11 @@
 
           <label class="field">
             <span>Term (months)</span>
-            <input type="number" formControlName="termMonths" placeholder="e.g. 12" />
+
+            <input
+              type="number"
+              formControlName="termMonths"
+              placeholder="e.g. 12" />
 
             <small class="error" *ngIf="form.controls.termMonths.touched && form.controls.termMonths.invalid">
               Term must be 1+ months
@@ -124,59 +127,136 @@
           </label>
         </ng-container>
 
+        <label class="field">
+            <span>Receipt / Ticket</span>
+
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onReceiptSelected($event)" />
+
+            <small *ngIf="ocrLoading">
+              Reading receipt...
+            </small>
+
+            <small *ngIf="!ocrLoading && form.controls.saleAmount.value">
+              Receipt amount loaded.
+            </small>
+
+            <small class="error" *ngIf="ocrError">
+              Could not read receipt
+            </small>
+          </label>
+
         <!-- SALE -->
-        <!-- SALE -->
-<ng-container *ngSwitchCase="'sale'">
+        <ng-container *ngSwitchCase="'sale'">
+          <label class="field">
+            <span>Store</span>
 
-  <label class="field">
-    <span>Store</span>
+            <select formControlName="storeId" [disabled]="loadingStores || storesError">
+              <option [ngValue]="null" disabled>
+                {{
+                  loadingStores
+                    ? 'Loading stores...'
+                    : (storesError ? 'Could not load stores' : 'Select a store...')
+                }}
+              </option>
 
-    <select formControlName="storeId" [disabled]="loadingStores || storesError">
-      <option [ngValue]="null" disabled>
-        {{
-          loadingStores
-            ? 'Loading stores...'
-            : (storesError ? 'Could not load stores' : 'Select a store...')
-        }}
-      </option>
+              <option *ngFor="let s of stores" [ngValue]="s.storeId">
+                {{ s.storeNumber }} - {{ s.storeName }}
+              </option>
+            </select>
 
-      <option *ngFor="let s of stores" [ngValue]="s.storeId">
-        {{ s.storeNumber }} - {{ s.storeName }}
-      </option>
-    </select>
+            <small class="error" *ngIf="storesError">
+              Could not load stores.
+              <button type="button" class="link" (click)="loadStores()">Retry</button>
+            </small>
 
-    <small class="error" *ngIf="storesError">
-      Could not load stores.
-      <button type="button" class="link" (click)="loadStores()">Retry</button>
-    </small>
+            <small class="error"
+              *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
+              Store is required
+            </small>
+          </label>
 
-    <small class="error"
-      *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
-      Store is required
-    </small>
-  </label>
+          <label class="field">
+            <span>Sale Amount</span>
 
-  <label class="field">
-    <span>Sale Amount</span>
-    <input type="number" step="0.01" formControlName="saleAmount" placeholder="e.g. 199.99" />
-    <small class="error" *ngIf="form.controls.saleAmount.touched && form.controls.saleAmount.invalid">
-      Amount is required
-    </small>
-  </label>
+            <input
+              type="number"
+              step="0.01"
+              formControlName="saleAmount"
+              placeholder="e.g. 199.99" />
 
-  <label class="field">
-    <span>Notes (optional)</span>
-    <textarea rows="3" formControlName="notes" placeholder="Add details..."></textarea>
-  </label>
+            <small class="error" *ngIf="form.controls.saleAmount.touched && form.controls.saleAmount.invalid">
+              Amount is required
+            </small>
+          </label>
 
-</ng-container>
+          <label class="field">
+            <span>Tax</span>
+            
+            <input
+              type="number"
+              step="0.01"
+              formControlName="taxAmount"
+              placeholder="e.g. 19.99" />
+            
+              <small class="error" *ngIf="form.controls.taxAmount.touched && form.controls.taxAmount.invalid">
+                Tax must be 0 or more
+              </small>
+          </label>
 
+          
+          <label class="field">
+            <span>Total</span>
+
+            <input
+              type="number"
+              step="0.01"
+              formControlName="totalAmount"
+              placeholder="e.g. 219.98" />
+
+            <small class="error" *ngIf="form.controls.totalAmount.touched && form.controls.totalAmount.invalid">
+              Total is required
+            </small>
+          </label>
+
+          <label class="field">
+            <span>Payment Method</span>
+
+            <select formControlName="paymentMethod">
+              <option [ngValue]="null" disabled>Select...</option>
+              <option *ngFor="let method of paymentMethods" [ngValue]="method">
+                {{ method }}
+              </option>
+            </select>
+
+            <small class="error" *ngIf="form.controls.paymentMethod.touched && form.controls.paymentMethod.invalid">
+              Payment method is required
+            </small>
+          </label>
+
+
+          <label class="field">
+            <span>Notes (optional)</span>
+
+            <textarea
+              rows="4"
+              formControlName="notes"
+              placeholder="Tax, total, payment method..."></textarea>
+          </label>
+        </ng-container>
 
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn-secondary" (click)="close.emit()">Cancel</button>
-        <button type="submit" class="btn-secondary">Save</button>
+        <button type="button" class="btn-secondary" (click)="close.emit()">
+          Cancel
+        </button>
+
+        <button type="submit" class="btn-secondary">
+          Save
+        </button>
       </div>
     </form>
   </div>
