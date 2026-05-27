@@ -75,6 +75,9 @@ export class AddPopupComponent implements OnInit, OnChanges {
   ocrLoading = false;
   ocrError = false;
 
+  ocrMessage = '';
+  ocrMessageType: 'success' | 'error' | 'loading' = 'success';
+
   paymentMethods: string[] = [
     'CASH',
     'DEBIT',
@@ -146,6 +149,8 @@ export class AddPopupComponent implements OnInit, OnChanges {
     this.ocrLoading = true;
     this.ocrError = false;
 
+    this.showOcrMessage('Reading receipt...', 'loading');
+
     this.receiptOcr
       .readReceipt(file)
       .subscribe({
@@ -185,19 +190,19 @@ export class AddPopupComponent implements OnInit, OnChanges {
 
           const itemLines = items.length > 0
             ? items
-                .map((item: any, index: number) => {
-                  const sku = item.sku ?? item.SKU ?? 'N/A';
+              .map((item: any, index: number) => {
+                const sku = item.sku ?? item.SKU ?? 'N/A';
 
-                  const description =
-                    item.description ??
-                    item.Description ??
-                    item.name ??
-                    item.Name ??
-                    'N/A';
+                const description =
+                  item.description ??
+                  item.Description ??
+                  item.name ??
+                  item.Name ??
+                  'N/A';
 
-                  return `${index + 1}. SKU: ${sku} - ${description}`;
-                })
-                .join('\n')
+                return `${index + 1}. SKU: ${sku} - ${description}`;
+              })
+              .join('\n')
             : 'No items found';
 
           this.form.patchValue({
@@ -206,11 +211,14 @@ export class AddPopupComponent implements OnInit, OnChanges {
             totalAmount: total != null ? Number(total) : null,
             paymentMethod: paymentMethod,
             notes:
-`Items:
+              `Items:
 ${itemLines}`
           });
 
           this.ocrLoading = false;
+          this.ocrError = false;
+
+          this.showOcrMessage('Receipt amount loaded.', 'success');
         },
 
         error: err => {
@@ -218,6 +226,8 @@ ${itemLines}`
 
           this.ocrError = true;
           this.ocrLoading = false;
+
+          this.showOcrMessage('Could not read receipt', 'error');
         }
       });
   }
@@ -468,16 +478,16 @@ ${itemLines}`
       };
     } else {
       payload = {
-  storeId: v.storeId,
-  storeNumber: v.storeNumber,
+        storeId: v.storeId,
+        storeNumber: v.storeNumber,
 
-  subtotal: v.saleAmount,
-  tax: v.taxAmount,
-  total: v.totalAmount,
+        subtotal: v.saleAmount,
+        tax: v.taxAmount,
+        total: v.totalAmount,
 
-  paymentMethod: v.paymentMethod,
-  notes: v.notes
-};
+        paymentMethod: v.paymentMethod,
+        notes: v.notes
+      };
     }
 
     this.submitForm.emit({
@@ -486,6 +496,18 @@ ${itemLines}`
     });
 
     this.close.emit();
+  }
+
+  private showOcrMessage(
+    message: string,
+    type: 'success' | 'error' | 'loading' = 'success'
+  ) {
+    this.ocrMessage = message;
+    this.ocrMessageType = type;
+
+    setTimeout(() => {
+      this.ocrMessage = '';
+    }, 4000);
   }
 
   get title(): string {
