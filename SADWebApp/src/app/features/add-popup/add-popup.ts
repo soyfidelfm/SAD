@@ -15,7 +15,10 @@ import {
   ReactiveFormsModule,
   Validators,
   FormGroup,
-  FormControl
+  FormControl,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors
 } from '@angular/forms';
 
 import { catchError, finalize, of } from 'rxjs';
@@ -28,6 +31,8 @@ import { CatalogMembership } from '../../core/models/catalog-membership.model';
 
 export type AddPopupMode = 'credit' | 'membership' | 'sale';
 
+type MoneyField = 'saleAmount' | 'taxAmount' | 'totalAmount';
+
 type AddPopupForm = {
   storeId: FormControl<number | null>;
   storeNumber: FormControl<number | null>;
@@ -37,9 +42,10 @@ type AddPopupForm = {
   membershipProductId: FormControl<number | null>;
   termMonths: FormControl<number | null>;
 
-  saleAmount: FormControl<number | null>;
-  taxAmount: FormControl<number | null>;
-  totalAmount: FormControl<number | null>;
+  saleDate: FormControl<string | null>;
+  saleAmount: FormControl<string | null>;
+  taxAmount: FormControl<string | null>;
+  totalAmount: FormControl<string | null>;
   paymentMethod: FormControl<string | null>;
 
   notes: FormControl<string>;
@@ -106,9 +112,10 @@ export class AddPopupComponent implements OnInit, OnChanges {
       membershipProductId: this.fb.control<number | null>(null),
       termMonths: this.fb.control<number | null>(null),
 
-      saleAmount: this.fb.control<number | null>(null),
-      taxAmount: this.fb.control<number | null>(null),
-      totalAmount: this.fb.control<number | null>(null),
+      saleDate: this.fb.control<string | null>(this.toDateTimeLocalValue(new Date())),
+      saleAmount: this.fb.control<string | null>(null),
+      taxAmount: this.fb.control<string | null>(null),
+      totalAmount: this.fb.control<string | null>(null),
       paymentMethod: this.fb.control<string | null>(null),
 
       notes: this.fb.control('', { nonNullable: true })
@@ -181,6 +188,15 @@ export class AddPopupComponent implements OnInit, OnChanges {
           const storeNumber =
             Number(result.storeNumber ?? 0);
 
+          const saleDate =
+            result.saleDate ??
+            result.SaleDate ??
+            result.date ??
+            result.transactionDate ??
+            null;
+
+          console.log('OCR SALE DATE', saleDate);
+
           const items = result.items ?? [];
 
           if (storeNumber > 0) {
@@ -206,9 +222,10 @@ export class AddPopupComponent implements OnInit, OnChanges {
             : 'No items found';
 
           this.form.patchValue({
-            saleAmount: subtotal != null ? Number(subtotal) : null,
-            taxAmount: tax != null ? Number(tax) : null,
-            totalAmount: total != null ? Number(total) : null,
+            saleDate: this.toDateTimeLocalValue(saleDate),
+            saleAmount: subtotal != null ? this.formatMoneyValue(subtotal) : null,
+            taxAmount: tax != null ? this.formatMoneyValue(tax) : null,
+            totalAmount: total != null ? this.formatMoneyValue(total) : null,
             paymentMethod: paymentMethod,
             notes:
               `Items:
@@ -218,7 +235,7 @@ ${itemLines}`
           this.ocrLoading = false;
           this.ocrError = false;
 
-          this.showOcrMessage('Receipt amount loaded.', 'success');
+          this.showOcrMessage('Receipt loaded.', 'success');
         },
 
         error: err => {
@@ -395,19 +412,23 @@ ${itemLines}`
         Validators.required
       ]);
 
+      this.form.controls.saleDate.setValidators([
+        Validators.required
+      ]);
+
       this.form.controls.saleAmount.setValidators([
         Validators.required,
-        Validators.min(0.01)
+        this.moneyMinValidator(0.01)
       ]);
 
       this.form.controls.taxAmount.setValidators([
         Validators.required,
-        Validators.min(0)
+        this.moneyMinValidator(0)
       ]);
 
       this.form.controls.totalAmount.setValidators([
         Validators.required,
-        Validators.min(0.01)
+        this.moneyMinValidator(0.01)
       ]);
 
       this.form.controls.paymentMethod.setValidators([
@@ -429,6 +450,7 @@ ${itemLines}`
     this.form.controls.membershipProductId.reset(null);
     this.form.controls.termMonths.reset(null);
 
+    this.form.controls.saleDate.reset(this.toDateTimeLocalValue(new Date()));
     this.form.controls.saleAmount.reset(null);
     this.form.controls.taxAmount.reset(null);
     this.form.controls.totalAmount.reset(null);
@@ -456,6 +478,10 @@ ${itemLines}`
       return;
     }
 
+    this.formatMoneyField('saleAmount');
+    this.formatMoneyField('taxAmount');
+    this.formatMoneyField('totalAmount');
+
     const v = this.form.getRawValue();
 
     let payload: any = {};
@@ -479,15 +505,18 @@ ${itemLines}`
     } else {
       payload = {
         storeId: v.storeId,
-        storeNumber: v.storeNumber,
 
-        subtotal: v.saleAmount,
-        tax: v.taxAmount,
-        total: v.totalAmount,
+        saleDate: this.toApiDateTime(v.saleDate),
+
+        subtotal: this.moneyToNumber(v.saleAmount),
+        tax: this.moneyToNumber(v.taxAmount),
+        total: this.moneyToNumber(v.totalAmount),
 
         paymentMethod: v.paymentMethod,
         notes: v.notes
       };
+
+      console.log('SALE PAYLOAD', payload);
     }
 
     this.submitForm.emit({
@@ -497,6 +526,51 @@ ${itemLines}`
 
     this.close.emit();
   }
+
+  formatMoneyField(field: MoneyField): void {
+    const control = this.form.controls[field];
+    control.setValue(this.formatMoneyValue(control.value));
+  }
+
+  private formatMoneyValue(value: string | number | null | undefined): string {
+    if (value === null || value === undefined || value === '') {
+      return '0.00';
+    }
+
+    const numericValue = Number(
+      value.toString().replace(/[^0-9.-]/g, '')
+    );
+
+    if (Number.isNaN(numericValue)) {
+      return '0.00';
+    }
+
+    return numericValue.toFixed(2);
+  }
+
+  private moneyToNumber(value: string | number | null | undefined): number {
+    if (value === null || value === undefined || value === '') {
+      return 0;
+    }
+
+    const numericValue = Number(
+      value.toString().replace(/[^0-9.-]/g, '')
+    );
+
+    return Number.isNaN(numericValue) ? 0 : numericValue;
+  }
+
+  private moneyMinValidator(min: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = this.moneyToNumber(control.value);
+
+    if (value < min) {
+      return { min: true };
+    }
+
+    return null;
+  };
+}
 
   private showOcrMessage(
     message: string,
@@ -508,6 +582,44 @@ ${itemLines}`
     setTimeout(() => {
       this.ocrMessage = '';
     }, 4000);
+  }
+
+  private toDateTimeLocalValue(value: string | Date | null | undefined): string | null {
+    if (!value) {
+      return this.toDateTimeLocalValue(new Date());
+    }
+
+    const date = value instanceof Date
+      ? value
+      : new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return this.toDateTimeLocalValue(new Date());
+    }
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+  private toApiDateTime(value: string | null): string | null {
+    if (!value) {
+      return null;
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return date.toISOString();
   }
 
   get title(): string {

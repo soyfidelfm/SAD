@@ -113,7 +113,8 @@
               <button type="button" class="link" (click)="loadMembershipProducts()">Retry</button>
             </small>
 
-            <small class="error"
+            <small
+              class="error"
               *ngIf="form.controls.membershipProductId.touched && form.controls.membershipProductId.invalid && !membershipsError">
               Membership is required
             </small>
@@ -121,7 +122,6 @@
 
           <label class="field">
             <span>Term (months)</span>
-
             <input type="number" formControlName="termMonths" placeholder="e.g. 12" />
 
             <small class="error" *ngIf="form.controls.termMonths.touched && form.controls.termMonths.invalid">
@@ -175,7 +175,8 @@
                 <button type="button" class="link" (click)="loadStores()">Retry</button>
               </small>
 
-              <small class="error"
+              <small
+                class="error"
                 *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
                 Store is required
               </small>
@@ -184,7 +185,16 @@
             <label class="field">
               <span>Sale Amount</span>
 
-              <input type="number" step="0.01" formControlName="saleAmount" placeholder="e.g. 199.99" />
+              <div class="money-input">
+                <span class="money-prefix">$</span>
+
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  formControlName="saleAmount"
+                  placeholder="0.00"
+                  (blur)="formatMoneyField('saleAmount')" />
+              </div>
 
               <small class="error" *ngIf="form.controls.saleAmount.touched && form.controls.saleAmount.invalid">
                 Amount is required
@@ -194,7 +204,16 @@
             <label class="field">
               <span>Tax</span>
 
-              <input type="number" step="0.01" formControlName="taxAmount" placeholder="e.g. 19.99" />
+              <div class="money-input">
+                <span class="money-prefix">$</span>
+
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  formControlName="taxAmount"
+                  placeholder="0.00"
+                  (blur)="formatMoneyField('taxAmount')" />
+              </div>
 
               <small class="error" *ngIf="form.controls.taxAmount.touched && form.controls.taxAmount.invalid">
                 Tax must be 0 or more
@@ -204,7 +223,16 @@
             <label class="field">
               <span>Total</span>
 
-              <input type="number" step="0.01" formControlName="totalAmount" placeholder="e.g. 219.98" />
+              <div class="money-input">
+                <span class="money-prefix">$</span>
+
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  formControlName="totalAmount"
+                  placeholder="0.00"
+                  (blur)="formatMoneyField('totalAmount')" />
+              </div>
 
               <small class="error" *ngIf="form.controls.totalAmount.touched && form.controls.totalAmount.invalid">
                 Total is required
@@ -224,6 +252,18 @@
 
               <small class="error" *ngIf="form.controls.paymentMethod.touched && form.controls.paymentMethod.invalid">
                 Payment method is required
+              </small>
+            </label>
+
+            <label class="field field-full">
+              <span>Sale Date</span>
+
+              <input
+                type="datetime-local"
+                formControlName="saleDate" />
+
+              <small class="error" *ngIf="form.controls.saleDate.touched && form.controls.saleDate.invalid">
+                Sale date is required
               </small>
             </label>
 

@@ -14,16 +14,23 @@ public class SalesController : ControllerBase
 	private readonly ISalesService _sales;
 	public SalesController(ISalesService sales) => _sales = sales;
 
-	[HttpPost]
-	public async Task<ActionResult<SaleDto>> Create([FromBody] SaleCreateDto dto, CancellationToken ct)
-	{
-		if (dto.StoreId <= 0) return BadRequest("StoreId is required.");
-		if (dto.Subtotal < 0 || dto.Tax < 0) return BadRequest("Subtotal/Tax must be >= 0.");
+  [HttpPost]
+  public async Task<ActionResult<SaleDto>> Create([FromBody] SaleCreateDto dto, CancellationToken ct)
+  {
+    try
+    {
+      if (dto.StoreId <= 0) return BadRequest("StoreId is required.");
+      if (dto.Subtotal < 0 || dto.Tax < 0) return BadRequest("Subtotal/Tax must be >= 0.");
 
-		var userId = User.GetUserIdOrThrow();
-		var created = await _sales.CreateAsync(userId, dto, ct);
+      var userId = User.GetUserIdOrThrow();
+      var created = await _sales.CreateAsync(userId, dto, ct);
 
-		return CreatedAtAction(nameof(GetById), new { saleId = created.SaleId }, created);
+      return CreatedAtAction(nameof(GetById), new { saleId = created.SaleId }, created);
+    }
+    catch (Exception ex)
+    {
+      return BadRequest(ex.Message);
+    }
 	}
 
   [HttpGet("latest")]

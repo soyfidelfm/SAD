@@ -196,6 +196,43 @@ textarea:focus {
 }
 
 /* =========================
+   MONEY INPUT
+========================= */
+
+.money-input {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+.money-input input {
+  width: 100%;
+
+  padding-left: 2.2rem !important;
+}
+
+.money-prefix {
+  position: absolute;
+
+  left: 0.9rem;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 0.95rem;
+  font-weight: 800;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+/* =========================
    ERROR TEXT
 ========================= */
 

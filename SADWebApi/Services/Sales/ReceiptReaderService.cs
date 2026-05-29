@@ -250,20 +250,36 @@ public class ReceiptReaderService : IReceiptReaderService
 
   private static DateTime? ExtractSaleDate(string text)
   {
+    if (string.IsNullOrWhiteSpace(text))
+      return null;
+
     var match = Regex.Match(
-      text,
-      @"(\d{1,2}/\d{1,2}/\d{4})"
+        text,
+        @"(\d{1,2}/\d{1,2}/\d{2,4})\s+(\d{1,2}:\d{2})"
     );
 
     if (!match.Success)
       return null;
 
-    return DateTime.TryParse(
-      match.Groups[1].Value,
-      out var dt
+    var rawDate = $"{match.Groups[1].Value} {match.Groups[2].Value}";
+
+    string[] formats =
+    [
+        "MM/dd/yy HH:mm",
+        "M/d/yy HH:mm",
+        "MM/dd/yyyy HH:mm",
+        "M/d/yyyy HH:mm"
+    ];
+
+    return DateTime.TryParseExact(
+        rawDate,
+        formats,
+        CultureInfo.InvariantCulture,
+        DateTimeStyles.None,
+        out var dt
     )
-      ? dt
-      : null;
+        ? dt
+        : null;
   }
 
   private static List<ReceiptItemDto> ExtractItems(string text)

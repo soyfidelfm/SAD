@@ -142,31 +142,45 @@ export class DashboardComponent implements OnInit {
   }
 
   private createSale(payload: {
-    storeId: number;
-    saleAmount: number;
-    notes?: string;
-    paymentMethod?: string | null;
-  }): void {
-    const dto: SaleCreateDto = {
-      storeId: payload.storeId,
-      subtotal: Number(payload.saleAmount),
-      tax: 0,
-      notes: payload.notes ?? null,
-      paymentMethod: payload.paymentMethod ?? null
-    };
+  storeId: number;
 
-    this.salesService.create(dto).subscribe({
-      next: () => {
-        this.successMessage = 'Sale saved.';
-        this.closePopup();
-        this.refreshSummary();
-      },
-      error: (err) => {
-        console.error('❌ Error saving sale', err);
-        this.errorMessage = 'Error saving sale.';
-      }
-    });
-  }
+  saleDate?: string | null;
+
+  subtotal: number;
+  tax: number;
+  total: number;
+
+  notes?: string;
+  paymentMethod?: string | null;
+}): void {
+
+  const dto: SaleCreateDto = {
+    storeId: payload.storeId,
+
+    saleDate: payload.saleDate ?? null,
+
+    subtotal: Number(payload.subtotal),
+    tax: Number(payload.tax),
+    total: Number(payload.total),
+
+    notes: payload.notes ?? null,
+    paymentMethod: payload.paymentMethod ?? null
+  };
+
+  console.log('FINAL DTO', dto);
+
+  this.salesService.create(dto).subscribe({
+    next: () => {
+      this.successMessage = 'Sale saved.';
+      this.closePopup();
+      this.refreshSummary();
+    },
+    error: (err) => {
+      console.error('❌ Error saving sale', err);
+      this.errorMessage = 'Error saving sale.';
+    }
+  });
+}
 
   refreshSummary(): void {
     this.summary$ = this.dashboardService.getSummary().pipe(shareReplay(1));

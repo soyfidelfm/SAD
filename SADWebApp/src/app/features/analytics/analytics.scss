@@ -264,14 +264,20 @@
 .date-col {
   position: sticky;
   left: 0;
-  z-index: 2;
+  z-index: 3;
+
   background: var(--bg-card);
   color: var(--text-main);
+
   text-align: left !important;
   font-weight: 800;
-  min-width: 95px;
-  width: 95px;
-  padding-inline: 10px !important;
+
+  min-width: 160px;
+  width: 160px;
+
+  padding: 14px 16px !important;
+
+  white-space: nowrap;
 }
 
 .total-col {
@@ -551,5 +557,22 @@
   .bar-row strong {
     grid-column: 2;
     text-align: left;
+  }
+}
+
+@media (max-width: 700px) {
+  .heatmap-table {
+    min-width: 1250px;
+  }
+
+  .date-col {
+    min-width: 150px;
+    width: 150px;
+    font-size: 14px;
+  }
+
+  .heatmap-table th,
+  .heatmap-table td {
+    padding: 14px;
   }
 }
