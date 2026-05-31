@@ -279,8 +279,8 @@ export class DashboardComponent implements OnInit {
     const goal = this.dailySalesGoal || 1;
     const safeAmount = Number(amount ?? 0);
 
-    if (safeAmount >= goal) return 'green';
-    if (safeAmount >= goal / 3) return 'yellow';
+    if (safeAmount >= 1500) return 'green';
+    if (safeAmount >= 800) return 'yellow';
     return 'red';
   }
 

@@ -68,7 +68,7 @@ public sealed class DashboardService : IDashboardService
 
     var creditCardTransactions = await _creditCardSvc.GetLatestAsync(top, ct, userId);
     var membershipTransactions = await _membershipSvc.GetLatestAsync(top, ct, userId);
-    var salesTransactions = await _salesSvc.GetLatestAsync(top, ct, userId);
+    var salesTransactions = await _salesSvc.GetLatestAsync(top, timeZone, ct, userId);
 
     var creditMapped = creditCardTransactions.Select(x => new
     {

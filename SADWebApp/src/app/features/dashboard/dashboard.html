@@ -70,7 +70,7 @@
           Total Sales for Today - {{ today | localDate }}
         </div>
 
-        <div class="kpi-value" [ngClass]="getStatusClass(s.sales.today)">
+        <div class="kpi-value" [ngClass]="getSalesAmountClass(s.sales.today)">
           {{ s.sales.today | currency:'USD':'symbol':'1.2-2' }}
         </div>
 

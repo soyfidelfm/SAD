@@ -106,36 +106,36 @@
 .bar-fill.red {
   background: linear-gradient(
     180deg,
-    #ff6b6b 0%,
-    #dc2626 100%
+    var(--danger-text) 0%,
+    var(--danger) 100%
   );
 
   box-shadow:
-    0 0 12px rgba(220, 38, 38, 0.45);
+    0 0 12px var(--danger-border);
 }
 
 /* MEDIUM SALES */
 .bar-fill.yellow {
   background: linear-gradient(
     180deg,
-    #facc15 0%,
-    #eab308 100%
+    var(--warning-text) 0%,
+    var(--warning) 100%
   );
 
   box-shadow:
-    0 0 12px rgba(234, 179, 8, 0.4);
+    0 0 12px var(--warning-border);
 }
 
 /* HIGH SALES */
 .bar-fill.green {
   background: linear-gradient(
     180deg,
-    #4ade80 0%,
-    #16a34a 100%
+    var(--success-text) 0%,
+    var(--success) 100%
   );
 
   box-shadow:
-    0 0 14px rgba(22, 163, 74, 0.45);
+    0 0 14px var(--success-border);
 }
 
 .bar-label {
