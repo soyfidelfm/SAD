@@ -20,6 +20,7 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
 
   public async Task<long> CreateAsync(Guid userId, CreateCreditCardApplicationDto dto, string timeZone, CancellationToken ct)
   {
+  var utctime = DateTime.UtcNow;
     var entity = new SalesCreditCardApplication
     {
       UserId = userId,
@@ -55,7 +56,7 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
             x.CreditCardProductId,
             x.StatusId,
             x.Status.StatusName,
-            _helpers.ConvertLocalToUtc(x.SubmittedAtUtc, tz),
+            _helpers.ConvertUtcToLocal(x.SubmittedAtUtc, tz),
             x.Store.StoreName ?? "",
             x.Store.StoreNumber
         ))

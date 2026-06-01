@@ -20,10 +20,11 @@ import { UserDailySettingsService } from '../../core/services/user-daily-setting
 import { LatestTransactionDto } from '../../core/models/latest-transaction.model';
 
 import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
+import { RawDatePipe } from '../../shared/pipes/raw-date.pipe';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AddPopupComponent, LocalDatePipe],
+  imports: [CommonModule, AddPopupComponent, LocalDatePipe, RawDatePipe],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
@@ -196,6 +197,7 @@ export class DashboardComponent implements OnInit {
 
     this.dashboardService.getLatestTransactions(5).subscribe({
       next: (data) => {
+        console.log(data);
         this.latestTransactions = data;
         this.loadingLatest = false;
       },

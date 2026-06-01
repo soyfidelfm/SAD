@@ -266,7 +266,7 @@
   left: 0;
   z-index: 3;
 
-  background: var(--bg-card);
+  background: var(--bg-surface);
   color: var(--text-main);
 
   text-align: left !important;
@@ -278,6 +278,11 @@
   padding: 14px 16px !important;
 
   white-space: nowrap;
+}
+
+thead .date-col {
+  background: var(--bg-surface);
+  color: var(--text-main);
 }
 
 .total-col {

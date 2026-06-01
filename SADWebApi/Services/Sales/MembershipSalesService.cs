@@ -20,6 +20,7 @@ public class MembershipSalesService : IMembershipSalesService
 
   public async Task<long> CreateAsync(Guid userId, CreateMembershipSaleDto dto, string timeZone, CancellationToken ct)
 	{
+  var utctime = DateTime.UtcNow;
 		// opcional pero recomendado: validar que exista el usuario (mensaje claro)
 		var userExists = await _db.Users.AnyAsync(u => u.UserId == userId, ct);
 		if (!userExists)
@@ -55,7 +56,7 @@ public class MembershipSalesService : IMembershipSalesService
                 x.MembershipProductId,
                 x.StatusId,
                 x.Status.StatusName,
-                _helpers.ConvertLocalToUtc(x.SoldAtUtc, tz)
+                _helpers.ConvertUtcToLocal(x.SoldAtUtc, tz)
             ))
             .ToListAsync(ct);
     }
