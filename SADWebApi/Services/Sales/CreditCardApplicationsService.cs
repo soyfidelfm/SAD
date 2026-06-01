@@ -18,7 +18,7 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
     _helpers = helpers;
   }
 
-  public async Task<long> CreateAsync(Guid userId, CreateCreditCardApplicationDto dto, CancellationToken ct)
+  public async Task<long> CreateAsync(Guid userId, CreateCreditCardApplicationDto dto, string timeZone, CancellationToken ct)
   {
     var entity = new SalesCreditCardApplication
     {

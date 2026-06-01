@@ -18,7 +18,7 @@ public class MembershipSalesService : IMembershipSalesService
     _helpers = helpers;
   }
 
-  public async Task<long> CreateAsync(Guid userId, CreateMembershipSaleDto dto, CancellationToken ct)
+  public async Task<long> CreateAsync(Guid userId, CreateMembershipSaleDto dto, string timeZone, CancellationToken ct)
 	{
 		// opcional pero recomendado: validar que exista el usuario (mensaje claro)
 		var userExists = await _db.Users.AnyAsync(u => u.UserId == userId, ct);

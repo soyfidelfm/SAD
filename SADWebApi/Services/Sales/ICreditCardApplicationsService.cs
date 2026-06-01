@@ -5,7 +5,7 @@ namespace Sad.Api.Services.Sales;
 
 public interface ICreditCardApplicationsService
 {
-  Task<long> CreateAsync(Guid userId, CreateCreditCardApplicationDto dto, CancellationToken ct);
+  Task<long> CreateAsync(Guid userId, CreateCreditCardApplicationDto dto, string timeZone, CancellationToken ct);
 
   Task<IReadOnlyList<CreditCardApplicationDto>> GetLatestAsync(
       int top,
