@@ -103,7 +103,7 @@ public sealed class DashboardService : IDashboardService
         .Select(x => new LatestTransactionDto(
             x.Type,
             x.Amount,
-            TimeZoneInfo.ConvertTimeFromUtc(x.TransactionDateUtc, tz),
+            x.TransactionDateUtc,
             x.Status
         ))
         .ToList();
