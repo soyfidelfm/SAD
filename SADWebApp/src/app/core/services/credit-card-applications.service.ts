@@ -8,6 +8,7 @@ import {
   CreditCardApplicationDto,
   CreatedResponse
 } from '../models/credit-card-application.models';
+
 import { API_BASE_URL } from './api.config';
 
 @Injectable({ providedIn: 'root' })
@@ -24,14 +25,77 @@ export class CreditCardApplicationsService {
 
   create(dto: CreateCreditCardApplicationDto): Observable<string> {
     if (!this.isBrowser) return of('');
-    return this.http.post<CreatedResponse>(this.baseUrl, dto).pipe(
-      map(r => r.creditCardApplicationId)
-    );
+
+    const params = new HttpParams()
+      .set('timeZone', this.getTimeZone());
+
+    return this.http
+      .post<CreatedResponse>(
+        this.baseUrl,
+        dto,
+        { params }
+      )
+      .pipe(
+        map(r => r.creditCardApplicationId)
+      );
   }
 
   getLatest(top = 50): Observable<CreditCardApplicationDto[]> {
     if (!this.isBrowser) return of([]);
-    const params = new HttpParams().set('top', top);
-    return this.http.get<CreditCardApplicationDto[]>(`${this.baseUrl}/latest`, { params });
+
+    const params = new HttpParams()
+      .set('top', top)
+      .set('timeZone', this.getTimeZone());
+
+    return this.http.get<CreditCardApplicationDto[]>(
+      `${this.baseUrl}/latest`,
+      { params }
+    );
+  }
+
+  getById(id: string): Observable<CreditCardApplicationDto> {
+    if (!this.isBrowser) return of(null as any);
+
+    const params = new HttpParams()
+      .set('timeZone', this.getTimeZone());
+
+    return this.http.get<CreditCardApplicationDto>(
+      `${this.baseUrl}/${id}`,
+      { params }
+    );
+  }
+
+  delete(id: string): Observable<void> {
+    if (!this.isBrowser) return of(void 0);
+
+    const params = new HttpParams()
+      .set('timeZone', this.getTimeZone());
+
+    return this.http.delete<void>(
+      `${this.baseUrl}/${id}`,
+      { params }
+    );
+  }
+
+  private getTimeZone(): string {
+    return Intl.DateTimeFormat()
+      .resolvedOptions()
+      .timeZone
+      .trim();
+  }
+
+  private toLocalDateTimeString(d: Date): string {
+    const pad = (n: number) =>
+      String(n).padStart(2, '0');
+
+    const yyyy = d.getFullYear();
+    const mm = pad(d.getMonth() + 1);
+    const dd = pad(d.getDate());
+
+    const hh = pad(d.getHours());
+    const mi = pad(d.getMinutes());
+    const ss = pad(d.getSeconds());
+
+    return `${yyyy}-${mm}-${dd}T${hh}:${mi}:${ss}`;
   }
 }
