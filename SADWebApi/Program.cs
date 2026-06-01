@@ -8,6 +8,7 @@ using Sad.Api.Services.Auth;
 using Sad.Api.Services.Catalog;
 using Sad.Api.Services.Dashboard;
 using Sad.Api.Services.Sales;
+using SADWebApi.Services.Helpers;
 using SADWebApi.Services.Sales;
 using System.Text;
 
@@ -73,6 +74,7 @@ builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IUserDailySettingsService, UserDailySettingsService>();
 builder.Services.AddScoped<IReceiptOcrService, AzureReceiptOcrService>();
 builder.Services.AddScoped<IReceiptReaderService, ReceiptReaderService>();
+builder.Services.AddScoped<IHelpers, HelpersService>();
 
 builder.Services.AddHttpClient();
 

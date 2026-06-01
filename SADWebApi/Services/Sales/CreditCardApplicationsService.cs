@@ -3,16 +3,19 @@ using Sad.Api.Contracts.Sales;
 using Sad.Api.Data;
 using Sad.Api.Data.Entities;
 using SADWebApi.Contracts.Sales;
+using SADWebApi.Services.Helpers;
 
 namespace Sad.Api.Services.Sales;
 
 public class CreditCardApplicationsService : ICreditCardApplicationsService
 {
   private readonly SadDbContext _db;
+  private readonly IHelpers _helpers;
 
-  public CreditCardApplicationsService(SadDbContext db)
+  public CreditCardApplicationsService(SadDbContext db, IHelpers helpers)
   {
     _db = db;
+    _helpers = helpers;
   }
 
   public async Task<long> CreateAsync(Guid userId, CreateCreditCardApplicationDto dto, CancellationToken ct)
@@ -34,9 +37,12 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
 
   public async Task<IReadOnlyList<CreditCardApplicationDto>> GetLatestAsync(
       int top,
+      string timeZone,
       CancellationToken ct,
       Guid? userId = null)
   {
+    var tz = _helpers.GetTimeZone(timeZone);
+
     return await _db.CreditCardApplications
         .AsNoTracking()
         .Where(x => !userId.HasValue || x.UserId == userId.Value)
@@ -49,7 +55,7 @@ public class CreditCardApplicationsService : ICreditCardApplicationsService
             x.CreditCardProductId,
             x.StatusId,
             x.Status.StatusName,
-            x.SubmittedAtUtc,
+            _helpers.ConvertLocalToUtc(x.SubmittedAtUtc, tz),
             x.Store.StoreName ?? "",
             x.Store.StoreNumber
         ))

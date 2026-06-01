@@ -2,14 +2,22 @@ using Microsoft.EntityFrameworkCore;
 using Sad.Api.Contracts.Sales;
 using Sad.Api.Data;
 using Sad.Api.Data.Entities.Sales;
+using SADWebApi.Services.Helpers;
 
 namespace Sad.Api.Services.Sales;
 
 public class SalesService : ISalesService
 {
   private readonly SadDbContext _db;
+  private readonly IHelpers _helpers;
 
-  public SalesService(SadDbContext db) => _db = db;
+  public SalesService(
+    SadDbContext db,
+    IHelpers helpers)
+  {
+    _db = db;
+    _helpers = helpers;
+  }
 
   public async Task<SaleDto> CreateAsync(
       Guid userId,
@@ -17,11 +25,11 @@ public class SalesService : ISalesService
       string timeZone,
       CancellationToken ct)
   {
-    var tz = GetTimeZone(timeZone);
+    var tz = _helpers.GetTimeZone(timeZone);
     var nowUtc = DateTime.UtcNow;
 
     var saleDateUtc = dto.SaleDate.HasValue
-        ? ConvertLocalToUtc(dto.SaleDate.Value, tz)
+        ? _helpers.ConvertLocalToUtc(dto.SaleDate.Value, tz)
         : nowUtc;
 
     var sale = new Sale
@@ -50,7 +58,7 @@ public class SalesService : ISalesService
       string timeZone,
       CancellationToken ct)
   {
-    var tz = GetTimeZone(timeZone);
+    var tz = _helpers.GetTimeZone(timeZone);
 
     var sale = await _db.Sales
         .AsNoTracking()
@@ -67,9 +75,9 @@ public class SalesService : ISalesService
       string timeZone,
       CancellationToken ct)
   {
-    var tz = GetTimeZone(timeZone);
+    var tz = _helpers.GetTimeZone(timeZone);
 
-    var q = _db.Sales
+    var q = _db.Sales 
         .AsNoTracking()
         .AsQueryable();
 
@@ -81,13 +89,13 @@ public class SalesService : ISalesService
 
     if (fromLocal.HasValue)
     {
-      var fromUtc = ConvertLocalToUtc(fromLocal.Value, tz);
+      var fromUtc = _helpers.ConvertLocalToUtc(fromLocal.Value, tz);
       q = q.Where(x => x.SaleDate >= fromUtc);
     }
 
     if (toLocal.HasValue)
     {
-      var toUtc = ConvertLocalToUtc(toLocal.Value, tz);
+      var toUtc = _helpers.ConvertLocalToUtc(toLocal.Value, tz);
       q = q.Where(x => x.SaleDate < toUtc);
     }
 
@@ -106,7 +114,7 @@ public class SalesService : ISalesService
       string timeZone,
       CancellationToken ct)
   {
-    var tz = GetTimeZone(timeZone);
+    var tz = _helpers.GetTimeZone(timeZone);
 
     var sale = await _db.Sales
         .FirstOrDefaultAsync(x => x.SaleId == saleId, ct);
@@ -115,7 +123,7 @@ public class SalesService : ISalesService
       return false;
 
     if (dto.SaleDate.HasValue)
-      sale.SaleDate = ConvertLocalToUtc(dto.SaleDate.Value, tz);
+      sale.SaleDate = _helpers.ConvertLocalToUtc(dto.SaleDate.Value, tz);
 
     sale.Subtotal = dto.Subtotal;
     sale.Tax = dto.Tax;
@@ -201,7 +209,7 @@ public class SalesService : ISalesService
       CancellationToken ct,
       Guid? userId = null)
   {
-    var tz = GetTimeZone(timeZone);
+    var tz = _helpers.GetTimeZone(timeZone);
 
     var sales = await _db.Sales
         .AsNoTracking()
@@ -221,13 +229,13 @@ public class SalesService : ISalesService
       string timeZone,
       CancellationToken ct)
   {
-    var tz = GetTimeZone(timeZone);
+    var tz = _helpers.GetTimeZone(timeZone);
 
     var startLocal = date.ToDateTime(TimeOnly.MinValue);
     var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
 
-    var startUtc = ConvertLocalToUtc(startLocal, tz);
-    var endUtc = ConvertLocalToUtc(endLocal, tz);
+    var startUtc = _helpers.ConvertLocalToUtc(startLocal, tz);
+    var endUtc = _helpers.ConvertLocalToUtc(endLocal, tz);
 
     var query = _db.Sales
         .AsNoTracking()
@@ -242,8 +250,8 @@ public class SalesService : ISalesService
     var monthStartLocal = new DateTime(date.Year, date.Month, 1);
     var monthEndLocal = monthStartLocal.AddMonths(1);
 
-    var monthStartUtc = ConvertLocalToUtc(monthStartLocal, tz);
-    var monthEndUtc = ConvertLocalToUtc(monthEndLocal, tz);
+    var monthStartUtc = _helpers.ConvertLocalToUtc(monthStartLocal, tz);
+    var monthEndUtc = _helpers.ConvertLocalToUtc(monthEndLocal, tz);
 
     var thisMonth = await query
         .Where(x => x.SaleDate >= monthStartUtc && x.SaleDate < monthEndUtc)
@@ -256,46 +264,20 @@ public class SalesService : ISalesService
     );
   }
 
-  private static TimeZoneInfo GetTimeZone(string timeZone)
-  {
-    if (string.IsNullOrWhiteSpace(timeZone))
-      throw new ArgumentException("Time zone is required.", nameof(timeZone));
-
-    return TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-  }
-
-  private static DateTime ConvertLocalToUtc(DateTime localDateTime, TimeZoneInfo tz)
-  {
-    var localUnspecified = DateTime.SpecifyKind(
-        localDateTime,
-        DateTimeKind.Unspecified);
-
-    return TimeZoneInfo.ConvertTimeToUtc(localUnspecified, tz);
-  }
-
-  private static DateTime ConvertUtcToLocal(DateTime utcDateTime, TimeZoneInfo tz)
-  {
-    var utc = DateTime.SpecifyKind(
-        utcDateTime,
-        DateTimeKind.Utc);
-
-    return TimeZoneInfo.ConvertTimeFromUtc(utc, tz);
-  }
-
-  private static SaleDto ToDto(Sale s, TimeZoneInfo tz) =>
+  private SaleDto ToDto(Sale s, TimeZoneInfo tz) =>
       new(
           s.SaleId,
           s.StoreId,
           s.UserId,
-          ConvertUtcToLocal(s.SaleDate, tz),
+          _helpers.ConvertUtcToLocal(s.SaleDate, tz),
           s.Subtotal,
           s.Tax,
           s.Total,
           s.PaymentMethod,
           s.Notes,
-          ConvertUtcToLocal(s.CreatedAt, tz),
+          _helpers.ConvertUtcToLocal(s.CreatedAt, tz),
           s.UpdatedAt.HasValue
-              ? ConvertUtcToLocal(s.UpdatedAt.Value, tz)
+              ? _helpers.ConvertUtcToLocal(s.UpdatedAt.Value, tz)
               : null
       );
 }

@@ -9,6 +9,7 @@ public interface ICreditCardApplicationsService
 
   Task<IReadOnlyList<CreditCardApplicationDto>> GetLatestAsync(
       int top,
+      string timeZone,
       CancellationToken ct,
       Guid? userId = null);
 
