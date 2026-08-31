@@ -53,11 +53,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Database
+// Production: set ConnectionStrings__SadDb in Render with the Neon PostgreSQL connection string.
+// Local development / EF tooling: use .NET User Secrets for ConnectionStrings:SadDb.
 var connectionString = builder.Configuration.GetConnectionString("SadDb");
 
 if (string.IsNullOrWhiteSpace(connectionString))
 {
-  throw new InvalidOperationException("Missing connection string: ConnectionStrings__SadDb");
+  throw new InvalidOperationException(
+    "Missing database connection string. Configure ConnectionStrings:SadDb using .NET User Secrets or ConnectionStrings__SadDb.");
 }
 
 builder.Services.AddDbContext<SadDbContext>(opt =>
@@ -115,8 +118,7 @@ if (jwt is null ||
     string.IsNullOrWhiteSpace(jwt.SigningKey))
 {
   throw new InvalidOperationException(
-    "Missing JWT configuration. Check Jwt__Issuer, Jwt__Audience, Jwt__SigningKey in Render or User Secrets locally."
-  );
+    "Missing JWT configuration. Check Jwt__Issuer, Jwt__Audience and Jwt__SigningKey.");
 }
 
 // Microsoft OAuth config validation
@@ -133,8 +135,7 @@ if (microsoftOAuth is null ||
     string.IsNullOrWhiteSpace(microsoftOAuth.FrontendSuccessUrl))
 {
   throw new InvalidOperationException(
-    "Missing Microsoft OAuth configuration. Check Auth__Microsoft__TenantId, Auth__Microsoft__ClientId, Auth__Microsoft__ClientSecret, Auth__Microsoft__RedirectUri, Auth__Microsoft__FrontendLoginUrl, Auth__Microsoft__FrontendSuccessUrl in Render or User Secrets locally."
-  );
+    "Missing Microsoft OAuth configuration. Check Auth__Microsoft__TenantId, Auth__Microsoft__ClientId, Auth__Microsoft__ClientSecret, Auth__Microsoft__RedirectUri, Auth__Microsoft__FrontendLoginUrl and Auth__Microsoft__FrontendSuccessUrl.");
 }
 
 // Authentication
