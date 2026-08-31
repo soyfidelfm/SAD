@@ -1,59 +1,99 @@
 # SADWebApp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.3.
+This repository contains the SAD Angular application and the ASP.NET Core 8 API.
 
 ## Development server
 
-To start a local development server, run:
+To start the Angular development server:
 
 ```bash
-ng serve
+npm install
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200/`.
 
-## Code scaffolding
+## Production API
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The production Angular configuration points to:
+
+```text
+https://sad-api-5c9o.onrender.com
+```
+
+The API controllers are exposed under `/api`.
+
+## PostgreSQL / Neon
+
+The API uses PostgreSQL through Npgsql. Render PostgreSQL is no longer required by the application; the production database should be the Neon PostgreSQL database configured through `ConnectionStrings__SadDb`.
+
+Do not commit the Neon connection string or any other secrets to source control.
+
+### Local setup
+
+Store the Neon connection string in .NET User Secrets:
 
 ```bash
-ng generate component component-name
+dotnet user-secrets --project SADWebApi set "ConnectionStrings:SadDb" "<NEON ADO.NET CONNECTION STRING>"
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Alternatively, set the environment variable:
+
+```text
+ConnectionStrings__SadDb=<NEON ADO.NET CONNECTION STRING>
+```
+
+### Create/update the Neon database schema
+
+The repository already contains the PostgreSQL EF Core migrations. The design-time DbContext factory allows the EF command to run without requiring JWT or Microsoft OAuth configuration.
+
+From the repository root:
 
 ```bash
-ng generate --help
+dotnet ef database update --project SADWebApi --startup-project SADWebApi
 ```
+
+This applies all migrations to the configured Neon database, including the schema and table creation migrations.
+
+To inspect the migration list first:
+
+```bash
+dotnet ef migrations list --project SADWebApi --startup-project SADWebApi
+```
+
+### Render configuration
+
+In the Render API service, configure these values as environment variables/secrets:
+
+- `ConnectionStrings__SadDb` — Neon PostgreSQL connection string.
+- `Jwt__Issuer`
+- `Jwt__Audience`
+- `Jwt__SigningKey`
+- `Auth__Microsoft__TenantId`
+- `Auth__Microsoft__ClientId`
+- `Auth__Microsoft__ClientSecret`
+- `Auth__Microsoft__RedirectUri`
+- `Auth__Microsoft__FrontendLoginUrl`
+- `Auth__Microsoft__FrontendSuccessUrl`
+
+The Neon database must be initialized with `dotnet ef database update` before the production API is expected to serve database-backed requests.
 
 ## Building
 
-To build the project run:
+Angular production build:
 
 ```bash
-ng build
+npm run build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+API build:
+
+```bash
+dotnet build SADWebApi/SADWebApi.csproj -c Release
+```
 
 ## Running unit tests
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
 ```bash
-ng test
+npm test
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

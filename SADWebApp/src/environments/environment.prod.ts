@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://sadapi.fidelfm.com'
+  apiUrl: 'https://sad-api-5c9o.onrender.com'
 };
