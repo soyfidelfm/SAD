@@ -97,3 +97,26 @@ dotnet build SADWebApi/SADWebApi.csproj -c Release
 ```bash
 npm test
 ```
+
+## Apply the PostgreSQL alignment patch
+
+From the repository root, with `ConnectionStrings:SadDb` configured:
+
+```bash
+dotnet ef database update --project SADWebApi --startup-project SADWebApi
+```
+
+This applies `AlignPostgresSchemaAndSeed`, which:
+
+- adds `sales.Sales.StatusId` and its foreign keys
+- converts remaining naive timestamps to `timestamptz` when needed
+- seeds Microsoft as identity provider, sale statuses 1-4, sample products and store `1`
+- creates `auth.upsert_user_from_external_login`
+
+After the update, set `Jwt__SigningKey` in User Secrets or the host environment. The sample key is no longer stored in `appsettings.json`.
+
+To reset transactional tables on PostgreSQL:
+
+```bash
+psql "$DATABASE_URL" -f "SADQuerysDB/Resetear DB.sql"
+```

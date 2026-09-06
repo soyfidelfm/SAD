@@ -50,8 +50,8 @@ BEGIN
             p_display_name,
             p_email,
             true,
-            now() AT TIME ZONE 'utc',
-            now() AT TIME ZONE 'utc',
+            now(),
+            now(),
             p_store_id,
             p_anumber
         );
@@ -66,14 +66,14 @@ BEGIN
             v_user_id,
             v_identity_provider_id,
             p_provider_subject,
-            now() AT TIME ZONE 'utc'
+            now()
         );
     ELSE
         UPDATE auth."Users"
         SET
             "DisplayName" = p_display_name,
             "Email" = p_email,
-            "LastLoginAtUtc" = now() AT TIME ZONE 'utc',
+            "LastLoginAtUtc" = now(),
             "StoreId" = p_store_id,
             "Anumber" = p_anumber
         WHERE "UserId" = v_user_id;

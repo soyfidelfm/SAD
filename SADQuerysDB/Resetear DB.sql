@@ -1,48 +1,18 @@
-BEGIN TRY
-    BEGIN TRANSACTION;
+-- PostgreSQL reset for SAD transactional data.
+-- Keeps catalogs, stores, identity providers and users by default.
 
-    -- 1) Tablas hijas / transaccionales
-    DELETE FROM [sales].[MembershipSales];
-    DELETE FROM [sales].[CreditCardApplications];
-    DELETE FROM [sales].[Sales];
+BEGIN;
 
-    --DELETE FROM [auth].[UserExternalLogins];
+TRUNCATE TABLE
+    sales."MembershipSales",
+    sales."CreditCardApplications",
+    sales."Sales"
+RESTART IDENTITY;
 
-    -- 2) Configuración dependiente
-    --DELETE FROM [catalog].[UserDailySettings];
+-- Uncomment to also wipe daily goals:
+-- TRUNCATE TABLE catalog."UserDailySettings" RESTART IDENTITY;
 
-    -- 3) Catálogos
-    DELETE FROM [catalog].[CreditCardProducts];
-    DELETE FROM [catalog].[MembershipProducts];
-    DELETE FROM [catalog].[SaleStatus];
-    --DELETE FROM [catalog].[IdentityProviders];
-    --DELETE FROM [catalog].[Stores];
+-- Uncomment to wipe users and logins:
+-- TRUNCATE TABLE auth."UserExternalLogins", auth."Users" RESTART IDENTITY CASCADE;
 
-    -- 4) Usuarios
-    --DELETE FROM [auth].[Users];
-
-    -- 5) Reset identities
-    DBCC CHECKIDENT ('[sales].[MembershipSales]', RESEED, 0);
-    DBCC CHECKIDENT ('[sales].[CreditCardApplications]', RESEED, 0);
-    
-
-    --DBCC CHECKIDENT ('[auth].[UserExternalLogins]', RESEED, 0);
-    --DBCC CHECKIDENT ('[catalog].[UserDailySettings]', RESEED, 0);
-
-    DBCC CHECKIDENT ('[catalog].[CreditCardProducts]', RESEED, 0);
-    DBCC CHECKIDENT ('[catalog].[MembershipProducts]', RESEED, 0);
-    
-    --DBCC CHECKIDENT ('[catalog].[IdentityProviders]', RESEED, 0);
-    --DBCC CHECKIDENT ('[catalog].[Stores]', RESEED, 0);
-
-    --DBCC CHECKIDENT ('[auth].[Users]', RESEED, 0);
-
-    COMMIT TRANSACTION;
-END TRY
-BEGIN CATCH
-    IF @@TRANCOUNT > 0
-        ROLLBACK TRANSACTION;
-
-    THROW;
-END CATCH;
-GO
+COMMIT;

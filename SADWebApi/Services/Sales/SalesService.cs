@@ -36,7 +36,7 @@ public class SalesService : ISalesService
     {
       StoreId = dto.StoreId,
       UserId = userId,
-      SaleDate = dto.SaleDate.Value,
+      SaleDate = saleDateUtc,
       Subtotal = dto.Subtotal,
       Tax = dto.Tax,
       Total = dto.Subtotal + dto.Tax,
