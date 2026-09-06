@@ -3,16 +3,24 @@ using Sad.Api.Contracts.Sales;
 using Sad.Api.Data;
 using Sad.Api.Data.Entities;
 using SADWebApi.Contracts.Helpers;
+using SADWebApi.Services.Helpers;
 
 namespace Sad.Api.Services.Sales;
 
 public class MembershipSalesService : IMembershipSalesService
 {
     private readonly SadDbContext _db;
-    public MembershipSalesService(SadDbContext db) => _db = db;
+    private readonly IHelpers _helpers;
+  public MembershipSalesService(SadDbContext db,
+    IHelpers helpers)
+  {
+    _db = db;
+    _helpers = helpers;
+  }
 
-	public async Task<long> CreateAsync(Guid userId, CreateMembershipSaleDto dto, CancellationToken ct)
+  public async Task<long> CreateAsync(Guid userId, CreateMembershipSaleDto dto, string timeZone, CancellationToken ct)
 	{
+  var utctime = DateTime.UtcNow;
 		// opcional pero recomendado: validar que exista el usuario (mensaje claro)
 		var userExists = await _db.Users.AnyAsync(u => u.UserId == userId, ct);
 		if (!userExists)
@@ -32,9 +40,11 @@ public class MembershipSalesService : IMembershipSalesService
 		return entity.MembershipSaleId;
 	}
 
-    public async Task<IReadOnlyList<MembershipSaleDto>> GetLatestAsync(int top, CancellationToken ct, Guid? userId = null)
+    public async Task<IReadOnlyList<MembershipSaleDto>> GetLatestAsync(int top, string timeZone, CancellationToken ct, Guid? userId = null)
     {
-        return await _db.MembershipSales
+    var tz = _helpers.GetTimeZone(timeZone);
+
+    return await _db.MembershipSales
             .AsNoTracking()
             .Where(x => !userId.HasValue || x.UserId == userId.Value)
             .OrderByDescending(x => x.SoldAtUtc)
@@ -46,7 +56,7 @@ public class MembershipSalesService : IMembershipSalesService
                 x.MembershipProductId,
                 x.StatusId,
                 x.Status.StatusName,
-                x.SoldAtUtc
+                _helpers.ConvertUtcToLocal(x.SoldAtUtc, tz)
             ))
             .ToListAsync(ct);
     }

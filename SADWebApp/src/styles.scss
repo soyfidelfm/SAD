@@ -835,6 +835,31 @@ p {
   background: var(--brand);
 }
 
+.progress-fill.yellow {
+  background: linear-gradient(
+    90deg,
+   var(--danger) 0%,
+    var(--warning) 100%
+  );
+}
+
+.progress-fill.red {
+  background: linear-gradient(
+    90deg,
+    var(--danger-text) 0%,
+    var(--danger) 100%
+  );
+}
+
+.progress-fill.green {
+  background: linear-gradient(
+    90deg,
+    var(--danger) 0%,
+    var(--warning) 50%,
+    var(--success) 100%
+  );
+}
+
 /* =========================
    DIALOG GLOBAL HELPERS
 ========================= */

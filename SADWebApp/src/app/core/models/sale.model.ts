@@ -1,10 +1,11 @@
 // src/app/core/models/sale.model.ts
+
 export interface Sale {
   saleId: string;
   storeId: number;
   userId: string;
 
-  saleDate: string; // ISO
+  saleDate: string;
   subtotal: number;
   tax: number;
   total: number;
@@ -18,9 +19,12 @@ export interface Sale {
 
 export interface SaleCreateDto {
   storeId: number;
-  saleDate?: string | null;  // ISO optional
+  saleDate?: string | null;
+
   subtotal: number;
   tax: number;
+  total: number;
+
   paymentMethod?: string | null;
   notes?: string | null;
 }

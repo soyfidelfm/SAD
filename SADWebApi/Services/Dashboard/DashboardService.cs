@@ -66,9 +66,9 @@ public sealed class DashboardService : IDashboardService
     var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
     var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
 
-    var creditCardTransactions = await _creditCardSvc.GetLatestAsync(top, ct, userId);
-    var membershipTransactions = await _membershipSvc.GetLatestAsync(top, ct, userId);
-    var salesTransactions = await _salesSvc.GetLatestAsync(top, ct, userId);
+    var creditCardTransactions = await _creditCardSvc.GetLatestAsync(top, timeZone, ct, userId);
+    var membershipTransactions = await _membershipSvc.GetLatestAsync(top, timeZone, ct, userId);
+    var salesTransactions = await _salesSvc.GetLatestAsync(top, timeZone, ct, userId);
 
     var creditMapped = creditCardTransactions.Select(x => new
     {
@@ -89,7 +89,7 @@ public sealed class DashboardService : IDashboardService
     var salesMapped = salesTransactions.Select(x => new
     {
       Type = "Sale",
-      Amount = x.Total,
+      Amount = x.Subtotal,
       TransactionDateUtc = x.SaleDate,
       Status = "Completed"
     });
@@ -103,7 +103,7 @@ public sealed class DashboardService : IDashboardService
         .Select(x => new LatestTransactionDto(
             x.Type,
             x.Amount,
-            TimeZoneInfo.ConvertTimeFromUtc(x.TransactionDateUtc, tz),
+            x.TransactionDateUtc,
             x.Status
         ))
         .ToList();
@@ -137,7 +137,7 @@ public sealed class DashboardService : IDashboardService
       {
         Hour = g.Key,
         HourLabel = FormatHour(g.Key),
-        Total = g.Sum(x => x.Total)
+        Total = g.Sum(x => x.Subtotal)
       })
       .OrderBy(x => x.Hour)
       .ToList();
@@ -195,9 +195,9 @@ public sealed class DashboardService : IDashboardService
             x.SoldAtUtc >= startUtc &&
             x.SoldAtUtc < endUtc, ct);
 
-    var totalSales = sales.Sum(x => x.Total);
-    var averageSale = sales.Any() ? sales.Average(x => x.Total) : 0;
-    var highestTransaction = sales.Any() ? sales.Max(x => x.Total) : 0;
+    var totalSales = sales.Sum(x => x.Subtotal);
+    var averageSale = sales.Any() ? sales.Average(x => x.Subtotal) : 0;
+    var highestTransaction = sales.Any() ? sales.Max(x => x.Subtotal) : 0;
     var goalPercent = totalGoalAmount > 0 ? Math.Round((totalSales / totalGoalAmount) * 100, 2): 0;    
     var appEfficiency = creditCards > 0 ? Math.Round((totalSales / creditCards), 2) : 0;    
     var membershipEfficiency = memberships > 0 ? Math.Round((totalSales / memberships), 2) : 0;
@@ -219,7 +219,7 @@ public sealed class DashboardService : IDashboardService
         .Select(g => new
         {
           Hour = g.Key,
-          TotalSales = g.Sum(x => x.Sale.Total)
+          TotalSales = g.Sum(x => x.Sale.Subtotal)
         })
         .OrderByDescending(x => x.TotalSales)
         .FirstOrDefault();
@@ -229,7 +229,7 @@ public sealed class DashboardService : IDashboardService
         .Select(g => new
         {
           Date = g.Key,
-          TotalSales = g.Sum(x => x.Sale.Total)
+          TotalSales = g.Sum(x => x.Sale.Subtotal)
         })
         .OrderByDescending(x => x.TotalSales)
         .FirstOrDefault();
@@ -305,7 +305,7 @@ public sealed class DashboardService : IDashboardService
     .Select(g => new SalesByHourByDateDto(
         g.Key.LocalDate,
         g.Key.LocalHour,
-        g.Sum(x => x.Sale.Total)
+        g.Sum(x => x.Sale.Subtotal)
     ))
     .OrderByDescending(x => x.Date)
     .ThenBy(x => x.Hour)
@@ -382,7 +382,7 @@ public sealed class DashboardService : IDashboardService
         creditCardsByDate.TryGetValue(g.Key, out var creditCardCount);
         goalsByDate.TryGetValue(g.Key, out var salesGoal);
 
-        var totalSales = g.Sum(x => x.Total);
+        var totalSales = g.Sum(x => x.Subtotal);
 
         var salesGoalPercent = salesGoal > 0
             ? Math.Round((totalSales / salesGoal) * 100, 2)
@@ -393,7 +393,7 @@ public sealed class DashboardService : IDashboardService
             totalSales,
             creditCardCount,
             membershipCount,            
-            g.Average(x => x.Total),
+            g.Average(x => x.Subtotal),
             salesGoalPercent
         );
       })

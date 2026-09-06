@@ -1,4 +1,5 @@
 @import '../../../styles/colors.scss';
+
 :host {
   display: block;
 }
@@ -94,9 +95,47 @@
 .bar-fill {
   width: 100%;
   min-height: 8px;
-  background: #3b82f6;
   border-radius: 10px 10px 0 0;
-  transition: height 0.25s ease;
+  transition:
+    height 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* LOW SALES */
+.bar-fill.red {
+  background: linear-gradient(
+    180deg,
+    var(--danger-text) 0%,
+    var(--danger) 100%
+  );
+
+  box-shadow:
+    0 0 12px var(--danger-border);
+}
+
+/* MEDIUM SALES */
+.bar-fill.yellow {
+  background: linear-gradient(
+    180deg,
+    var(--warning-text) 0%,
+    var(--warning) 100%
+  );
+
+  box-shadow:
+    0 0 12px var(--warning-border);
+}
+
+/* HIGH SALES */
+.bar-fill.green {
+  background: linear-gradient(
+    180deg,
+    var(--success-text) 0%,
+    var(--success) 100%
+  );
+
+  box-shadow:
+    0 0 14px var(--success-border);
 }
 
 .bar-label {
@@ -148,35 +187,26 @@
   color: var(--text-main);
 }
 
-
-/* =========================
-   VIEW ACTIONS BUTTONS
-   AND ADD MENU
-========================= */
-
 /* =========================
    ADD MENU DROPDOWN
 ========================= */
-
 .add-menu {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
   z-index: 20;
-  padding: var(--space-sm);
+  padding: 8px;
   background: var(--bg-app);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding: 8px;
   backdrop-filter: none;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-
 }
 
 .view-actions {
   display: flex;
   align-items: center;
-  gap: 14px; // separación entre refresh y Add new
+  gap: 14px;
   position: relative;
 }
 
@@ -197,7 +227,6 @@
   color: var(--success);
   font-weight: 800;
 }
-
 
 /* =========================
    RESPONSIVE

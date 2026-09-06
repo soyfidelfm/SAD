@@ -20,10 +20,11 @@ import { UserDailySettingsService } from '../../core/services/user-daily-setting
 import { LatestTransactionDto } from '../../core/models/latest-transaction.model';
 
 import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
+import { RawDatePipe } from '../../shared/pipes/raw-date.pipe';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AddPopupComponent, LocalDatePipe],
+  imports: [CommonModule, AddPopupComponent, LocalDatePipe, RawDatePipe],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
@@ -142,31 +143,45 @@ export class DashboardComponent implements OnInit {
   }
 
   private createSale(payload: {
-    storeId: number;
-    saleAmount: number;
-    notes?: string;
-    paymentMethod?: string | null;
-  }): void {
-    const dto: SaleCreateDto = {
-      storeId: payload.storeId,
-      subtotal: Number(payload.saleAmount),
-      tax: 0,
-      notes: payload.notes ?? null,
-      paymentMethod: payload.paymentMethod ?? null
-    };
+  storeId: number;
 
-    this.salesService.create(dto).subscribe({
-      next: () => {
-        this.successMessage = 'Sale saved.';
-        this.closePopup();
-        this.refreshSummary();
-      },
-      error: (err) => {
-        console.error('❌ Error saving sale', err);
-        this.errorMessage = 'Error saving sale.';
-      }
-    });
-  }
+  saleDate?: string | null;
+
+  subtotal: number;
+  tax: number;
+  total: number;
+
+  notes?: string;
+  paymentMethod?: string | null;
+}): void {
+
+  const dto: SaleCreateDto = {
+    storeId: payload.storeId,
+
+    saleDate: payload.saleDate ?? null,
+
+    subtotal: Number(payload.subtotal),
+    tax: Number(payload.tax),
+    total: Number(payload.total),
+
+    notes: payload.notes ?? null,
+    paymentMethod: payload.paymentMethod ?? null
+  };
+
+  console.log('FINAL DTO', dto);
+
+  this.salesService.create(dto).subscribe({
+    next: () => {
+      this.successMessage = 'Sale saved.';
+      this.closePopup();
+      this.refreshSummary();
+    },
+    error: (err) => {
+      console.error('❌ Error saving sale', err);
+      this.errorMessage = 'Error saving sale.';
+    }
+  });
+}
 
   refreshSummary(): void {
     this.summary$ = this.dashboardService.getSummary().pipe(shareReplay(1));
@@ -182,6 +197,7 @@ export class DashboardComponent implements OnInit {
 
     this.dashboardService.getLatestTransactions(5).subscribe({
       next: (data) => {
+        console.log(data);
         this.latestTransactions = data;
         this.loadingLatest = false;
       },
@@ -265,8 +281,8 @@ export class DashboardComponent implements OnInit {
     const goal = this.dailySalesGoal || 1;
     const safeAmount = Number(amount ?? 0);
 
-    if (safeAmount >= goal) return 'green';
-    if (safeAmount >= goal / 3) return 'yellow';
+    if (safeAmount >= 1500) return 'green';
+    if (safeAmount >= 800) return 'yellow';
     return 'red';
   }
 

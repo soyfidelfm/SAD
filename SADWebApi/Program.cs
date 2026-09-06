@@ -8,6 +8,7 @@ using Sad.Api.Services.Auth;
 using Sad.Api.Services.Catalog;
 using Sad.Api.Services.Dashboard;
 using Sad.Api.Services.Sales;
+using SADWebApi.Services.Helpers;
 using SADWebApi.Services.Sales;
 using System.Text;
 
@@ -63,7 +64,11 @@ if (string.IsNullOrWhiteSpace(connectionString))
 }
 
 builder.Services.AddDbContext<SadDbContext>(opt =>
-  opt.UseNpgsql(connectionString));
+  opt.UseNpgsql(connectionString, npgsql =>
+  {
+    npgsql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(5), null);
+    npgsql.CommandTimeout(30);
+  }));
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -74,6 +79,9 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ISalesService, SalesService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IUserDailySettingsService, UserDailySettingsService>();
+builder.Services.AddScoped<IReceiptOcrService, AzureReceiptOcrService>();
+builder.Services.AddScoped<IReceiptReaderService, ReceiptReaderService>();
+builder.Services.AddScoped<IHelpers, HelpersService>();
 
 builder.Services.AddHttpClient();
 
@@ -159,9 +167,11 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Swagger
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+  app.UseSwagger();
+  app.UseSwaggerUI();
+}
 
 // Pipeline
 app.UseHttpsRedirection();

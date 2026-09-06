@@ -2,22 +2,34 @@ using Microsoft.EntityFrameworkCore;
 using Sad.Api.Contracts.Sales;
 using Sad.Api.Data;
 using Sad.Api.Data.Entities.Sales;
-using SADWebApi.Contracts.Helpers;
+using SADWebApi.Services.Helpers;
 
 namespace Sad.Api.Services.Sales;
 
 public class SalesService : ISalesService
 {
   private readonly SadDbContext _db;
+  private readonly IHelpers _helpers;
 
-  public SalesService(SadDbContext db) => _db = db;
-
-  public async Task<SaleDto> CreateAsync(Guid userId, SaleCreateDto dto, CancellationToken ct)
+  public SalesService(
+    SadDbContext db,
+    IHelpers helpers)
   {
+    _db = db;
+    _helpers = helpers;
+  }
+
+  public async Task<SaleDto> CreateAsync(
+      Guid userId,
+      SaleCreateDto dto,
+      string timeZone,
+      CancellationToken ct)
+  {
+    var tz = _helpers.GetTimeZone(timeZone);
     var nowUtc = DateTime.UtcNow;
 
     var saleDateUtc = dto.SaleDate.HasValue
-        ? DateTimeHelper.ConvertPstToUtc(dto.SaleDate.Value)
+        ? _helpers.ConvertLocalToUtc(dto.SaleDate.Value, tz)
         : nowUtc;
 
     var sale = new Sale
@@ -32,22 +44,27 @@ public class SalesService : ISalesService
       Notes = dto.Notes,
       CreatedAt = nowUtc,
       UpdatedAt = nowUtc,
-      StatusId = 4 // Assuming 1 is the default status for a new sale
+      StatusId = 4
     };
 
     _db.Sales.Add(sale);
     await _db.SaveChangesAsync(ct);
 
-    return ToDto(sale);
+    return ToDto(sale, tz);
   }
 
-  public async Task<SaleDto?> GetByIdAsync(Guid saleId, CancellationToken ct)
+  public async Task<SaleDto?> GetByIdAsync(
+      Guid saleId,
+      string timeZone,
+      CancellationToken ct)
   {
+    var tz = _helpers.GetTimeZone(timeZone);
+
     var sale = await _db.Sales
         .AsNoTracking()
         .FirstOrDefaultAsync(x => x.SaleId == saleId, ct);
 
-    return sale is null ? null : ToDto(sale);
+    return sale is null ? null : ToDto(sale, tz);
   }
 
   public async Task<IReadOnlyList<SaleDto>> GetAsync(
@@ -55,9 +72,12 @@ public class SalesService : ISalesService
       Guid? userId,
       DateTime? fromLocal,
       DateTime? toLocal,
+      string timeZone,
       CancellationToken ct)
   {
-    var q = _db.Sales
+    var tz = _helpers.GetTimeZone(timeZone);
+
+    var q = _db.Sales 
         .AsNoTracking()
         .AsQueryable();
 
@@ -69,24 +89,33 @@ public class SalesService : ISalesService
 
     if (fromLocal.HasValue)
     {
-      var fromUtc = DateTimeHelper.ConvertPstToUtc(fromLocal.Value);
+      var fromUtc = _helpers.ConvertLocalToUtc(fromLocal.Value, tz);
       q = q.Where(x => x.SaleDate >= fromUtc);
     }
 
     if (toLocal.HasValue)
     {
-      var toUtc = DateTimeHelper.ConvertPstToUtc(toLocal.Value);
+      var toUtc = _helpers.ConvertLocalToUtc(toLocal.Value, tz);
       q = q.Where(x => x.SaleDate < toUtc);
     }
 
-    return await q
+    var sales = await q
         .OrderByDescending(x => x.SaleDate)
-        .Select(x => ToDto(x))
         .ToListAsync(ct);
+
+    return sales
+        .Select(x => ToDto(x, tz))
+        .ToList();
   }
 
-  public async Task<bool> UpdateAsync(Guid saleId, SaleUpdateDto dto, CancellationToken ct)
+  public async Task<bool> UpdateAsync(
+      Guid saleId,
+      SaleUpdateDto dto,
+      string timeZone,
+      CancellationToken ct)
   {
+    var tz = _helpers.GetTimeZone(timeZone);
+
     var sale = await _db.Sales
         .FirstOrDefaultAsync(x => x.SaleId == saleId, ct);
 
@@ -94,7 +123,7 @@ public class SalesService : ISalesService
       return false;
 
     if (dto.SaleDate.HasValue)
-      sale.SaleDate = DateTimeHelper.ConvertPstToUtc(dto.SaleDate.Value);
+      sale.SaleDate = _helpers.ConvertLocalToUtc(dto.SaleDate.Value, tz);
 
     sale.Subtotal = dto.Subtotal;
     sale.Tax = dto.Tax;
@@ -121,26 +150,52 @@ public class SalesService : ISalesService
     return true;
   }
 
-  public Task<IReadOnlyList<SaleDto>> GetByStoreIdAsync(int storeId, CancellationToken ct)
+  public Task<IReadOnlyList<SaleDto>> GetByStoreIdAsync(
+      int storeId,
+      string timeZone,
+      CancellationToken ct)
   {
-    return GetAsync(storeId, userId: null, fromLocal: null, toLocal: null, ct);
+    return GetAsync(
+        storeId,
+        userId: null,
+        fromLocal: null,
+        toLocal: null,
+        timeZone,
+        ct);
   }
 
-  public Task<IReadOnlyList<SaleDto>> GetByStoreAndDateAsync(int storeId, DateTime date, CancellationToken ct)
+  public Task<IReadOnlyList<SaleDto>> GetByStoreAndDateAsync(
+      int storeId,
+      DateTime date,
+      string timeZone,
+      CancellationToken ct)
   {
     var fromLocal = date.Date;
     var toLocal = date.Date.AddDays(1);
 
-    return GetAsync(storeId, userId: null, fromLocal: fromLocal, toLocal: toLocal, ct);
+    return GetAsync(
+        storeId,
+        userId: null,
+        fromLocal,
+        toLocal,
+        timeZone,
+        ct);
   }
 
   public Task<IReadOnlyList<SaleDto>> GetByStoreAndRangeAsync(
       int storeId,
       DateTime from,
       DateTime to,
+      string timeZone,
       CancellationToken ct)
   {
-    return GetAsync(storeId, userId: null, fromLocal: from, toLocal: to, ct);
+    return GetAsync(
+        storeId,
+        userId: null,
+        fromLocal: from,
+        toLocal: to,
+        timeZone,
+        ct);
   }
 
   public Task<bool> DeleteByIdAsync(Guid saleId, CancellationToken ct)
@@ -150,71 +205,79 @@ public class SalesService : ISalesService
 
   public async Task<IReadOnlyList<SaleDto>> GetLatestAsync(
       int top,
+      string timeZone,
       CancellationToken ct,
       Guid? userId = null)
   {
-    return await _db.Sales
+    var tz = _helpers.GetTimeZone(timeZone);
+
+    var sales = await _db.Sales
         .AsNoTracking()
         .Where(x => !userId.HasValue || x.UserId == userId.Value)
         .OrderByDescending(x => x.SaleDate)
         .Take(top)
-        .Select(x => ToDto(x))
         .ToListAsync(ct);
+
+    return sales
+        .Select(x => ToDto(x, tz))
+        .ToList();
   }
 
-  public async Task<SalesSummaryDto> GetSummaryAsync(Guid userId,
+  public async Task<SalesSummaryDto> GetSummaryAsync(
+      Guid userId,
       DateOnly date,
       string timeZone,
       CancellationToken ct)
-      {
-    // Fallback por si no mandan timezone
-    var tz = string.IsNullOrWhiteSpace(timeZone)
-        ? TimeZoneInfo.Utc
-        : TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+  {
+    var tz = _helpers.GetTimeZone(timeZone);
 
-    // Convertir el día LOCAL a rango UTC
     var startLocal = date.ToDateTime(TimeOnly.MinValue);
     var endLocal = date.AddDays(1).ToDateTime(TimeOnly.MinValue);
 
-    var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
-    var endUtc = TimeZoneInfo.ConvertTimeToUtc(endLocal, tz);
+    var startUtc = _helpers.ConvertLocalToUtc(startLocal, tz);
+    var endUtc = _helpers.ConvertLocalToUtc(endLocal, tz);
 
     var query = _db.Sales
         .AsNoTracking()
         .Where(x => x.UserId == userId);
-    var total = await query.SumAsync(x => x.Total, ct);
+
+    var total = await query.SumAsync(x => x.Subtotal, ct);
+
     var today = await query
-    .Where(x => x.SaleDate >= startUtc && x.SaleDate < endUtc)
-    .SumAsync(x => x.Total, ct);
+        .Where(x => x.SaleDate >= startUtc && x.SaleDate < endUtc)
+        .SumAsync(x => x.Subtotal, ct);
 
     var monthStartLocal = new DateTime(date.Year, date.Month, 1);
     var monthEndLocal = monthStartLocal.AddMonths(1);
 
-    var monthStartUtc = TimeZoneInfo.ConvertTimeToUtc(monthStartLocal, tz);
-    var monthEndUtc = TimeZoneInfo.ConvertTimeToUtc(monthEndLocal, tz);
+    var monthStartUtc = _helpers.ConvertLocalToUtc(monthStartLocal, tz);
+    var monthEndUtc = _helpers.ConvertLocalToUtc(monthEndLocal, tz);
 
-    var thisMonth = await query.Where(x => x.SaleDate >= monthStartUtc && x.SaleDate < monthEndUtc)
-    .SumAsync(x => x.Total, ct);
+    var thisMonth = await query
+        .Where(x => x.SaleDate >= monthStartUtc && x.SaleDate < monthEndUtc)
+        .SumAsync(x => x.Subtotal, ct);
 
     return new SalesSummaryDto(
-    total,
-    thisMonth,
-    today    
+        total,
+        thisMonth,
+        today
     );
   }
 
-  private static SaleDto ToDto(Sale s) =>
+  private SaleDto ToDto(Sale s, TimeZoneInfo tz) =>
       new(
           s.SaleId,
           s.StoreId,
           s.UserId,
-          s.SaleDate,
+          _helpers.ConvertUtcToLocal(s.SaleDate, tz),
           s.Subtotal,
           s.Tax,
           s.Total,
           s.PaymentMethod,
           s.Notes,
-          s.CreatedAt,
-          s.UpdatedAt
+          _helpers.ConvertUtcToLocal(s.CreatedAt, tz),
+          s.UpdatedAt.HasValue
+              ? _helpers.ConvertUtcToLocal(s.UpdatedAt.Value, tz)
+              : null
       );
 }

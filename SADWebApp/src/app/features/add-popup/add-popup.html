@@ -1,4 +1,14 @@
 <div class="modal-backdrop" (click)="onBackdropClick()">
+
+  <div
+    class="ocr-toast"
+    *ngIf="ocrMessage"
+    [class.error]="ocrMessageType === 'error'"
+    [class.success]="ocrMessageType === 'success'"
+    [class.loading]="ocrMessageType === 'loading'">
+    {{ ocrMessage }}
+  </div>
+
   <div class="modal" (click)="onDialogClick($event)">
     <div class="modal-header">
       <h2>{{ title }}</h2>
@@ -32,14 +42,14 @@
               <button type="button" class="link" (click)="loadStores()">Retry</button>
             </small>
 
-            <small class="error"
-              *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
+            <small class="error" *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
               Store is required
             </small>
           </label>
 
           <label class="field">
             <span>Approved?</span>
+
             <select formControlName="approved">
               <option [ngValue]="null" disabled>Select...</option>
               <option [ngValue]="true">Approved</option>
@@ -54,7 +64,6 @@
 
         <!-- MEMBERSHIP -->
         <ng-container *ngSwitchCase="'membership'">
-
           <label class="field">
             <span>Store</span>
 
@@ -77,8 +86,7 @@
               <button type="button" class="link" (click)="loadStores()">Retry</button>
             </small>
 
-            <small class="error"
-              *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
+            <small class="error" *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
               Store is required
             </small>
           </label>
@@ -86,10 +94,7 @@
           <label class="field">
             <span>Membership</span>
 
-            <select
-              formControlName="membershipProductId"
-              [disabled]="loadingMemberships || membershipsError"
-            >
+            <select formControlName="membershipProductId" [disabled]="loadingMemberships || membershipsError">
               <option [ngValue]="null" disabled>
                 {{
                   loadingMemberships
@@ -108,7 +113,8 @@
               <button type="button" class="link" (click)="loadMembershipProducts()">Retry</button>
             </small>
 
-            <small class="error"
+            <small
+              class="error"
               *ngIf="form.controls.membershipProductId.touched && form.controls.membershipProductId.invalid && !membershipsError">
               Membership is required
             </small>
@@ -125,58 +131,164 @@
         </ng-container>
 
         <!-- SALE -->
-        <!-- SALE -->
-<ng-container *ngSwitchCase="'sale'">
+        <ng-container *ngSwitchCase="'sale'">
+          <div class="sale-fields-grid">
 
-  <label class="field">
-    <span>Store</span>
+            <label class="field">
+              <span>Receipt / Ticket</span>
 
-    <select formControlName="storeId" [disabled]="loadingStores || storesError">
-      <option [ngValue]="null" disabled>
-        {{
-          loadingStores
-            ? 'Loading stores...'
-            : (storesError ? 'Could not load stores' : 'Select a store...')
-        }}
-      </option>
+              <input
+                #receiptInput
+                type="file"
+                accept="image/*"
+                class="hidden-file-input"
+                (change)="onReceiptSelected($event)" />
 
-      <option *ngFor="let s of stores" [ngValue]="s.storeId">
-        {{ s.storeNumber }} - {{ s.storeName }}
-      </option>
-    </select>
+              <button
+                type="button"
+                class="receipt-upload-btn"
+                (click)="receiptInput.click()">
+                <i class="fa-solid fa-camera"></i>
+                <span>Upload Receipt</span>
+              </button>
+            </label>
 
-    <small class="error" *ngIf="storesError">
-      Could not load stores.
-      <button type="button" class="link" (click)="loadStores()">Retry</button>
-    </small>
+            <label class="field">
+              <span>Store</span>
 
-    <small class="error"
-      *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
-      Store is required
-    </small>
-  </label>
+              <select formControlName="storeId" [disabled]="loadingStores || storesError">
+                <option [ngValue]="null" disabled>
+                  {{
+                    loadingStores
+                      ? 'Loading stores...'
+                      : (storesError ? 'Could not load stores' : 'Select a store...')
+                  }}
+                </option>
 
-  <label class="field">
-    <span>Sale Amount</span>
-    <input type="number" step="0.01" formControlName="saleAmount" placeholder="e.g. 199.99" />
-    <small class="error" *ngIf="form.controls.saleAmount.touched && form.controls.saleAmount.invalid">
-      Amount is required
-    </small>
-  </label>
+                <option *ngFor="let s of stores" [ngValue]="s.storeId">
+                  {{ s.storeName }}
+                </option>
+              </select>
 
-  <label class="field">
-    <span>Notes (optional)</span>
-    <textarea rows="3" formControlName="notes" placeholder="Add details..."></textarea>
-  </label>
+              <small class="error" *ngIf="storesError">
+                Could not load stores.
+                <button type="button" class="link" (click)="loadStores()">Retry</button>
+              </small>
 
-</ng-container>
+              <small
+                class="error"
+                *ngIf="form.controls.storeId.touched && form.controls.storeId.invalid && !storesError">
+                Store is required
+              </small>
+            </label>
 
+            <label class="field">
+              <span>Sale Amount</span>
+
+              <div class="money-input">
+                <span class="money-prefix">$</span>
+
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  formControlName="saleAmount"
+                  placeholder="0.00"
+                  (blur)="formatMoneyField('saleAmount')" />
+              </div>
+
+              <small class="error" *ngIf="form.controls.saleAmount.touched && form.controls.saleAmount.invalid">
+                Amount is required
+              </small>
+            </label>
+
+            <label class="field">
+              <span>Tax</span>
+
+              <div class="money-input">
+                <span class="money-prefix">$</span>
+
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  formControlName="taxAmount"
+                  placeholder="0.00"
+                  (blur)="formatMoneyField('taxAmount')" />
+              </div>
+
+              <small class="error" *ngIf="form.controls.taxAmount.touched && form.controls.taxAmount.invalid">
+                Tax must be 0 or more
+              </small>
+            </label>
+
+            <label class="field">
+              <span>Total</span>
+
+              <div class="money-input">
+                <span class="money-prefix">$</span>
+
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  formControlName="totalAmount"
+                  placeholder="0.00"
+                  (blur)="formatMoneyField('totalAmount')" />
+              </div>
+
+              <small class="error" *ngIf="form.controls.totalAmount.touched && form.controls.totalAmount.invalid">
+                Total is required
+              </small>
+            </label>
+
+            <label class="field">
+              <span>Payment Method</span>
+
+              <select formControlName="paymentMethod">
+                <option [ngValue]="null" disabled>Select...</option>
+
+                <option *ngFor="let method of paymentMethods" [ngValue]="method">
+                  {{ method }}
+                </option>
+              </select>
+
+              <small class="error" *ngIf="form.controls.paymentMethod.touched && form.controls.paymentMethod.invalid">
+                Payment method is required
+              </small>
+            </label>
+
+            <label class="field field-full">
+              <span>Sale Date</span>
+
+              <input
+                type="datetime-local"
+                formControlName="saleDate" />
+
+              <small class="error" *ngIf="form.controls.saleDate.touched && form.controls.saleDate.invalid">
+                Sale date is required
+              </small>
+            </label>
+
+            <label class="field field-full">
+              <span>Notes (optional)</span>
+
+              <textarea
+                rows="4"
+                formControlName="notes"
+                placeholder="Tax, total, payment method..."></textarea>
+            </label>
+
+          </div>
+        </ng-container>
 
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn ghost" (click)="close.emit()">Cancel</button>
-        <button type="submit" class="btn primary">Save</button>
+        <button type="button" class="btn-secondary" (click)="close.emit()">
+          Cancel
+        </button>
+
+        <button type="submit" class="btn-secondary">
+          Save
+        </button>
       </div>
     </form>
   </div>

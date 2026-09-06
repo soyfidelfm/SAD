@@ -7,6 +7,9 @@ public class CatalogSaleStatus
   public string StatusCode { get; set; } = string.Empty;
   public string StatusName { get; set; } = string.Empty;
 
+  public bool IsFinal { get; set; }
+  public bool IsActive { get; set; }
+
   public ICollection<SalesCreditCardApplication> CreditCardApplications { get; set; } = new List<SalesCreditCardApplication>();
   public ICollection<SalesMembershipSale> MembershipSales { get; set; } = new List<SalesMembershipSale>();
 }

@@ -1,165 +1,486 @@
+@import '../../../styles/colors.scss';
+
+:host {
+  display: block;
+}
+
+/* =========================
+   MODAL BACKDROP
+========================= */
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+
+  background: rgba(15, 23, 42, 0.72);
+
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 1rem;
+
   z-index: 1000;
 }
 
+/* =========================
+   MODAL CONTAINER
+========================= */
+
 .modal {
   width: min(720px, 100%);
-  background: #0b1220;
-  color: #e5e7eb;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+
   overflow: hidden;
+
+  background: var(--bg-app);
+  color: var(--text-main);
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
 }
+
+/* =========================
+   MODAL HEADER
+========================= */
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 1.15rem;
-  font-weight: 650;
-  color: #f9fafb;
+
+  font-size: 1.1rem;
+  font-weight: 700;
   letter-spacing: 0.2px;
+
+  color: var(--text-main);
 }
+
+/* =========================
+   ICON BUTTON
+========================= */
 
 .icon-btn {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  color: #f9fafb;
-  cursor: pointer;
+
   display: grid;
   place-items: center;
-  font-size: 1.2rem;
-  transition: background 0.2s ease, transform 0.1s ease, border-color 0.2s ease;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: var(--text-main);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
 }
 
 .icon-btn:hover {
-  background: rgba(255, 255, 255, 0.10);
-  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+
+  border-color: rgba(255, 255, 255, 0.14);
+
   transform: scale(1.03);
 }
 
+/* =========================
+   MODAL BODY
+========================= */
+
 .modal-body {
-  padding: 1.1rem 1.25rem 1.25rem;
   display: grid;
+
   gap: 1rem;
+
+  padding: 1.1rem 1.25rem 1.25rem;
 }
+
+/* =========================
+   FORM FIELD
+========================= */
 
 .field {
   display: grid;
+
   gap: 0.45rem;
 }
 
 .field span {
   font-size: 0.85rem;
-  color: #cbd5e1;
+  font-weight: 500;
+
+  color: var(--text-muted);
 }
 
-/* ===========================
+/* =========================
    INPUTS / SELECTS / TEXTAREA
-   =========================== */
+========================= */
 
 input,
 select,
 textarea {
   width: 100%;
-  padding: 0.75rem 0.85rem;
+
+  padding: 0.78rem 0.9rem;
+
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  color: #f9fafb;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: var(--text-main);
+
   outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* 🔑 CLAVE: forzar color correcto del dropdown */
 select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+
   cursor: pointer;
 }
 
-/* 🔑 CLAVE: opciones visibles */
 select option {
-  background: #ffffff;   // fondo del dropdown
-  color: #111827;        // texto oscuro
+  background: var(--bg-app);
+
+  color: var(--text-main);
 }
 
 select option:disabled {
-  color: #9ca3af;
+  color: var(--text-muted);
 }
-
-/* =========================== */
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(226, 232, 240, 0.55);
+  color: rgba(255, 255, 255, 0.38);
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: rgba(99, 102, 241, 0.6);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  border-color: rgba(59, 130, 246, 0.55);
+
+  background: rgba(255, 255, 255, 0.06);
+
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
 }
 
-.error {
-  color: #fca5a5;
-  font-size: 0.78rem;
+/* =========================
+   MONEY INPUT
+========================= */
+
+.money-input {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
 }
+
+.money-input input {
+  width: 100%;
+
+  padding-left: 2.2rem !important;
+}
+
+.money-prefix {
+  position: absolute;
+
+  left: 0.9rem;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 0.95rem;
+  font-weight: 800;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+/* =========================
+   ERROR TEXT
+========================= */
+
+.error {
+  font-size: 0.78rem;
+  font-weight: 500;
+
+  color: var(--danger);
+}
+
+/* =========================
+   MODAL FOOTER
+========================= */
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 0.6rem;
-  padding: 0.95rem 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
+
+  gap: 0.7rem;
+
+  padding: 1rem 1.25rem;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+/* =========================
+   BUTTONS
+========================= */
 
 .btn {
   border: none;
+
   border-radius: 12px;
-  padding: 0.62rem 0.95rem;
+
+  padding: 0.68rem 1rem;
+
+  font-weight: 700;
+  font-size: 0.92rem;
+
   cursor: pointer;
-  font-weight: 600;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 .btn.ghost {
-  background: rgba(255, 255, 255, 0.08);
-  color: #e5e7eb;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+
+  color: var(--text-main);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .btn.ghost:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .btn.primary {
-  background: #111827;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--primary);
+
+  color: white;
+
+  border: 1px solid transparent;
 }
 
 .btn.primary:hover {
-  background: #0b1220;
+  filter: brightness(1.05);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+/* =========================
+   SALE GRID
+========================= */
+
+.sale-fields-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
+/* =========================
+   CAMERA FILE INPUT
+========================= */
+
+.hidden-file-input {
+  display: none;
+}
+
+.receipt-upload-btn {
+  width: 100%;
+
+  min-height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.7rem;
+
+  padding: 0.85rem 1rem;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: var(--text-main);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.12s ease;
+}
+
+.receipt-upload-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  border-color: rgba(255, 255, 255, 0.14);
+
+  transform: translateY(-1px);
+}
+
+.receipt-upload-btn i {
+  font-size: 1rem;
+
+  color: var(--primary);
+}
+
+/* =========================
+   OCR TOAST - CENTER FRONT
+========================= */
+
+.ocr-toast {
+  position: fixed !important;
+
+  top: 50% !important;
+  left: 50% !important;
+
+  transform: translate(-50%, -50%) !important;
+
+  z-index: 2147483647 !important;
+
+  min-width: 280px;
+  max-width: 90vw;
+
+  padding: 1rem 1.4rem;
+
+  border-radius: 18px;
+
+  background: rgba(15, 23, 42, 0.96);
+
+  color: white;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  font-size: 0.95rem;
+  font-weight: 800;
+
+  text-align: center;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+
+  pointer-events: none;
+
+  animation: toastPop 0.25s ease;
+}
+
+.ocr-toast.success {
+  background: rgba(16, 185, 129, 0.22);
+
+  border-color: rgba(16, 185, 129, 0.65);
+
+  color: #6ee7b7;
+}
+
+.ocr-toast.error {
+  background: rgba(239, 68, 68, 0.2);
+
+  border-color: rgba(239, 68, 68, 0.65);
+
+  color: #fca5a5;
+}
+
+.ocr-toast.loading {
+  background: rgba(59, 130, 246, 0.2);
+
+  border-color: rgba(59, 130, 246, 0.6);
+
+  color: #93c5fd;
+}
+
+@keyframes toastPop {
+  from {
+    opacity: 0;
+
+    transform: translate(-50%, -50%) scale(0.94) !important;
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .modal {
+    width: 100%;
+  }
+
+  .sale-fields-grid {
+    gap: 0.9rem;
+  }
+
+  .ocr-toast {
+    width: calc(100% - 48px);
+
+    min-width: auto;
+  }
 }

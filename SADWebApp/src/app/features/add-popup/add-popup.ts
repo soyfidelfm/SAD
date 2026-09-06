@@ -7,35 +7,47 @@ import {
   SimpleChanges,
   OnInit
 } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
 import {
   FormBuilder,
   ReactiveFormsModule,
   Validators,
   FormGroup,
-  FormControl
+  FormControl,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors
 } from '@angular/forms';
+
 import { catchError, finalize, of } from 'rxjs';
 
 import { CatalogService } from '../../core/services/catalog.service';
+import { ReceiptOcrService } from '../../core/services/receipt-ocr.service';
+
 import { CatalogStore } from '../../core/models/catalog-store.model';
 import { CatalogMembership } from '../../core/models/catalog-membership.model';
 
 export type AddPopupMode = 'credit' | 'membership' | 'sale';
 
+type MoneyField = 'saleAmount' | 'taxAmount' | 'totalAmount';
+
 type AddPopupForm = {
   storeId: FormControl<number | null>;
   storeNumber: FormControl<number | null>;
 
-  // credit
   approved: FormControl<boolean | null>;
 
-  // membership
   membershipProductId: FormControl<number | null>;
   termMonths: FormControl<number | null>;
 
-  // sale
-  saleAmount: FormControl<number | null>;
+  saleDate: FormControl<string | null>;
+  saleAmount: FormControl<string | null>;
+  taxAmount: FormControl<string | null>;
+  totalAmount: FormControl<string | null>;
+  paymentMethod: FormControl<string | null>;
+
   notes: FormControl<string>;
 };
 
@@ -47,26 +59,52 @@ type AddPopupForm = {
   styleUrls: ['./add-popup.scss']
 })
 export class AddPopupComponent implements OnInit, OnChanges {
+
   @Input({ required: true }) mode!: AddPopupMode;
+
   @Output() close = new EventEmitter<void>();
-  @Output() submitForm = new EventEmitter<{ mode: AddPopupMode; payload: any }>();
+
+  @Output() submitForm =
+    new EventEmitter<{ mode: AddPopupMode; payload: any }>();
 
   form: FormGroup<AddPopupForm>;
 
-  // catalogs
   stores: CatalogStore[] = [];
   membershipProducts: CatalogMembership[] = [];
 
-  // states
   loadingStores = false;
   storesError = false;
 
   loadingMemberships = false;
   membershipsError = false;
 
-  constructor(private fb: FormBuilder, private catalog: CatalogService) {
+  ocrLoading = false;
+  ocrError = false;
+
+  ocrMessage = '';
+  ocrMessageType: 'success' | 'error' | 'loading' = 'success';
+
+  paymentMethods: string[] = [
+    'CASH',
+    'DEBIT',
+    'VISA',
+    'MASTERCARD',
+    'AMEX',
+    'DISCOVER',
+    'APPLE PAY',
+    'GOOGLE PAY',
+    'PAYPAL'
+  ];
+
+  private pendingOcrStoreNumber: number | null = null;
+
+  constructor(
+    private fb: FormBuilder,
+    private catalog: CatalogService,
+    private receiptOcr: ReceiptOcrService
+  ) {
     this.form = this.fb.group<AddPopupForm>({
-      storeId: this.fb.control<number | null>(null),
+      storeId: this.fb.control<number | null>(1),
       storeNumber: this.fb.control<number | null>(null),
 
       approved: this.fb.control<boolean | null>(null),
@@ -74,7 +112,12 @@ export class AddPopupComponent implements OnInit, OnChanges {
       membershipProductId: this.fb.control<number | null>(null),
       termMonths: this.fb.control<number | null>(null),
 
-      saleAmount: this.fb.control<number | null>(null),
+      saleDate: this.fb.control<string | null>(this.toDateTimeLocalValue(new Date())),
+      saleAmount: this.fb.control<string | null>(null),
+      taxAmount: this.fb.control<string | null>(null),
+      totalAmount: this.fb.control<string | null>(null),
+      paymentMethod: this.fb.control<string | null>(null),
+
       notes: this.fb.control('', { nonNullable: true })
     });
   }
@@ -83,10 +126,13 @@ export class AddPopupComponent implements OnInit, OnChanges {
     this.ensureCatalogsForMode();
     this.applyValidatorsByMode();
 
-    // Cuando eligen storeId, autocompleta storeNumber
     this.form.controls.storeId.valueChanges.subscribe(storeId => {
-      const s = this.stores.find(x => x.storeId === storeId);
-      this.form.controls.storeNumber.setValue(s?.storeNumber ?? null, { emitEvent: false });
+      const store = this.stores.find(x => x.storeId === storeId);
+
+      this.form.controls.storeNumber.setValue(
+        store?.storeNumber ?? null,
+        { emitEvent: false }
+      );
     });
   }
 
@@ -98,7 +144,130 @@ export class AddPopupComponent implements OnInit, OnChanges {
     }
   }
 
-  // ---------- Catalog loaders (PUBLIC: used by Retry buttons) ----------
+  onReceiptSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    this.ocrLoading = true;
+    this.ocrError = false;
+
+    this.showOcrMessage('Reading receipt...', 'loading');
+
+    this.receiptOcr
+      .readReceipt(file)
+      .subscribe({
+        next: (result: any) => {
+          console.log('OCR RESULT', result);
+
+          const subtotal =
+            result.subtotal ??
+            result.subTotal ??
+            result.subTotalAmount ??
+            null;
+
+          const tax =
+            result.tax ??
+            result.salesTax ??
+            result.taxAmount ??
+            null;
+
+          const total =
+            result.total ??
+            result.balanceTotal ??
+            result.totalDue ??
+            null;
+
+          const paymentMethod =
+            result.paymentMethod ?? null;
+
+          const storeNumber =
+            Number(result.storeNumber ?? 0);
+
+          const saleDate =
+            result.saleDate ??
+            result.SaleDate ??
+            result.date ??
+            result.transactionDate ??
+            null;
+
+          console.log('OCR SALE DATE', saleDate);
+
+          const items = result.items ?? [];
+
+          if (storeNumber > 0) {
+            this.pendingOcrStoreNumber = storeNumber;
+            this.trySelectStoreByNumber(storeNumber);
+          }
+
+          const itemLines = items.length > 0
+            ? items
+              .map((item: any, index: number) => {
+                const sku = item.sku ?? item.SKU ?? 'N/A';
+
+                const description =
+                  item.description ??
+                  item.Description ??
+                  item.name ??
+                  item.Name ??
+                  'N/A';
+
+                return `${index + 1}. SKU: ${sku} - ${description}`;
+              })
+              .join('\n')
+            : 'No items found';
+
+          this.form.patchValue({
+            saleDate: this.toDateTimeLocalValue(saleDate),
+            saleAmount: subtotal != null ? this.formatMoneyValue(subtotal) : null,
+            taxAmount: tax != null ? this.formatMoneyValue(tax) : null,
+            totalAmount: total != null ? this.formatMoneyValue(total) : null,
+            paymentMethod: paymentMethod,
+            notes:
+              `Items:
+${itemLines}`
+          });
+
+          this.ocrLoading = false;
+          this.ocrError = false;
+
+          this.showOcrMessage('Receipt loaded.', 'success');
+        },
+
+        error: err => {
+          console.error('OCR ERROR', err);
+
+          this.ocrError = true;
+          this.ocrLoading = false;
+
+          this.showOcrMessage('Could not read receipt', 'error');
+        }
+      });
+  }
+
+  private trySelectStoreByNumber(storeNumber: number): void {
+    if (!this.stores.length) {
+      return;
+    }
+
+    const store = this.stores.find(
+      s => Number(s.storeNumber) === Number(storeNumber)
+    );
+
+    if (!store) {
+      console.warn('Store not found for OCR store number:', storeNumber);
+      return;
+    }
+
+    this.form.patchValue({
+      storeId: store.storeId,
+      storeNumber: store.storeNumber
+    });
+  }
 
   loadStores(): void {
     this.loadingStores = true;
@@ -119,10 +288,28 @@ export class AddPopupComponent implements OnInit, OnChanges {
           .filter(s => s.isActive)
           .sort((a, b) => a.storeNumber - b.storeNumber);
 
-        // si ya había un store seleccionado, rehidrata storeNumber
         const currentStoreId = this.form.controls.storeId.value;
-        const s = this.stores.find(x => x.storeId === currentStoreId);
-        this.form.controls.storeNumber.setValue(s?.storeNumber ?? null, { emitEvent: false });
+        const store = this.stores.find(x => x.storeId === currentStoreId);
+
+        this.form.controls.storeNumber.setValue(
+          store?.storeNumber ?? null,
+          { emitEvent: false }
+        );
+
+        if (!this.form.controls.storeId.value) {
+          const defaultStore = this.stores.find(s => s.storeId === 1);
+
+          if (defaultStore) {
+            this.form.patchValue({
+              storeId: defaultStore.storeId,
+              storeNumber: defaultStore.storeNumber
+            });
+          }
+        }
+
+        if (this.pendingOcrStoreNumber != null) {
+          this.trySelectStoreByNumber(this.pendingOcrStoreNumber);
+        }
       });
   }
 
@@ -141,74 +328,140 @@ export class AddPopupComponent implements OnInit, OnChanges {
         finalize(() => (this.loadingMemberships = false))
       )
       .subscribe((data: any) => {
-        // ✅ soporta camelCase o PascalCase
-        const mapped: CatalogMembership[] = (data ?? []).map((x: any) => ({
-          membershipProductId: x.membershipProductId ?? x.MembershipProductId,
-          productCode: x.productCode ?? x.ProductCode,
-          productName: x.productName ?? x.ProductName,
-          isActive: x.isActive ?? x.IsActive
-        }));0
+        const mapped: CatalogMembership[] =
+          (data ?? []).map((x: any) => ({
+            membershipProductId:
+              x.membershipProductId ?? x.MembershipProductId,
+
+            productCode:
+              x.productCode ?? x.ProductCode,
+
+            productName:
+              x.productName ?? x.ProductName,
+
+            isActive:
+              x.isActive ?? x.IsActive
+          }));
 
         this.membershipProducts = mapped
           .filter(m => !!m && m.isActive && !!m.productName)
-          .sort((a, b) => (a.productName ?? '').localeCompare(b.productName ?? ''));
+          .sort((a, b) =>
+            (a.productName ?? '').localeCompare(b.productName ?? '')
+          );
       });
   }
 
-  // ---------- Mode behavior ----------
-
   private ensureCatalogsForMode(): void {
-  if (this.mode === 'credit') {
-    if (!this.stores.length && !this.loadingStores) this.loadStores();
-    return;
-  }
+    if (this.mode === 'credit') {
+      if (!this.stores.length && !this.loadingStores) {
+        this.loadStores();
+      }
 
-  if (this.mode === 'membership') {
-    if (!this.stores.length && !this.loadingStores) this.loadStores();
-    if (!this.membershipProducts.length && !this.loadingMemberships) this.loadMembershipProducts();
-    return;
-  }
+      return;
+    }
 
-  if (this.mode === 'sale') {
-    if (!this.stores.length && !this.loadingStores) this.loadStores(); // ✅
+    if (this.mode === 'membership') {
+      if (!this.stores.length && !this.loadingStores) {
+        this.loadStores();
+      }
+
+      if (!this.membershipProducts.length && !this.loadingMemberships) {
+        this.loadMembershipProducts();
+      }
+
+      return;
+    }
+
+    if (this.mode === 'sale') {
+      if (!this.stores.length && !this.loadingStores) {
+        this.loadStores();
+      }
+    }
   }
-}
 
   private applyValidatorsByMode(): void {
-  this.clearValidators();
+    this.clearValidators();
 
-  if (this.mode === 'credit') {
-    this.form.controls.storeId.setValidators([Validators.required]);
-    this.form.controls.approved.setValidators([Validators.required]);
+    if (this.mode === 'credit') {
+      this.form.controls.storeId.setValidators([
+        Validators.required
+      ]);
+
+      this.form.controls.approved.setValidators([
+        Validators.required
+      ]);
+    }
+
+    if (this.mode === 'membership') {
+      this.form.controls.storeId.setValidators([
+        Validators.required
+      ]);
+
+      this.form.controls.membershipProductId.setValidators([
+        Validators.required
+      ]);
+
+      this.form.controls.termMonths.setValidators([
+        Validators.required,
+        Validators.min(1)
+      ]);
+    }
+
+    if (this.mode === 'sale') {
+      this.form.controls.storeId.setValidators([
+        Validators.required
+      ]);
+
+      this.form.controls.saleDate.setValidators([
+        Validators.required
+      ]);
+
+      this.form.controls.saleAmount.setValidators([
+        Validators.required,
+        this.moneyMinValidator(0.01)
+      ]);
+
+      this.form.controls.taxAmount.setValidators([
+        Validators.required,
+        this.moneyMinValidator(0)
+      ]);
+
+      this.form.controls.totalAmount.setValidators([
+        Validators.required,
+        this.moneyMinValidator(0.01)
+      ]);
+
+      this.form.controls.paymentMethod.setValidators([
+        Validators.required
+      ]);
+    }
+
+    Object.values(this.form.controls)
+      .forEach(c => c.updateValueAndValidity());
   }
-
-  if (this.mode === 'membership') {
-    this.form.controls.storeId.setValidators([Validators.required]);
-    this.form.controls.membershipProductId.setValidators([Validators.required]);
-    this.form.controls.termMonths.setValidators([Validators.required, Validators.min(1)]);
-  }
-
-  if (this.mode === 'sale') {
-    this.form.controls.storeId.setValidators([Validators.required]); // ✅
-    this.form.controls.saleAmount.setValidators([Validators.required, Validators.min(0.01)]);
-  }
-
-  Object.values(this.form.controls).forEach(c => c.updateValueAndValidity());
-}
 
   private clearValidators(): void {
-    Object.values(this.form.controls).forEach(ctrl => ctrl.clearValidators());
+    Object.values(this.form.controls)
+      .forEach(ctrl => ctrl.clearValidators());
   }
 
   private resetModeSpecificControls(): void {
     this.form.controls.approved.reset(null);
     this.form.controls.membershipProductId.reset(null);
     this.form.controls.termMonths.reset(null);
-    this.form.controls.saleAmount.reset(null);
-    this.form.controls.notes.reset('');
-  }
 
-  // ---------- UI events ----------
+    this.form.controls.saleDate.reset(this.toDateTimeLocalValue(new Date()));
+    this.form.controls.saleAmount.reset(null);
+    this.form.controls.taxAmount.reset(null);
+    this.form.controls.totalAmount.reset(null);
+    this.form.controls.paymentMethod.reset(null);
+
+    this.form.controls.notes.reset('');
+
+    this.pendingOcrStoreNumber = null;
+    this.ocrError = false;
+    this.ocrLoading = false;
+  }
 
   onBackdropClick(): void {
     this.close.emit();
@@ -220,7 +473,14 @@ export class AddPopupComponent implements OnInit, OnChanges {
 
   onSubmit(): void {
     this.form.markAllAsTouched();
-    if (this.form.invalid) return;
+
+    if (this.form.invalid) {
+      return;
+    }
+
+    this.formatMoneyField('saleAmount');
+    this.formatMoneyField('taxAmount');
+    this.formatMoneyField('totalAmount');
 
     const v = this.form.getRawValue();
 
@@ -232,7 +492,7 @@ export class AddPopupComponent implements OnInit, OnChanges {
         storeNumber: v.storeNumber,
         approved: v.approved,
         creditCardProductId: 1,
-        statusId: v.approved ? 1 : 3 // 👈 FIX
+        statusId: v.approved ? 1 : 3
       };
     } else if (this.mode === 'membership') {
       payload = {
@@ -243,25 +503,133 @@ export class AddPopupComponent implements OnInit, OnChanges {
         statusId: 1
       };
     } else {
-  payload = {
-    storeId: v.storeId,
-    storeNumber: v.storeNumber,
-    saleAmount: v.saleAmount,
-    notes: v.notes
+      payload = {
+        storeId: v.storeId,
+
+        saleDate: this.toApiDateTime(v.saleDate),
+
+        subtotal: this.moneyToNumber(v.saleAmount),
+        tax: this.moneyToNumber(v.taxAmount),
+        total: this.moneyToNumber(v.totalAmount),
+
+        paymentMethod: v.paymentMethod,
+        notes: v.notes
+      };
+
+      console.log('SALE PAYLOAD', payload);
+    }
+
+    this.submitForm.emit({
+      mode: this.mode,
+      payload
+    });
+
+    this.close.emit();
+  }
+
+  formatMoneyField(field: MoneyField): void {
+    const control = this.form.controls[field];
+    control.setValue(this.formatMoneyValue(control.value));
+  }
+
+  private formatMoneyValue(value: string | number | null | undefined): string {
+    if (value === null || value === undefined || value === '') {
+      return '0.00';
+    }
+
+    const numericValue = Number(
+      value.toString().replace(/[^0-9.-]/g, '')
+    );
+
+    if (Number.isNaN(numericValue)) {
+      return '0.00';
+    }
+
+    return numericValue.toFixed(2);
+  }
+
+  private moneyToNumber(value: string | number | null | undefined): number {
+    if (value === null || value === undefined || value === '') {
+      return 0;
+    }
+
+    const numericValue = Number(
+      value.toString().replace(/[^0-9.-]/g, '')
+    );
+
+    return Number.isNaN(numericValue) ? 0 : numericValue;
+  }
+
+  private moneyMinValidator(min: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = this.moneyToNumber(control.value);
+
+    if (value < min) {
+      return { min: true };
+    }
+
+    return null;
   };
 }
 
+  private showOcrMessage(
+    message: string,
+    type: 'success' | 'error' | 'loading' = 'success'
+  ) {
+    this.ocrMessage = message;
+    this.ocrMessageType = type;
 
-    this.submitForm.emit({ mode: this.mode, payload });
-    this.close.emit();
+    setTimeout(() => {
+      this.ocrMessage = '';
+    }, 4000);
+  }
+
+  private toDateTimeLocalValue(value: string | Date | null | undefined): string | null {
+    if (!value) {
+      return this.toDateTimeLocalValue(new Date());
+    }
+
+    const date = value instanceof Date
+      ? value
+      : new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return this.toDateTimeLocalValue(new Date());
+    }
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+  private toApiDateTime(value: string | null): string | null {
+    if (!value) {
+      return null;
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return date.toISOString();
   }
 
   get title(): string {
     switch (this.mode) {
       case 'credit':
         return 'New Credit Card Application';
+
       case 'membership':
         return 'New Membership';
+
       case 'sale':
         return 'New Sale';
     }
