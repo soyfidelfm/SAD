@@ -64,7 +64,11 @@ if (string.IsNullOrWhiteSpace(connectionString))
 }
 
 builder.Services.AddDbContext<SadDbContext>(opt =>
-  opt.UseNpgsql(connectionString));
+  opt.UseNpgsql(connectionString, npgsql =>
+  {
+    npgsql.EnableRetryOnFailure(5, TimeSpan.FromSeconds(5), null);
+    npgsql.CommandTimeout(30);
+  }));
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -163,9 +167,11 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Swagger
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+  app.UseSwagger();
+  app.UseSwaggerUI();
+}
 
 // Pipeline
 app.UseHttpsRedirection();
