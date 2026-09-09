@@ -1,11 +1,12 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+-- Neon / PostgreSQL version (not MSSQL).
 CREATE OR REPLACE FUNCTION auth.upsert_user_from_external_login(
     p_identity_provider_code text,
     p_provider_subject text,
     p_email text,
     p_display_name text,
-    p_store_id int,
+    p_store_id integer,
     p_anumber text
 )
 RETURNS uuid
