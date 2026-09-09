@@ -25,7 +25,7 @@
   gap: var(--space-md);
   padding: 0 var(--space-md);
   border-bottom: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--shell-topbar-bg);
   backdrop-filter: blur(12px);
 }
 
@@ -46,11 +46,7 @@
   object-fit: contain;
   display: block;
   flex: 0 0 auto;
-
-  /* removes the fake transparent gap */
   margin-right: -10px;
-
-  /* optional fine tuning */
   transform: translateX(-8px);
 }
 
@@ -70,9 +66,6 @@
   text-overflow: ellipsis;
 }
 
-/* =========================
-   TOPBAR ACTIONS
-========================= */
 .topbar-actions {
   display: flex;
   align-items: center;
@@ -97,9 +90,6 @@
   white-space: nowrap;
 }
 
-/* =========================
-   BODY LAYOUT
-========================= */
 .body {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
@@ -112,15 +102,12 @@
   grid-template-columns: 0 minmax(0, 1fr);
 }
 
-/* =========================
-   SIDEBAR
-========================= */
 .sidebar {
   width: 260px;
   min-width: 260px;
   max-width: 260px;
   border-right: 1px solid var(--border-soft);
-  background: rgba(0, 0, 0, 0.16);
+  background: var(--shell-sidebar-bg);
   padding: var(--space-md);
   overflow: hidden;
   transition:
@@ -144,9 +131,6 @@
   overflow: hidden;
 }
 
-/* =========================
-   NAV
-========================= */
 .nav {
   display: grid;
   gap: var(--space-sm);
@@ -194,12 +178,10 @@
 .nav-item.active {
   background: var(--brand-soft);
   border-color: var(--brand);
-  color: var(--text-main);
+  color: var(--brand);
+  box-shadow: inset 3px 0 0 0 var(--brand);
 }
 
-/* =========================
-   CONTENT
-========================= */
 .content {
   min-width: 0;
   width: 100%;
@@ -207,9 +189,6 @@
   overflow-x: hidden;
 }
 
-/* =========================
-   RESPONSIVE / TABLET
-========================= */
 @media (max-width: 900px) {
   .body,
   .body.sidebar-closed {
@@ -253,9 +232,6 @@
   }
 }
 
-/* =========================
-   RESPONSIVE / MOBILE
-========================= */
 @media (max-width: 640px) {
   .topbar {
     padding: 0 12px;
