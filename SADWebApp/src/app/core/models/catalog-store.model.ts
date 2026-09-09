@@ -4,3 +4,9 @@ export interface CatalogStore {
   storeName?: string;
   isActive: boolean;
 }
+
+export interface UpsertStore {
+  storeNumber: number;
+  storeName?: string | null;
+  isActive: boolean;
+}
