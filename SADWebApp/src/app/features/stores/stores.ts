@@ -26,7 +26,6 @@ export class StoresComponent implements OnInit {
   deletingId: number | null = null;
   errorMessage = '';
   successMessage = '';
-  search = '';
 
   form = this.fb.group({
     storeNumber: [null as number | null, [Validators.required, Validators.min(1)]],
@@ -34,12 +33,21 @@ export class StoresComponent implements OnInit {
     isActive: [true]
   });
 
+  filterForm = this.fb.group({
+    search: ['']
+  });
+
   ngOnInit(): void {
+    this.filterForm.controls.search.valueChanges.subscribe(() => this.applyFilter());
     this.loadStores();
   }
 
   get f() {
     return this.form.controls;
+  }
+
+  get activeCount(): number {
+    return this.stores.filter((s) => s.isActive).length;
   }
 
   loadStores(): void {
@@ -61,7 +69,7 @@ export class StoresComponent implements OnInit {
   }
 
   applyFilter(): void {
-    const q = this.search.trim().toLowerCase();
+    const q = (this.filterForm.value.search ?? '').trim().toLowerCase();
     if (!q) {
       this.filteredStores = [...this.stores];
       return;

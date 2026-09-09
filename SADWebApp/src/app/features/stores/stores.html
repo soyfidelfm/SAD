@@ -60,20 +60,19 @@
     </div>
   </form>
 
-  <div class="filters">
+  <div class="filters" [formGroup]="filterForm">
     <div class="form-group field">
       <label for="storeSearch">Search</label>
       <input
         id="storeSearch"
         type="search"
-        [ngModel]="search"
-        (ngModelChange)="search = $event; applyFilter()"
+        formControlName="search"
         placeholder="Name or store number"
       />
     </div>
     <div class="meta">
       <span>Total: {{ stores.length }}</span>
-      <span>Active: {{ stores.length ? (stores | slice:0:0) : 0 }}{{ activeCount }}</span>
+      <span>Active: {{ activeCount }}</span>
     </div>
   </div>
 
