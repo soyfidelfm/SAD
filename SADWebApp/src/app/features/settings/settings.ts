@@ -13,16 +13,12 @@ import {
 import { CatalogService } from '../../core/services/catalog.service';
 import { UserDailySettingsService } from '../../core/services/user-daily-settings.service';
 import { ThemeService } from '../../core/services/theme.service';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
-
-  import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
+import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTableModule, MatProgressSpinnerModule, MatIconModule, LocalDatePipe],
+  imports: [CommonModule, ReactiveFormsModule, LocalDatePipe],
   templateUrl: './settings.html',
   styleUrl: './settings.scss'
 })
@@ -39,27 +35,9 @@ export class SettingsComponent implements OnInit {
   successMessage = '';
   deletingId: string | null = null;
 
-  dataSource = new MatTableDataSource<UserDailySetting>([]);
+  settings: UserDailySetting[] = [];
   stores: CatalogStore[] = [];
   currentSettingId: number | null = null;
-
-  displayedColumnsDesktop: string[] = [
-    'settingDate',
-    'salesGoalAmount',
-    'appsGoal',
-    'membershipsGoal',
-    'storeName',
-    'actions'
-  ];
-
-  displayedColumnsMobile: string[] = [
-    'settingDate',
-    'salesGoalAmount',
-    'appsGoal',
-    'membershipsGoal',
-    'actions'
-  ];
-
 
   form = this.fb.group({
     settingDate: [this.getTodayDate(), Validators.required],
@@ -80,11 +58,6 @@ export class SettingsComponent implements OnInit {
     return this.form.controls;
   }
 
-  isMobile = false;
-  get displayedColumns(): string[] {
-    return this.isMobile ? this.displayedColumnsMobile : this.displayedColumnsDesktop;
-  }
-
   loadStores(): void {
     this.catalogService.getStores().subscribe({
       next: (data) => {
@@ -100,7 +73,7 @@ export class SettingsComponent implements OnInit {
   loadSettings(): void {
     this.userDailySettingsService.getAll().subscribe({
       next: (data) => {
-        this.dataSource.data = data ?? [];
+        this.settings = data ?? [];
       },
       error: (err) => {
         console.error('Error loading settings', err);
@@ -110,7 +83,6 @@ export class SettingsComponent implements OnInit {
   }
 
   loadTodaySettings(): void {
-
     this.loading = true;
     this.errorMessage = '';
     this.successMessage = '';
@@ -183,7 +155,6 @@ export class SettingsComponent implements OnInit {
     }
 
     const createPayload: CreateUserDailySetting = {
-      
       settingDate: this.form.value.settingDate ?? this.getTodayDate(),
       salesGoalAmount: Number(this.form.value.salesGoalAmount ?? 0),
       appsGoal: Number(this.form.value.appsGoal ?? 0),
@@ -247,38 +218,36 @@ export class SettingsComponent implements OnInit {
   }
 
   deleteSetting(row: UserDailySetting): void {
-      const id = this.getSettingsId(row);
-      if (!id) return;
-  
-      if (!confirm('Delete this setting?')) return;
-  
-      this.deletingId = id;
-  
-      this.userDailySettingsService
-        .delete(id)
-        .pipe(finalize(() => (this.deletingId = null)))
-        .subscribe({
-          next: () => {
-            this.dataSource.data = this.dataSource.data.filter(
-              x => this.getSettingsId(x) !== id
-            );
-          },
-          error: err => {
-            console.error(err);
-            alert('Error deleting setting');
-          }
-        });
-    }
+    const id = this.getSettingsId(row);
+    if (!id) return;
+
+    if (!confirm('Delete this setting?')) return;
+
+    this.deletingId = id;
+
+    this.userDailySettingsService
+      .delete(id)
+      .pipe(finalize(() => (this.deletingId = null)))
+      .subscribe({
+        next: () => {
+          this.settings = this.settings.filter((x) => this.getSettingsId(x) !== id);
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Error deleting setting');
+        }
+      });
+  }
 
   trackById = (_: number, row: UserDailySetting): string => {
-      return this.getSettingsId(row);
-    };
+    return this.getSettingsId(row);
+  };
 
-    getSettingsId(row: UserDailySetting): string {
-        return row.id ? row.id.toString() : '';
-      }
+  getSettingsId(row: UserDailySetting): string {
+    return row.id ? row.id.toString() : '';
+  }
 
-      isDeleting(row: UserDailySetting): boolean {
-          return this.deletingId === this.getSettingsId(row);
-        }
+  isDeleting(row: UserDailySetting): boolean {
+    return this.deletingId === this.getSettingsId(row);
+  }
 }

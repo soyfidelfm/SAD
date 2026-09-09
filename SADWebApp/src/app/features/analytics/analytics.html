@@ -11,19 +11,9 @@
         <i class="fa-solid fa-arrow-rotate-right"></i>
       </button>
 
-      <mat-form-field class="hidden-range-picker">
-        <mat-date-range-input [rangePicker]="rangePicker">
-          <input matStartDate [(ngModel)]="customFrom">
-          <input matEndDate [(ngModel)]="customTo" (dateChange)="onCustomDateChanged()">
-        </mat-date-range-input>
-
-        <mat-date-range-picker #rangePicker></mat-date-range-picker>
-      </mat-form-field>
-
-      <button type="button" class="btn-secondary" (click)="openCustomRange()">
+      <button type="button" class="btn-secondary" disabled>
         <i class="fa-regular fa-calendar"></i>
         {{ selectedPeriodLabel }}
-        <i class="fa-solid fa-chevron-down"></i>
       </button>
     </div>
   </section>
@@ -47,6 +37,22 @@
 
     <button type="button" [class.active]="selectedPeriod === 'custom'" (click)="changePeriod('custom')">
       Custom
+    </button>
+  </section>
+
+  <section class="custom-range-card" *ngIf="selectedPeriod === 'custom'">
+    <div class="range-fields">
+      <div class="form-group">
+        <label for="analyticsFrom">From</label>
+        <input id="analyticsFrom" type="date" [(ngModel)]="customFrom" />
+      </div>
+      <div class="form-group">
+        <label for="analyticsTo">To</label>
+        <input id="analyticsTo" type="date" [(ngModel)]="customTo" />
+      </div>
+    </div>
+    <button type="button" class="apply-btn" (click)="applyCustomRange()" [disabled]="!customFrom || !customTo">
+      Apply range
     </button>
   </section>
 

@@ -2,62 +2,67 @@
    themes.scss
    Retailer-inspired palettes × light/dark
    Inspired colors only — not official branding
+
+   data-retailer + data-mode drive a full-app skin:
+   brand accents AND tinted surfaces / chrome.
 ===================================== */
 
 @mixin brand($brand, $hover, $active) {
   --brand: #{$brand};
   --brand-hover: #{$hover};
   --brand-active: #{$active};
-  --brand-soft: color-mix(in srgb, #{$brand} 18%, transparent);
-  --brand-border: color-mix(in srgb, #{$brand} 28%, transparent);
-  --border-brand: color-mix(in srgb, #{$brand} 28%, transparent);
+  --brand-soft: color-mix(in srgb, #{$brand} 22%, transparent);
+  --brand-border: color-mix(in srgb, #{$brand} 34%, transparent);
+  --border-brand: color-mix(in srgb, #{$brand} 34%, transparent);
   --brand-text: #ffffff;
 }
 
-@mixin dark-surfaces {
-  --bg-app: #0b0f17;
-  --bg-surface: #121826;
-  --bg-card: rgba(255, 255, 255, 0.04);
-  --bg-card-strong: rgba(255, 255, 255, 0.06);
-  --bg-hover: rgba(255, 255, 255, 0.08);
-  --bg-hover-strong: rgba(255, 255, 255, 0.12);
+/* Dark: stronger brand wash so chrome reads as retailer-colored */
+@mixin dark-surfaces($brand) {
+  --bg-app: color-mix(in srgb, #{$brand} 18%, #080b12);
+  --bg-surface: color-mix(in srgb, #{$brand} 14%, #101624);
+  --bg-card: color-mix(in srgb, #{$brand} 16%, rgba(255, 255, 255, 0.045));
+  --bg-card-strong: color-mix(in srgb, #{$brand} 20%, rgba(255, 255, 255, 0.07));
+  --bg-hover: color-mix(in srgb, #{$brand} 18%, rgba(255, 255, 255, 0.08));
+  --bg-hover-strong: color-mix(in srgb, #{$brand} 24%, rgba(255, 255, 255, 0.12));
 
-  --border-soft: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-soft: color-mix(in srgb, #{$brand} 20%, rgba(255, 255, 255, 0.08));
+  --border-strong: color-mix(in srgb, #{$brand} 28%, rgba(255, 255, 255, 0.12));
 
   --text-main: #e9eefc;
   --text-muted: rgba(233, 238, 252, 0.72);
   --text-soft: rgba(233, 238, 252, 0.55);
   --text-inverse: #0b0f17;
 
-  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.18);
-  --shadow-card: 0 16px 40px rgba(0, 0, 0, 0.2);
+  --shadow-soft: 0 10px 30px color-mix(in srgb, #{$brand} 24%, rgba(0, 0, 0, 0.22));
+  --shadow-card: 0 16px 40px color-mix(in srgb, #{$brand} 20%, rgba(0, 0, 0, 0.28));
 
-  --shell-topbar-bg: rgba(255, 255, 255, 0.04);
-  --shell-sidebar-bg: rgba(0, 0, 0, 0.16);
+  --shell-topbar-bg: color-mix(in srgb, #{$brand} 22%, rgba(8, 11, 18, 0.9));
+  --shell-sidebar-bg: color-mix(in srgb, #{$brand} 16%, rgba(0, 0, 0, 0.3));
 }
 
-@mixin light-surfaces {
-  --bg-app: #f4f6fb;
-  --bg-surface: #ffffff;
-  --bg-card: #ffffff;
-  --bg-card-strong: #f8fafc;
-  --bg-hover: rgba(15, 23, 42, 0.05);
-  --bg-hover-strong: rgba(15, 23, 42, 0.09);
+/* Light: softer tint so pages stay readable but clearly branded */
+@mixin light-surfaces($brand) {
+  --bg-app: color-mix(in srgb, #{$brand} 10%, #f4f6fb);
+  --bg-surface: color-mix(in srgb, #{$brand} 5%, #ffffff);
+  --bg-card: color-mix(in srgb, #{$brand} 4%, #ffffff);
+  --bg-card-strong: color-mix(in srgb, #{$brand} 8%, #f8fafc);
+  --bg-hover: color-mix(in srgb, #{$brand} 12%, rgba(15, 23, 42, 0.04));
+  --bg-hover-strong: color-mix(in srgb, #{$brand} 16%, rgba(15, 23, 42, 0.07));
 
-  --border-soft: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.14);
+  --border-soft: color-mix(in srgb, #{$brand} 16%, rgba(15, 23, 42, 0.08));
+  --border-strong: color-mix(in srgb, #{$brand} 22%, rgba(15, 23, 42, 0.14));
 
   --text-main: #0f172a;
   --text-muted: rgba(15, 23, 42, 0.68);
   --text-soft: rgba(15, 23, 42, 0.48);
   --text-inverse: #f8fafc;
 
-  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
-  --shadow-card: 0 16px 40px rgba(15, 23, 42, 0.1);
+  --shadow-soft: 0 10px 30px color-mix(in srgb, #{$brand} 14%, rgba(15, 23, 42, 0.08));
+  --shadow-card: 0 16px 40px color-mix(in srgb, #{$brand} 16%, rgba(15, 23, 42, 0.1));
 
-  --shell-topbar-bg: rgba(255, 255, 255, 0.86);
-  --shell-sidebar-bg: #ffffff;
+  --shell-topbar-bg: color-mix(in srgb, #{$brand} 9%, rgba(255, 255, 255, 0.92));
+  --shell-sidebar-bg: color-mix(in srgb, #{$brand} 6%, #ffffff);
 
   --success-bg: rgba(23, 198, 96, 0.1);
   --success-border: rgba(23, 198, 96, 0.22);
@@ -76,84 +81,123 @@
 
 /* ---------- SAD Blue ---------- */
 html[data-retailer='sad'][data-mode='dark'] {
-  @include dark-surfaces;
+  @include dark-surfaces(#4083ff);
   @include brand(#4083ff, #2f74f6, #1f66eb);
 }
 
 html[data-retailer='sad'][data-mode='light'] {
-  @include light-surfaces;
+  @include light-surfaces(#4083ff);
   @include brand(#4083ff, #2f74f6, #1f66eb);
 }
 
 /* ---------- Best Buy inspired ---------- */
 html[data-retailer='bestbuy'][data-mode='dark'] {
-  @include dark-surfaces;
+  @include dark-surfaces(#0046be);
   @include brand(#0046be, #003a9e, #002f82);
 }
 
 html[data-retailer='bestbuy'][data-mode='light'] {
-  @include light-surfaces;
+  @include light-surfaces(#0046be);
   @include brand(#0046be, #003a9e, #002f82);
 }
 
 /* ---------- Target inspired ---------- */
 html[data-retailer='target'][data-mode='dark'] {
-  @include dark-surfaces;
+  @include dark-surfaces(#cc0000);
   @include brand(#cc0000, #b00000, #960000);
 }
 
 html[data-retailer='target'][data-mode='light'] {
-  @include light-surfaces;
+  @include light-surfaces(#cc0000);
   @include brand(#cc0000, #b00000, #960000);
 }
 
 /* ---------- Walmart inspired ---------- */
 html[data-retailer='walmart'][data-mode='dark'] {
-  @include dark-surfaces;
+  @include dark-surfaces(#0071ce);
   @include brand(#0071ce, #005fad, #004e8f);
 }
 
 html[data-retailer='walmart'][data-mode='light'] {
-  @include light-surfaces;
+  @include light-surfaces(#0071ce);
   @include brand(#0071ce, #005fad, #004e8f);
 }
 
 /* ---------- Costco inspired ---------- */
 html[data-retailer='costco'][data-mode='dark'] {
-  @include dark-surfaces;
+  @include dark-surfaces(#005daa);
   @include brand(#005daa, #004e90, #003f75);
 }
 
 html[data-retailer='costco'][data-mode='light'] {
-  @include light-surfaces;
+  @include light-surfaces(#005daa);
   @include brand(#005daa, #004e90, #003f75);
 }
 
 /* ---------- Sam's Club inspired ---------- */
 html[data-retailer='sams'][data-mode='dark'] {
-  @include dark-surfaces;
+  @include dark-surfaces(#0067a0);
   @include brand(#0067a0, #005786, #00466d);
 }
 
 html[data-retailer='sams'][data-mode='light'] {
-  @include light-surfaces;
+  @include light-surfaces(#0067a0);
   @include brand(#0067a0, #005786, #00466d);
 }
 
 /* ---------- Aldi inspired ---------- */
 html[data-retailer='aldi'][data-mode='dark'] {
-  @include dark-surfaces;
+  @include dark-surfaces(#ff6600);
   @include brand(#ff6600, #e55b00, #cc5100);
 }
 
 html[data-retailer='aldi'][data-mode='light'] {
-  @include light-surfaces;
+  @include light-surfaces(#ff6600);
   @include brand(#ff6600, #e55b00, #cc5100);
 }
 
 /* =========================
-   Light-mode shell surfaces
+   Shell chrome accents (full-app feel)
 ========================= */
+html[data-retailer] {
+  .topbar {
+    background: var(--shell-topbar-bg);
+    border-bottom-color: var(--border-soft);
+    box-shadow: inset 0 -3px 0 0 var(--brand);
+  }
+
+  .sidebar {
+    background: var(--shell-sidebar-bg);
+    border-right-color: var(--border-soft);
+  }
+
+  .nav-item.active {
+    background: var(--brand-soft);
+    border-color: var(--brand);
+    color: var(--brand);
+    box-shadow: inset 3px 0 0 0 var(--brand);
+  }
+
+  .nav-item.active i,
+  .nav-item.active .label {
+    color: var(--brand);
+  }
+
+  .nav-item:hover:not(.active) {
+    border-color: var(--brand-border);
+  }
+
+  a.view-all:hover,
+  .text-brand,
+  .eyebrow {
+    color: var(--brand);
+  }
+
+  .progress-fill:not(.yellow):not(.red):not(.green) {
+    background: var(--brand);
+  }
+}
+
 html[data-mode='light'] {
   .topbar {
     background: var(--shell-topbar-bg);
@@ -164,6 +208,15 @@ html[data-mode='light'] {
     background: var(--shell-sidebar-bg);
   }
 
+  @media (max-width: 900px) {
+    .sidebar {
+      background: var(--bg-app);
+      box-shadow: var(--shadow-soft);
+    }
+  }
+}
+
+html[data-mode='dark'] {
   @media (max-width: 900px) {
     .sidebar {
       background: var(--bg-app);

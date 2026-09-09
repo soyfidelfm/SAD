@@ -1,11 +1,6 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 
 import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
 
@@ -24,10 +19,6 @@ import { SalesGoalCardComponent } from '../dashboard/components/sales-goal-card/
   imports: [
     CommonModule,
     FormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatFormFieldModule,
-    MatInputModule,
     LocalDatePipe,
     SalesGoalCardComponent
   ],
@@ -35,10 +26,6 @@ import { SalesGoalCardComponent } from '../dashboard/components/sales-goal-card/
   styleUrl: './analytics.scss',
 })
 export class AnalyticsComponent implements OnInit {
-
-  @ViewChild('rangePicker')
-  rangePicker!: MatDateRangePicker<Date>;
-
   private dashboardService = inject(DashboardService);
 
   hours = Array.from({ length: 11 }, (_, i) => i + 10);
@@ -53,8 +40,8 @@ export class AnalyticsComponent implements OnInit {
   selectedPeriod = '30days';
   selectedPeriodLabel = '';
 
-  customFrom: Date | null = null;
-  customTo: Date | null = null;
+  customFrom = '';
+  customTo = '';
 
   analytics: AnalyticsSummaryDto = {
     totalSales: 0,
@@ -120,35 +107,20 @@ export class AnalyticsComponent implements OnInit {
 
   changePeriod(period: string): void {
     this.selectedPeriod = period;
+    this.updateSelectedPeriodLabel();
 
     if (period === 'custom') {
-      this.updateSelectedPeriodLabel();
-
-      setTimeout(() => {
-        this.rangePicker.open();
-      });
-
+      if (!this.customFrom || !this.customTo) {
+        const today = new Date();
+        const from = new Date(today);
+        from.setDate(today.getDate() - 7);
+        this.customFrom = this.toDateString(from);
+        this.customTo = this.toDateString(today);
+      }
       return;
     }
 
-    this.updateSelectedPeriodLabel();
     this.loadAnalytics();
-  }
-
-  openCustomRange(): void {
-    if (this.selectedPeriod !== 'custom') {
-      return;
-    }
-
-    this.rangePicker.open();
-  }
-
-  onCustomDateChanged(): void {
-    if (!this.customFrom || !this.customTo) {
-      return;
-    }
-
-    this.applyCustomRange();
   }
 
   applyCustomRange(): void {
@@ -157,7 +129,10 @@ export class AnalyticsComponent implements OnInit {
     }
 
     this.selectedPeriod = 'custom';
-    this.selectedPeriodLabel = this.formatDateRange(this.customFrom, this.customTo);
+    this.selectedPeriodLabel = this.formatDateRange(
+      this.parseDate(this.customFrom),
+      this.parseDate(this.customTo)
+    );
 
     this.loadAnalytics();
   }
@@ -173,8 +148,8 @@ export class AnalyticsComponent implements OnInit {
 
     if (this.selectedPeriod === 'custom' && this.customFrom && this.customTo) {
       return {
-        from: this.toDateString(this.customFrom),
-        to: this.toDateString(this.customTo)
+        from: this.customFrom,
+        to: this.customTo
       };
     }
 
@@ -234,7 +209,10 @@ export class AnalyticsComponent implements OnInit {
 
       case 'custom':
         if (this.customFrom && this.customTo) {
-          this.selectedPeriodLabel = this.formatDateRange(this.customFrom, this.customTo);
+          this.selectedPeriodLabel = this.formatDateRange(
+            this.parseDate(this.customFrom),
+            this.parseDate(this.customTo)
+          );
         } else {
           this.selectedPeriodLabel = 'Custom Range';
         }
@@ -248,11 +226,11 @@ export class AnalyticsComponent implements OnInit {
   }
 
   buildHeatmap(data: SalesByHourByDateDto[]): void {
-    const maxSales = Math.max(...data.map(x => x.totalSales), 1);
+    const maxSales = Math.max(...data.map((x) => x.totalSales), 1);
 
     const grouped = new Map<string, SalesByHourByDateDto[]>();
 
-    data.forEach(item => {
+    data.forEach((item) => {
       if (!grouped.has(item.date)) {
         grouped.set(item.date, []);
       }
@@ -267,8 +245,8 @@ export class AnalyticsComponent implements OnInit {
         return {
           date,
           total,
-          hours: this.hours.map(hour => {
-            const found = items.find(x => x.hour === hour);
+          hours: this.hours.map((hour) => {
+            const found = items.find((x) => x.hour === hour);
             const totalSales = found?.totalSales ?? 0;
 
             return {
@@ -282,7 +260,7 @@ export class AnalyticsComponent implements OnInit {
       .sort((a, b) => b.date.localeCompare(a.date));
   }
 
-  getHeatmapCellStyle(intensity: number): any {
+  getHeatmapCellStyle(intensity: number): Record<string, string> {
     if (intensity <= 0) {
       return {
         background: 'var(--bg-hover)',
@@ -290,16 +268,15 @@ export class AnalyticsComponent implements OnInit {
       };
     }
 
-    const opacity = Math.max(intensity, 0.18);
+    const pct = Math.round(Math.max(intensity, 0.18) * 100);
 
     return {
-      background: `rgba(59, 130, 246, ${opacity})`,
+      background: `color-mix(in srgb, var(--brand) ${pct}%, transparent)`,
       color: '#ffffff'
     };
   }
 
   getEfficiencyClass(value: number): string {
-
     if (value < 6000) {
       return 'green';
     }
@@ -315,6 +292,11 @@ export class AnalyticsComponent implements OnInit {
     if (hour === 0) return '12 AM';
     if (hour === 12) return '12 PM';
     return hour < 12 ? `${hour} AM` : `${hour - 12} PM`;
+  }
+
+  private parseDate(value: string): Date {
+    const [y, m, d] = value.split('-').map(Number);
+    return new Date(y, m - 1, d);
   }
 
   private formatPrettyDate(date: Date): string {
