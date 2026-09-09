@@ -1,4 +1,5 @@
 using Npgsql;
+using NpgsqlTypes;
 using Microsoft.EntityFrameworkCore;
 using Sad.Api.Contracts.Auth;
 using Sad.Api.Data;
@@ -16,6 +17,9 @@ public class AuthService : IAuthService
     ExternalLoginRequestDto dto,
     CancellationToken ct)
   {
+    if (dto.StoreId is null)
+      throw new ArgumentException("StoreId is required for external login upsert.", nameof(dto));
+
     var userId = await _db.Database
         .SqlQueryRaw<Guid>(@"
             SELECT auth.upsert_user_from_external_login(
@@ -31,8 +35,8 @@ public class AuthService : IAuthService
         new NpgsqlParameter("@ProviderSubject", dto.ProviderSubject),
         new NpgsqlParameter("@Email", (object?)dto.Email ?? DBNull.Value),
         new NpgsqlParameter("@DisplayName", (object?)dto.DisplayName ?? DBNull.Value),
-        new NpgsqlParameter("@StoreId", dto.StoreId),
-        new NpgsqlParameter("@Anumber", dto.Anumber))
+        new NpgsqlParameter("@StoreId", NpgsqlDbType.Integer) { Value = dto.StoreId.Value },
+        new NpgsqlParameter("@Anumber", (object?)dto.Anumber ?? DBNull.Value))
         .FirstAsync(ct);
 
     return userId;

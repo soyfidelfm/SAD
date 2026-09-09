@@ -167,6 +167,14 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Apply pending EF migrations on startup so Neon gets auth.upsert_user_from_external_login
+// and other schema alignment without a manual migrate step on each deploy.
+using (var scope = app.Services.CreateScope())
+{
+  var db = scope.ServiceProvider.GetRequiredService<SadDbContext>();
+  db.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
