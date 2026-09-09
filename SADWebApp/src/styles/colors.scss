@@ -43,9 +43,9 @@
      SUCCESS
   ========================= */
   --success: #17c660;
---success-bg: rgba(23, 198, 96, 0.12);
---success-border: rgba(23, 198, 96, 0.22);
---success-text: #7df0b0;
+  --success-bg: rgba(23, 198, 96, 0.12);
+  --success-border: rgba(23, 198, 96, 0.22);
+  --success-text: #7df0b0;
 
   /* =========================
      WARNING
@@ -60,10 +60,10 @@
   ========================= */
   --danger: #ff002b;
   --danger-bg: rgba(255, 0, 43, 0.18);
---danger-bg-hover: rgba(255, 0, 43, 0.28);
---danger-border: rgba(255, 0, 43, 0.35);
---danger-soft: rgba(255, 0, 43, 0.10);
---danger-text: #ff5c78;
+  --danger-bg-hover: rgba(255, 0, 43, 0.28);
+  --danger-border: rgba(255, 0, 43, 0.35);
+  --danger-soft: rgba(255, 0, 43, 0.10);
+  --danger-text: #ff5c78;
 
   /* =========================
      INFO
@@ -77,6 +77,9 @@
   ========================= */
   --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.18);
   --shadow-card: 0 16px 40px rgba(0, 0, 0, 0.2);
+
+  --shell-topbar-bg: rgba(255, 255, 255, 0.04);
+  --shell-sidebar-bg: rgba(0, 0, 0, 0.16);
 
   /* =========================
      RADIUS
