@@ -6,7 +6,6 @@ import { Observable, of } from 'rxjs';
 import { DashboardSummaryDto } from '../models/dashboard.models';
 import { LatestTransactionDto } from '../models/latest-transaction.model';
 import { API_BASE_URL } from './api.config';
-import { I } from '@angular/cdk/keycodes';
 
 export interface SalesByHour {
   hour: number;
