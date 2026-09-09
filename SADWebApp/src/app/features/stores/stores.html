@@ -1,1 +1,127 @@
-<p>stores works!</p>
+<div class="page-shell">
+  <div class="view-header">
+    <div class="title-section">
+      <span class="eyebrow">Stores</span>
+      <h1 class="view-title">{{ isEditMode ? 'Edit Store' : 'Store Catalog' }}</h1>
+      <p class="view-subtitle">
+        Add, update, or deactivate locations used across sales, settings, and login.
+      </p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="settings-form">
+    <div class="card">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="storeNumber">Store Number</label>
+          <input
+            id="storeNumber"
+            type="number"
+            min="1"
+            formControlName="storeNumber"
+            placeholder="e.g. 420"
+          />
+          <small class="error" *ngIf="f.storeNumber.touched && f.storeNumber.invalid">
+            Store number is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="storeName">Store Name</label>
+          <input
+            id="storeName"
+            type="text"
+            formControlName="storeName"
+            placeholder="Best Buy - Oxnard"
+          />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="check-inline">
+            <input type="checkbox" formControlName="isActive" />
+            <span>Active</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="messages">
+        <div class="message error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+        <div class="message success-message" *ngIf="successMessage">{{ successMessage }}</div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-danger" (click)="resetForm()" [disabled]="saving">
+          Reset
+        </button>
+        <button type="submit" class="btn-secondary" [disabled]="saving || loading">
+          {{ saving ? 'Saving...' : (isEditMode ? 'Update Store' : 'Add Store') }}
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="filters">
+    <div class="form-group field">
+      <label for="storeSearch">Search</label>
+      <input
+        id="storeSearch"
+        type="search"
+        [ngModel]="search"
+        (ngModelChange)="search = $event; applyFilter()"
+        placeholder="Name or store number"
+      />
+    </div>
+    <div class="meta">
+      <span>Total: {{ stores.length }}</span>
+      <span>Active: {{ stores.length ? (stores | slice:0:0) : 0 }}{{ activeCount }}</span>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <div *ngIf="loading" class="loading">
+      <span class="spinner" aria-hidden="true"></span>
+      <span>Loading stores...</span>
+    </div>
+
+    <table class="app-table" *ngIf="!loading">
+      <thead>
+        <tr>
+          <th>Store Number</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th class="actions-col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of filteredStores; trackBy: trackById">
+          <td>#{{ row.storeNumber }}</td>
+          <td>{{ row.storeName || '-' }}</td>
+          <td>
+            <span class="status-pill" [class.active]="row.isActive" [class.inactive]="!row.isActive">
+              {{ row.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="actions-col">
+            <button type="button" class="btn-ghost btn-icon" (click)="editStore(row)" aria-label="Edit store">
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <button
+              type="button"
+              class="btn-danger btn-icon"
+              (click)="deactivateStore(row)"
+              [disabled]="isDeleting(row) || !row.isActive"
+              aria-label="Deactivate store"
+            >
+              <i class="fa-regular fa-trash-can" *ngIf="!isDeleting(row)"></i>
+              <span class="spinner sm" *ngIf="isDeleting(row)" aria-hidden="true"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty" *ngIf="!loading && filteredStores.length === 0">
+      No stores found.
+    </div>
+  </div>
+</div>
