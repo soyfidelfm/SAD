@@ -9,8 +9,31 @@ namespace Sad.Api.Data;
 /// </summary>
 public static class AuthPostgresBootstrap
 {
-  private const string EnsureUpsertSql = """
+  private const string EnsureAuthSql = """
     CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+    -- Required catalog row for Microsoft OAuth upserts
+    INSERT INTO catalog."IdentityProviders"
+        ("IdentityProviderId", "ProviderCode", "ProviderName", "IsActive")
+    VALUES
+        (1, 'microsoft', 'Microsoft', TRUE)
+    ON CONFLICT ("IdentityProviderId") DO UPDATE
+        SET "ProviderCode" = EXCLUDED."ProviderCode",
+            "ProviderName" = EXCLUDED."ProviderName",
+            "IsActive" = TRUE;
+
+    INSERT INTO catalog."IdentityProviders"
+        ("IdentityProviderId", "ProviderCode", "ProviderName", "IsActive")
+    SELECT
+        COALESCE((SELECT MAX("IdentityProviderId") FROM catalog."IdentityProviders"), 0) + 1,
+        'microsoft',
+        'Microsoft',
+        TRUE
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM catalog."IdentityProviders"
+        WHERE "ProviderCode" = 'microsoft'
+    );
 
     CREATE OR REPLACE FUNCTION auth.upsert_user_from_external_login(
         p_identity_provider_code text,
@@ -98,6 +121,6 @@ public static class AuthPostgresBootstrap
 
   public static async Task EnsureAuthHelpersAsync(SadDbContext db, CancellationToken ct = default)
   {
-    await db.Database.ExecuteSqlRawAsync(EnsureUpsertSql, ct);
+    await db.Database.ExecuteSqlRawAsync(EnsureAuthSql, ct);
   }
 }
