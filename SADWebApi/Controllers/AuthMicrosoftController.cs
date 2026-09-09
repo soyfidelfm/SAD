@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Sad.Api.Auth;
 using Sad.Api.Contracts.Auth;
@@ -16,6 +16,7 @@ public class AuthMicrosoftController : ControllerBase
 	private readonly MicrosoftOAuthOptions _opt;
 	private readonly IJwtTokenService _jwt;
 	private readonly IStoreService _stores;
+	private readonly ILogger<AuthMicrosoftController> _logger;
 
 	private const string CsrfCookieName = "sad_ms_oauth";
 
@@ -27,13 +28,15 @@ public class AuthMicrosoftController : ControllerBase
 		IAuthService auth,
 		IOptions<MicrosoftOAuthOptions> opt,
 		IJwtTokenService jwt,
-		IStoreService stores)
+		IStoreService stores,
+		ILogger<AuthMicrosoftController> logger)
 	{
 		_httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
 		_auth = auth ?? throw new ArgumentNullException(nameof(auth));
 		_opt = opt.Value ?? throw new ArgumentNullException(nameof(opt));
 		_jwt = jwt ?? throw new ArgumentNullException(nameof(jwt));
 		_stores = stores;
+		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 	}
 
 	// GET /api/auth/microsoft/start?aNumber=...&storeNumber=...
@@ -111,6 +114,7 @@ public class AuthMicrosoftController : ControllerBase
 		OAuthCookie? oauthCookie;
 		try
 		{
+			cookieJson = cookieJson;
 			oauthCookie = JsonSerializer.Deserialize<OAuthCookie>(cookieJson);
 		}
 		catch
@@ -134,107 +138,104 @@ public class AuthMicrosoftController : ControllerBase
 		// Limpia cookie CSRF (one-time use)
 		Response.Cookies.Delete(CsrfCookieName, new CookieOptions { Path = "/" });
 
-		// 2) Exchange: code -> tokens (v2 token endpoint)
-		var tokenEndpoint = $"https://login.microsoftonline.com/{_opt.TenantId}/oauth2/v2.0/token";
-
-		var form = new Dictionary<string, string>
+		try
 		{
-			["client_id"] = _opt.ClientId,
-			["client_secret"] = _opt.ClientSecret,
-			["grant_type"] = "authorization_code",
-			["code"] = code,
-			["redirect_uri"] = _opt.RedirectUri,
-			["scope"] = "openid profile email User.Read"
-		};
+			// 2) Exchange: code -> tokens (v2 token endpoint)
+			var tokenEndpoint = $"https://login.microsoftonline.com/{_opt.TenantId}/oauth2/v2.0/token";
 
-		var http = _httpClientFactory.CreateClient();
-		using var tokenResp = await http.PostAsync(tokenEndpoint, new FormUrlEncodedContent(form), ct);
+			var form = new Dictionary<string, string>
+			{
+				["client_id"] = _opt.ClientId,
+				["client_secret"] = _opt.ClientSecret,
+				["grant_type"] = "authorization_code",
+				["code"] = code,
+				["redirect_uri"] = _opt.RedirectUri,
+				["scope"] = "openid profile email User.Read"
+			};
 
-		var tokenJson = await tokenResp.Content.ReadAsStringAsync(ct);
-		if (!tokenResp.IsSuccessStatusCode)
-			return BadRequest($"Token exchange failed: {tokenJson}");
+			var http = _httpClientFactory.CreateClient();
+			using var tokenResp = await http.PostAsync(tokenEndpoint, new FormUrlEncodedContent(form), ct);
 
-		using var tokenDoc = JsonDocument.Parse(tokenJson);
+			var tokenJson = await tokenResp.Content.ReadAsStringAsync(ct);
+			if (!tokenResp.IsSuccessStatusCode)
+				return Redirect($"{_opt.FrontendLoginUrl}?err=token_exchange_failed");
 
-		var idToken = tokenDoc.RootElement.TryGetProperty("id_token", out var idTokEl)
-		  ? idTokEl.GetString()
-		  : null;
+			using var tokenDoc = JsonDocument.Parse(tokenJson);
 
-		if (string.IsNullOrWhiteSpace(idToken))
-			return BadRequest("Missing id_token in token response.");
+			var idToken = tokenDoc.RootElement.TryGetProperty("id_token", out var idTokEl)
+			  ? idTokEl.GetString()
+			  : null;
 
-		// 3) Leer claims del id_token (piloto: sin validar firma)
-		var handler = new JwtSecurityTokenHandler();
-		var jwt = handler.ReadJwtToken(idToken);
+			if (string.IsNullOrWhiteSpace(idToken))
+				return Redirect($"{_opt.FrontendLoginUrl}?err=missing_id_token");
 
-		// Microsoft: oid suele ser lo mejor como subject estable
-		var oid = jwt.Claims.FirstOrDefault(c => c.Type == "oid")?.Value;
-		var sub = jwt.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-		var providerSubject = oid ?? sub;
+			// 3) Leer claims del id_token (piloto: sin validar firma)
+			var handler = new JwtSecurityTokenHandler();
+			var jwt = handler.ReadJwtToken(idToken);
 
-		if (string.IsNullOrWhiteSpace(providerSubject))
-			return BadRequest("Cannot determine ProviderSubject (oid/sub missing).");
+			// Microsoft: oid suele ser lo mejor como subject estable
+			var oid = jwt.Claims.FirstOrDefault(c => c.Type == "oid")?.Value;
+			var sub = jwt.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+			var providerSubject = oid ?? sub;
 
-		var email =
-		  jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value
-		  ?? jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+			if (string.IsNullOrWhiteSpace(providerSubject))
+				return Redirect($"{_opt.FrontendLoginUrl}?err=missing_provider_subject");
 
-		var displayName =
-		  jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
+			var email =
+			  jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value
+			  ?? jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
 
-		// 4) Resolver StoreId en BD usando storeNumber
-		var storeId = await _stores.GetActiveStoreIdByNumberAsync(storeNumber, ct);
-		if (storeId is null)
-			return Redirect($"{_opt.FrontendLoginUrl}?err=invalid_store");
-		var store = await _stores.GetStoreByIdAsync(storeId.Value, ct);
-		var storeName = store?.StoreName; // ajusta a tu propiedad real (Name/StoreName)
-		// ✅ 4.1) Guardar cookie de sesión con storeId (además de aNumber/storeNumber)
-		//     (Separada del CSRF, para que persista)
-		var sessionPayload = JsonSerializer.Serialize(new
+			var displayName =
+			  jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
+
+			// 4) Resolver StoreId en BD usando storeNumber
+			var storeId = await _stores.GetActiveStoreIdByNumberAsync(storeNumber, ct);
+			if (storeId is null)
+				return Redirect($"{_opt.FrontendLoginUrl}?err=invalid_store");
+			var store = await _stores.GetStoreByIdAsync(storeId.Value, ct);
+			var storeName = store?.StoreName;
+
+			// 5) Upsert en Neon/Postgres
+			var dto = new ExternalLoginRequestDto(
+			  IdentityProviderCode: "microsoft",
+			  ProviderSubject: providerSubject,
+			  Email: email,
+			  DisplayName: displayName,
+			  Anumber: aNumber,
+			  StoreId: storeId.Value
+			);
+
+			var userId = await _auth.UpsertUserFromExternalLoginAsync(dto, ct);
+
+			// 6) Genera JWT propio incluyendo aNumber
+			var role = "Advisor";
+
+			var accessToken = _jwt.CreateAccessToken(
+				userId,
+				aNumber,
+				email,
+				displayName,
+				storeId.Value,
+				storeName,
+				role
+			);
+
+			// 7) Redirige al frontend con token + storeId (+ aNumber opcional)
+			var baseUrl = (_opt.FrontendSuccessUrl ?? "https://sad.thekiddycloud.com").TrimEnd('/');
+
+			var redirect =
+			  $"{baseUrl}/login" +
+			  $"?token={WebUtility.UrlEncode(accessToken)}" +
+			  $"&storeId={WebUtility.UrlEncode(storeId.Value.ToString())}" +
+			  $"&aNumber={WebUtility.UrlEncode(aNumber ?? string.Empty)}";
+
+			return Redirect(redirect);
+		}
+		catch (Exception ex)
 		{
-			aNumber,
-			storeNumber,
-			storeId = storeId.Value.ToString()
-		});
-
-
-		// 5) Upsert en tu BD
-		var dto = new ExternalLoginRequestDto(
-		  IdentityProviderCode: "microsoft",
-		  ProviderSubject: providerSubject,
-		  Email: email,
-		  DisplayName: displayName,
-		  Anumber: aNumber,
-		  StoreId: storeId.Value
-		);
-
-		var userId = await _auth.UpsertUserFromExternalLoginAsync(dto, ct);
-
-		// 6) Genera JWT propio incluyendo aNumber
-		// role: por ahora fijo, luego lo sacas de tu usuario en BD
-		var role = "Advisor";
-
-		var accessToken = _jwt.CreateAccessToken(
-			userId,
-			aNumber,
-			email,
-			displayName,
-			storeId.Value,
-			storeName,
-			role
-		);
-		// 7) Redirige al frontend con token (Angular lo captura en /login)
-		// 7) Redirige al frontend con token + storeId (+ aNumber opcional)
-		var baseUrl = (_opt.FrontendSuccessUrl ?? "https://sad.thekiddycloud.com").TrimEnd('/');
-
-		var redirect =
-		  $"{baseUrl}/login" +
-		  $"?token={WebUtility.UrlEncode(accessToken)}" +
-		  $"&storeId={WebUtility.UrlEncode(storeId.Value.ToString())}" +
-		  $"&aNumber={WebUtility.UrlEncode(aNumber ?? string.Empty)}";
-
-		return Redirect(redirect);
-
+			_logger.LogError(ex, "Microsoft OAuth callback failed after CSRF validation.");
+			return Redirect($"{_opt.FrontendLoginUrl}?err=login_failed");
+		}
 	}
 
 }
