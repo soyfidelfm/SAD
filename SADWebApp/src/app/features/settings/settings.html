@@ -80,9 +80,12 @@
         <select id="storeId" formControlName="storeId">
           <option [ngValue]="null">Select store</option>
           <option *ngFor="let store of stores" [ngValue]="store.storeId">
-            {{ store.storeName || store.storeNumber }}
+            {{ storeLabel(store) }}
           </option>
         </select>
+        <small class="hint" *ngIf="!stores.length">
+          No active stores in catalog. Add one in Stores first.
+        </small>
         <small class="error" *ngIf="f.storeId.touched && f.storeId.invalid">
           Store is required.
         </small>

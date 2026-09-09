@@ -44,7 +44,7 @@ export class SettingsComponent implements OnInit {
     salesGoalAmount: [6400, [Validators.required, Validators.min(0)]],
     appsGoal: [2, [Validators.required, Validators.min(0)]],
     membershipsGoal: [2, [Validators.required, Validators.min(0)]],
-    storeId: [1, Validators.required],
+    storeId: [null as number | null, Validators.required],
     isActive: [true]
   });
 
@@ -58,14 +58,28 @@ export class SettingsComponent implements OnInit {
     return this.form.controls;
   }
 
+  storeLabel(store: CatalogStore): string {
+    const name = store.storeName?.trim();
+    return name ? `${name} (#${store.storeNumber})` : `Store #${store.storeNumber}`;
+  }
+
   loadStores(): void {
-    this.catalogService.getStores().subscribe({
+    this.catalogService.getAllStores().subscribe({
       next: (data) => {
-        this.stores = data ?? [];
+        const selected = this.form.value.storeId;
+        const all = (data ?? []).slice().sort((a, b) => a.storeNumber - b.storeNumber);
+        this.stores = all.filter((store) => store.isActive || store.storeId === selected);
+
+        if (!this.form.value.storeId) {
+          const firstActive = this.stores.find((store) => store.isActive);
+          if (firstActive) {
+            this.form.patchValue({ storeId: firstActive.storeId });
+          }
+        }
       },
       error: (err) => {
         console.error('Error loading stores', err);
-        this.errorMessage = 'Could not load stores.';
+        this.errorMessage = 'Could not load stores from catalog.';
       }
     });
   }
@@ -100,6 +114,7 @@ export class SettingsComponent implements OnInit {
         this.mapForm(data);
         this.currentSettingId = data.id;
         this.isEditMode = true;
+        this.loadStores();
       },
       error: (err) => {
         this.loading = false;
@@ -182,12 +197,14 @@ export class SettingsComponent implements OnInit {
   }
 
   resetForm(): void {
+    const firstActive = this.stores.find((store) => store.isActive);
+
     this.form.reset({
       settingDate: this.getTodayDate(),
       salesGoalAmount: null,
       appsGoal: null,
       membershipsGoal: null,
-      storeId: null,
+      storeId: firstActive?.storeId ?? null,
       isActive: true
     });
 
