@@ -157,62 +157,12 @@ html[data-retailer='aldi'][data-mode='light'] {
 }
 
 /* =========================
-   Material / MDC follow --brand
-   (static mat.$azure-palette stays; CSS vars override at runtime)
-========================= */
-html {
-  --mat-sys-primary: var(--brand);
-  --mat-sys-on-primary: var(--brand-text);
-  --mat-sys-primary-container: var(--brand-soft);
-  --mat-sys-on-primary-container: var(--brand);
-  --mat-sys-secondary: var(--brand-hover);
-  --mat-sys-on-secondary: var(--brand-text);
-  --mat-sys-surface: var(--bg-surface);
-  --mat-sys-on-surface: var(--text-main);
-  --mat-sys-surface-container: var(--bg-card);
-  --mat-sys-surface-container-high: var(--bg-card-strong);
-  --mat-sys-outline: var(--border-strong);
-  --mat-sys-outline-variant: var(--border-soft);
-
-  --mdc-filled-button-container-color: var(--brand);
-  --mdc-filled-button-label-text-color: var(--brand-text);
-  --mdc-protected-button-container-color: var(--brand);
-  --mdc-protected-button-label-text-color: var(--brand-text);
-  --mdc-text-button-label-text-color: var(--brand);
-  --mdc-outlined-button-label-text-color: var(--brand);
-  --mdc-outlined-button-outline-color: var(--brand-border);
-
-  --mdc-circular-progress-active-indicator-color: var(--brand);
-  --mdc-linear-progress-active-indicator-color: var(--brand);
-  --mdc-checkbox-selected-container-color: var(--brand);
-  --mdc-checkbox-selected-focus-state-layer-color: var(--brand);
-  --mdc-checkbox-selected-hover-state-layer-color: var(--brand);
-  --mdc-radio-selected-icon-color: var(--brand);
-  --mdc-slider-handle-color: var(--brand);
-  --mdc-slider-active-track-color: var(--brand);
-  --mdc-switch-selected-track-color: var(--brand);
-  --mdc-switch-selected-handle-color: var(--brand-text);
-  --mdc-tab-indicator-active-indicator-color: var(--brand);
-  --mat-tab-header-active-label-text-color: var(--brand);
-  --mat-tab-header-active-focus-label-text-color: var(--brand);
-  --mat-tab-header-active-hover-label-text-color: var(--brand);
-  --mat-focus-indicator-color: var(--brand);
-  --mat-minimal-pseudo-checkbox-selected-checkmark-color: var(--brand);
-
-  --mdc-outlined-text-field-focus-outline-color: var(--brand);
-  --mdc-outlined-text-field-focus-label-text-color: var(--brand);
-  --mdc-filled-text-field-focus-active-indicator-color: var(--brand);
-  --mdc-filled-text-field-focus-label-text-color: var(--brand);
-}
-
-/* =========================
    Shell chrome accents (full-app feel)
 ========================= */
 html[data-retailer] {
   .topbar {
     background: var(--shell-topbar-bg);
     border-bottom-color: var(--border-soft);
-    /* brand bar along the bottom edge of the topbar */
     box-shadow: inset 0 -3px 0 0 var(--brand);
   }
 
