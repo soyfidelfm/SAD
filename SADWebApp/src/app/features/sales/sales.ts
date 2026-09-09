@@ -3,31 +3,14 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
 import { SalesService } from '../../core/services/sales.service';
 import { Sale } from '../../core/models/sale.model';
+import { LocalDatePipe } from '../../shared/pipes/local-date-pipe';
 
-import { LocalDatePipe } from '../../shared/pipes/local-date-pipe'
 @Component({
   selector: 'app-sales',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    LocalDatePipe
-  ],
+  imports: [CommonModule, ReactiveFormsModule, LocalDatePipe],
   templateUrl: './sales.html',
   styleUrls: ['./sales.scss']
 })
@@ -41,28 +24,7 @@ export class SalesComponent implements OnDestroy {
   loading = false;
   deletingId: string | null = null;
 
-  dataSource = new MatTableDataSource<Sale>([]);
-
-  displayedColumnsDesktop: string[] = [
-    'saleDate',
-    'subtotal',
-    'tax',
-    'total',
-    'paymentMethod',
-    'notes',
-    'actions'
-  ];
-
-  displayedColumnsMobile: string[] = [
-    'saleDate',
-    'total'
-  ];
-
-  isMobile = false;
-
-  get displayedColumns(): string[] {
-    return this.isMobile ? this.displayedColumnsMobile : this.displayedColumnsDesktop;
-  }
+  sales: Sale[] = [];
 
   private mq?: MediaQueryList;
   private mqHandler?: (e: MediaQueryListEvent) => void;
@@ -85,12 +47,7 @@ export class SalesComponent implements OnDestroy {
 
     if (this.isBrowser) {
       this.mq = window.matchMedia('(max-width: 640px)');
-      this.isMobile = this.mq.matches;
-
-      this.mqHandler = (e: MediaQueryListEvent) => {
-        this.isMobile = e.matches;
-      };
-
+      this.mqHandler = (_e: MediaQueryListEvent) => {};
       this.mq.addEventListener('change', this.mqHandler);
 
       afterNextRender(() => {
@@ -139,12 +96,12 @@ export class SalesComponent implements OnDestroy {
       .getByStoreAndRange(this.storeId, from, to)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: rows => {
-          this.dataSource.data = rows ?? [];
+        next: (rows) => {
+          this.sales = rows ?? [];
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
-          this.dataSource.data = [];
+          this.sales = [];
           alert('Error loading sales');
         }
       });
@@ -172,11 +129,9 @@ export class SalesComponent implements OnDestroy {
       .pipe(finalize(() => (this.deletingId = null)))
       .subscribe({
         next: () => {
-          this.dataSource.data = this.dataSource.data.filter(
-            x => this.getSaleId(x) !== id
-          );
+          this.sales = this.sales.filter((x) => this.getSaleId(x) !== id);
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
           alert('Error deleting sale');
         }
