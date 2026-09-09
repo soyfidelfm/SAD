@@ -1,0 +1,300 @@
+/* =====================================
+   themes.scss
+   Retailer-inspired palettes × light/dark
+   Inspired colors only — not official branding
+===================================== */
+
+@mixin brand($brand, $hover, $active) {
+  --brand: #{$brand};
+  --brand-hover: #{$hover};
+  --brand-active: #{$active};
+  --brand-soft: color-mix(in srgb, #{$brand} 18%, transparent);
+  --brand-border: color-mix(in srgb, #{$brand} 28%, transparent);
+  --border-brand: color-mix(in srgb, #{$brand} 28%, transparent);
+  --brand-text: #ffffff;
+}
+
+@mixin dark-surfaces {
+  --bg-app: #0b0f17;
+  --bg-surface: #121826;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-strong: rgba(255, 255, 255, 0.06);
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --bg-hover-strong: rgba(255, 255, 255, 0.12);
+
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.12);
+
+  --text-main: #e9eefc;
+  --text-muted: rgba(233, 238, 252, 0.72);
+  --text-soft: rgba(233, 238, 252, 0.55);
+  --text-inverse: #0b0f17;
+
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.18);
+  --shadow-card: 0 16px 40px rgba(0, 0, 0, 0.2);
+
+  --shell-topbar-bg: rgba(255, 255, 255, 0.04);
+  --shell-sidebar-bg: rgba(0, 0, 0, 0.16);
+}
+
+@mixin light-surfaces {
+  --bg-app: #f4f6fb;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-strong: #f8fafc;
+  --bg-hover: rgba(15, 23, 42, 0.05);
+  --bg-hover-strong: rgba(15, 23, 42, 0.09);
+
+  --border-soft: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.14);
+
+  --text-main: #0f172a;
+  --text-muted: rgba(15, 23, 42, 0.68);
+  --text-soft: rgba(15, 23, 42, 0.48);
+  --text-inverse: #f8fafc;
+
+  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0 16px 40px rgba(15, 23, 42, 0.1);
+
+  --shell-topbar-bg: rgba(255, 255, 255, 0.86);
+  --shell-sidebar-bg: #ffffff;
+
+  --success-bg: rgba(23, 198, 96, 0.1);
+  --success-border: rgba(23, 198, 96, 0.22);
+  --success-text: #0f9b4c;
+
+  --warning-bg: rgba(245, 185, 66, 0.12);
+  --warning-border: rgba(245, 185, 66, 0.28);
+  --warning-text: #9a6b00;
+
+  --danger-bg: rgba(255, 0, 43, 0.08);
+  --danger-bg-hover: rgba(255, 0, 43, 0.14);
+  --danger-border: rgba(255, 0, 43, 0.22);
+  --danger-soft: rgba(255, 0, 43, 0.06);
+  --danger-text: #c40022;
+}
+
+/* ---------- SAD Blue ---------- */
+html[data-retailer='sad'][data-mode='dark'] {
+  @include dark-surfaces;
+  @include brand(#4083ff, #2f74f6, #1f66eb);
+}
+
+html[data-retailer='sad'][data-mode='light'] {
+  @include light-surfaces;
+  @include brand(#4083ff, #2f74f6, #1f66eb);
+}
+
+/* ---------- Best Buy inspired ---------- */
+html[data-retailer='bestbuy'][data-mode='dark'] {
+  @include dark-surfaces;
+  @include brand(#0046be, #003a9e, #002f82);
+}
+
+html[data-retailer='bestbuy'][data-mode='light'] {
+  @include light-surfaces;
+  @include brand(#0046be, #003a9e, #002f82);
+}
+
+/* ---------- Target inspired ---------- */
+html[data-retailer='target'][data-mode='dark'] {
+  @include dark-surfaces;
+  @include brand(#cc0000, #b00000, #960000);
+}
+
+html[data-retailer='target'][data-mode='light'] {
+  @include light-surfaces;
+  @include brand(#cc0000, #b00000, #960000);
+}
+
+/* ---------- Walmart inspired ---------- */
+html[data-retailer='walmart'][data-mode='dark'] {
+  @include dark-surfaces;
+  @include brand(#0071ce, #005fad, #004e8f);
+}
+
+html[data-retailer='walmart'][data-mode='light'] {
+  @include light-surfaces;
+  @include brand(#0071ce, #005fad, #004e8f);
+}
+
+/* ---------- Costco inspired ---------- */
+html[data-retailer='costco'][data-mode='dark'] {
+  @include dark-surfaces;
+  @include brand(#005daa, #004e90, #003f75);
+}
+
+html[data-retailer='costco'][data-mode='light'] {
+  @include light-surfaces;
+  @include brand(#005daa, #004e90, #003f75);
+}
+
+/* ---------- Sam's Club inspired ---------- */
+html[data-retailer='sams'][data-mode='dark'] {
+  @include dark-surfaces;
+  @include brand(#0067a0, #005786, #00466d);
+}
+
+html[data-retailer='sams'][data-mode='light'] {
+  @include light-surfaces;
+  @include brand(#0067a0, #005786, #00466d);
+}
+
+/* ---------- Aldi inspired ---------- */
+html[data-retailer='aldi'][data-mode='dark'] {
+  @include dark-surfaces;
+  @include brand(#ff6600, #e55b00, #cc5100);
+}
+
+html[data-retailer='aldi'][data-mode='light'] {
+  @include light-surfaces;
+  @include brand(#ff6600, #e55b00, #cc5100);
+}
+
+/* =========================
+   Light-mode shell surfaces
+========================= */
+html[data-mode='light'] {
+  .topbar {
+    background: var(--shell-topbar-bg);
+    border-bottom-color: var(--border-soft);
+  }
+
+  .sidebar {
+    background: var(--shell-sidebar-bg);
+  }
+
+  @media (max-width: 900px) {
+    .sidebar {
+      background: var(--bg-app);
+      box-shadow: var(--shadow-soft);
+    }
+  }
+}
+
+/* =========================
+   Appearance picker UI
+========================= */
+.mode-toggle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-soft);
+}
+
+.mode-toggle button {
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.mode-toggle button.active {
+  background: var(--brand);
+  color: var(--brand-text);
+}
+
+.mode-toggle button:hover:not(.active) {
+  color: var(--text-main);
+  background: var(--bg-hover-strong);
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-sm);
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-option:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+.theme-option.active {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  box-shadow: 0 0 0 1px var(--brand-border);
+}
+
+.theme-option .meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 0;
+  min-width: 0;
+}
+
+.theme-option .label {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.theme-option .hint {
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  margin: 0;
+}
+
+.theme-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+html[data-mode='light'] .theme-swatch {
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.appearance-card {
+  margin-bottom: var(--space-lg);
+}
+
+.appearance-card .card-header {
+  margin-bottom: var(--space-md);
+}
+
+.appearance-disclaimer {
+  margin-top: var(--space-md);
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+.appearance-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.appearance-section-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}

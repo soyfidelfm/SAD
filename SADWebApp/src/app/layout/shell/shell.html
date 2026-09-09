@@ -15,6 +15,16 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
+      <button
+        class="btn-ghost btn-icon"
+        type="button"
+        (click)="theme.toggleMode()"
+        title="Toggle light/dark"
+        aria-label="Toggle light/dark"
+      >
+        <i class="fa-solid" [class.fa-moon]="theme.mode === 'light'" [class.fa-sun]="theme.mode === 'dark'"></i>
+      </button>
+
       <button class="btn-danger btn-logout" type="button" (click)="logout()">
         <i class="fa-solid fa-right-from-bracket"></i>
         <span>Logout</span>
