@@ -167,12 +167,12 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Apply pending EF migrations on startup so Neon gets auth.upsert_user_from_external_login
-// and other schema alignment without a manual migrate step on each deploy.
+// Neon was provisioned outside full EF history. Do NOT call Database.Migrate() here —
+// it tries InitPostgres against existing tables. Ensure only the auth upsert function.
 using (var scope = app.Services.CreateScope())
 {
   var db = scope.ServiceProvider.GetRequiredService<SadDbContext>();
-  db.Database.Migrate();
+  AuthPostgresBootstrap.EnsureAuthHelpersAsync(db).GetAwaiter().GetResult();
 }
 
 if (app.Environment.IsDevelopment())
