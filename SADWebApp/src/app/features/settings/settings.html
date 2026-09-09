@@ -10,6 +10,60 @@
       </div>
     </div>
 
+
+  <div class="card appearance-card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Appearance</div>
+        <div class="card-subtitle">Pick a retailer-inspired palette and light/dark mode.</div>
+      </div>
+    </div>
+
+    <div class="appearance-section">
+      <div class="appearance-section-label">Mode</div>
+      <div class="mode-toggle" role="group" aria-label="Color mode">
+        <button
+          type="button"
+          [class.active]="theme.mode === 'light'"
+          (click)="theme.setMode('light')"
+        >
+          Light
+        </button>
+        <button
+          type="button"
+          [class.active]="theme.mode === 'dark'"
+          (click)="theme.setMode('dark')"
+        >
+          Dark
+        </button>
+      </div>
+    </div>
+
+    <div class="appearance-section">
+      <div class="appearance-section-label">Retailer palette</div>
+      <div class="theme-grid">
+        <button
+          type="button"
+          class="theme-option"
+          *ngFor="let option of theme.retailers"
+          [class.active]="theme.retailer === option.id"
+          (click)="theme.setRetailer(option.id)"
+          [attr.title]="option.hint"
+        >
+          <span class="theme-swatch" [style.background]="option.swatch"></span>
+          <span class="meta">
+            <span class="label">{{ option.label }}</span>
+            <span class="hint">{{ option.hint }}</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <p class="appearance-disclaimer">
+      Inspired colors for demos — not official retailer branding.
+    </p>
+  </div>
+
   <form [formGroup]="form" (ngSubmit)="submit()" class="settings-form">
     <div class="card">
     <div class="form-grid">
