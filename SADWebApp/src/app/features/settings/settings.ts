@@ -12,6 +12,7 @@ import {
 
 import { CatalogService } from '../../core/services/catalog.service';
 import { UserDailySettingsService } from '../../core/services/user-daily-settings.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +30,7 @@ export class SettingsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private catalogService = inject(CatalogService);
   private userDailySettingsService = inject(UserDailySettingsService);
+  theme = inject(ThemeService);
 
   loading = false;
   saving = false;
